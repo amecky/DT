@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{b4d208d3-d466-451b-9ede-4567b423fe82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{ffed577a-bcfe-4b17-afa3-079574c40b3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{effa1542-8469-4aa5-af5f-50b94191d22d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="particle">
+      <UniqueIdentifier>{846dc5bf-73f4-4cbb-905f-54e9a384d77c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{b8f33345-58ac-4d34-9311-9393926bca87}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="small.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="DT.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="utils\Profiler.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Log.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\render_types.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="math\BezierCurve.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="particle\ParticleArray.h">
+      <Filter>particle</Filter>
+    </ClInclude>
+    <ClInclude Include="particle\ParticleSystem.h">
+      <Filter>particle</Filter>
+    </ClInclude>
+    <ClInclude Include="particle\ParticleModifier.h">
+      <Filter>particle</Filter>
+    </ClInclude>
+    <ClInclude Include="particle\ParticleEmitter.h">
+      <Filter>particle</Filter>
+    </ClInclude>
+    <ClInclude Include="TestApp.h" />
+    <ClInclude Include="renderer\Camera.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\DX.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Mesh.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\VIBuffer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="base\BaseApp.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\DT.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\GameTimer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="utils\Profiler.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\Log.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="particle\ParticleSystem.cpp">
+      <Filter>particle</Filter>
+    </ClCompile>
+    <ClCompile Include="particle\ParticleModifier.cpp">
+      <Filter>particle</Filter>
+    </ClCompile>
+    <ClCompile Include="particle\ParticleEmitter.cpp">
+      <Filter>particle</Filter>
+    </ClCompile>
+    <ClCompile Include="TestApp.cpp" />
+    <ClCompile Include="renderer\Camera.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\DX.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\Mesh.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\VIBuffer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="base\BaseApp.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\DT.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\GameTimer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DT.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DT", "DT.vcxproj", "{836B12F5-AB80-4CA6-9DD1-2E588CD1D485}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "math", "..\math\math.vcxproj", "{9E8A43DA-B621-4824-B373-03D386B990EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{836B12F5-AB80-4CA6-9DD1-2E588CD1D485}.Debug|Win32.ActiveCfg = Debug|Win32
+		{836B12F5-AB80-4CA6-9DD1-2E588CD1D485}.Debug|Win32.Build.0 = Debug|Win32
+		{836B12F5-AB80-4CA6-9DD1-2E588CD1D485}.Release|Win32.ActiveCfg = Release|Win32
+		{836B12F5-AB80-4CA6-9DD1-2E588CD1D485}.Release|Win32.Build.0 = Release|Win32
+		{9E8A43DA-B621-4824-B373-03D386B990EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9E8A43DA-B621-4824-B373-03D386B990EC}.Debug|Win32.Build.0 = Debug|Win32
+		{9E8A43DA-B621-4824-B373-03D386B990EC}.Release|Win32.ActiveCfg = Release|Win32
+		{9E8A43DA-B621-4824-B373-03D386B990EC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
