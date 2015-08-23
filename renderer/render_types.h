@@ -1,6 +1,6 @@
 #pragma once
 #include <d3dx9core.h>
-
+#include <Vector.h>
 // -------------------------------------------------------
 // Blending constants
 // -------------------------------------------------------
@@ -77,4 +77,24 @@ struct TextureAsset {
 	LPDIRECT3DTEXTURE9 texture;
 	int width;
 	int height;
+};
+
+struct Texture {
+
+	//IdString hashName;
+	Vector4f uv;
+	Vector2f dim;
+	int textureID;
+
+	Texture() : uv(0, 0, 1, 1), dim(32, 32), textureID(0) {}
+
+	const Vector2f getUV(int idx) const {
+		switch (idx) {
+			case 0: return Vector2f(uv.x, uv.y); break;
+			case 1: return Vector2f(uv.z, uv.y); break;
+			case 2: return Vector2f(uv.z, uv.w); break;
+			case 3: return Vector2f(uv.x, uv.w); break;
+			default: return Vector2f(0, 0);
+		}
+	}
 };

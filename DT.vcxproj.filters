@@ -81,6 +81,7 @@
     <ClInclude Include="utils\GameTimer.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="CubeTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -122,6 +123,7 @@
     <ClCompile Include="utils\GameTimer.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="CubeTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DT.rc">

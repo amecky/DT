@@ -30,8 +30,16 @@ void DX::init(HWND hWnd) {
 	D3DDISPLAYMODE d3ddm;
 	_d3d->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm);
 
+	D3DCAPS9 deviceCaps;
+	_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &deviceCaps);
+	D3DFORMAT adapterFormat = D3DFMT_X8R8G8B8;
+	d3dpp.BackBufferFormat = adapterFormat;
+	d3dpp.BackBufferCount = 1;
+
 	DWORD total;
-	if (_d3d->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3ddm.Format, true, D3DMULTISAMPLE_NONMASKABLE, &total)) {
+	_d3d->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, adapterFormat, true, D3DMULTISAMPLE_NONMASKABLE, &total);
+	LOG << "multi sampling: " << total;
+	if ( total > 0 ) {
 		d3dpp.MultiSampleType = D3DMULTISAMPLE_NONMASKABLE;
 		d3dpp.MultiSampleQuality = total - 1;
 		LOG << "multi sample is supported - quality level " << total - 1;

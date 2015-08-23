@@ -39,8 +39,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\math;C:\devtools\DirectX\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\devtools\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\math;C:\devtools\DirectX_SDK\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\devtools\DirectX_SDK\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClInclude Include="base\BaseApp.h" />
     <ClInclude Include="base\DT.h" />
+    <ClInclude Include="CubeTest.h" />
     <ClInclude Include="math\BezierCurve.h" />
     <ClInclude Include="particle\ParticleArray.h" />
     <ClInclude Include="particle\ParticleEmitter.h" />
@@ -104,6 +105,7 @@
   <ItemGroup>
     <ClCompile Include="base\BaseApp.cpp" />
     <ClCompile Include="base\DT.cpp" />
+    <ClCompile Include="CubeTest.cpp" />
     <ClCompile Include="particle\ParticleEmitter.cpp" />
     <ClCompile Include="particle\ParticleModifier.cpp" />
     <ClCompile Include="particle\ParticleSystem.cpp" />

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "TestApp.h"
 
-BaseApp *app = new TestApp(); 
+//BaseApp *app = new TestApp(); 
 
 TestApp::TestApp(void) {
 }

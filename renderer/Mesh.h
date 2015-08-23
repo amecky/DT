@@ -69,9 +69,13 @@ namespace data {
 
 	void add_xz_plane(PCTMeshData& data,float width,float height);
 
+	void add_xz_plane(PCTMeshData* data, float width, float height);
+
 	void add_line(PCTMeshData& data,const Vector3f& start,const Vector3f& end,float thickness);
 
 	void add_xz_plane(PCMeshData& data,float width,float height);
+
+	void add_grid(PCTMeshData* data, float cellSize, int countX, int countY);
 
 	void add_line(PCMeshData& data,const Vector3f& start,const Vector3f& end,float thickness);
 }

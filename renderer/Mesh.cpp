@@ -80,6 +80,41 @@ namespace data {
 		data.addQuad(plane);
 	}
 
+	void add_xz_plane(PCTMeshData* data, float width, float height) {
+		float hx = width * 0.5f;
+		float hy = 0.0f;
+		float hz = height * 0.5f;
+		float u2 = 1.0f;//width;
+		float v2 = 1.0f;//height;
+		// top
+		Quad<PCTVertex> plane;
+		plane.v[0] = PCTVertex(hx, hy, hz, 0.0f, v2);
+		plane.v[1] = PCTVertex(hx, hy, -hz, 0.0f, 0.0f);
+		plane.v[2] = PCTVertex(-hx, hy, -hz, u2, 0.0f);
+		plane.v[3] = PCTVertex(-hx, hy, hz, u2, v2);
+		data->addQuad(plane);
+	}
+
+	void add_grid(PCTMeshData* data, float cellSize, int countX, int countY) {
+		float x = countX * cellSize * -0.5f + cellSize;
+		float y = countY * cellSize * -0.5f + cellSize;
+		for (int sx = 0; sx < countX; ++sx) {
+			x = countX * cellSize * -0.5f + cellSize;
+			for (int sy = 0; sy < countY; ++sy) {
+				LOG << "creating at " << x << " " << y;
+				Quad<PCTVertex> plane;
+
+				plane.v[0] = PCTVertex(x           , y - cellSize, 0.0f, 0.0f, 1.0f);
+				plane.v[1] = PCTVertex(x           , y           , 0.0f, 0.0f, 0.0f);
+				plane.v[2] = PCTVertex(x - cellSize, y           , 0.0f, 1.0f, 0.0f);
+				plane.v[3] = PCTVertex(x - cellSize, y - cellSize, 0.0f, 1.0f, 1.0f);
+				data->addQuad(plane);
+				x += cellSize;
+			}
+			y += cellSize;
+		}
+	}
+
 	void add_line(PCTMeshData& data,const Vector3f& start,const Vector3f& end,float thickness) {
 		Vector3f d = end - start;
 		float u2 = 1.0f;//width;
