@@ -39,7 +39,7 @@ void CubeTest::loadContent() {
 	//data::build_cube(floor,12.0f,0.1f,12.0f);
 	//data::add_xz_plane(_floor, 1.0f, 1.0f);
 	//data::add_line(*_floor, Vector3f(4.0f, 0.0f, 0.0f), Vector3f(-4.0f, 2.0f, 0.0f), 0.4f);
-	data::add_grid(_floor, 2.0f, 4, 4);
+	data::add_grid(_floor, 2.0f, 6, 6);
 
 	_world = new World(&_dx);
 	// create floor
