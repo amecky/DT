@@ -150,6 +150,12 @@ void Camera::tick() {
 	if ( GetAsyncKeyState('S') != 0 ) {
 		MoveForward(-0.1f);
 	}
+	if ( GetAsyncKeyState('Q') != 0 ) {
+		MoveUp(0.1f);
+	}
+	if ( GetAsyncKeyState('Y') != 0 ) {
+		MoveUp(-0.1f);
+	}
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 

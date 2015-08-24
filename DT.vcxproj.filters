@@ -20,6 +20,12 @@
     <Filter Include="base">
       <UniqueIdentifier>{b8f33345-58ac-4d34-9311-9393926bca87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="examples">
+      <UniqueIdentifier>{2dd52104-a26f-4569-a63c-0e2643a0fa1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="examples\01_cubes">
+      <UniqueIdentifier>{8a01f938-8699-46e7-a82f-41a9c29e3185}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -81,7 +87,9 @@
     <ClInclude Include="utils\GameTimer.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="CubeTest.h" />
+    <ClInclude Include="examples\01_cube\CubeTest.h">
+      <Filter>examples\01_cubes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -123,7 +131,9 @@
     <ClCompile Include="utils\GameTimer.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="CubeTest.cpp" />
+    <ClCompile Include="examples\01_cube\CubeTest.cpp">
+      <Filter>examples\01_cubes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DT.rc">

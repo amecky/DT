@@ -61,7 +61,7 @@ void DX::init(HWND hWnd) {
 	_device->SetRenderState(D3DRS_LIGHTING, FALSE);
 	_device->SetRenderState(D3DRS_ZENABLE, TRUE); 
 	_device->SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
-	_camera.setPosition(0.0f,0.0f,12.0f);
+	_camera.setPosition(0.0f,0.0f,6.0f);
 	_camera.Update();
 	
 	 D3DXMatrixIdentity(&_world);
