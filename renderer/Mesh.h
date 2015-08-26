@@ -4,6 +4,7 @@
 
 class VIBuffer;
 
+
 class MeshData {
 
 public:
@@ -40,7 +41,7 @@ public:
 	AbstractMeshData(int buffer_id,int vertex_declaration,int max) : MeshData(buffer_id,vertex_declaration,max) {
 		_data = new T[max];
 	}
-	~AbstractMeshData() {
+	virtual ~AbstractMeshData() {
 		delete[] _data;
 	}
 	void addQuad(Quad<T> quad) {
@@ -63,6 +64,12 @@ typedef AbstractMeshData<PCVertex> PCMeshData;
 
 namespace data {
 
+	void load_mesh(PCTMeshData* data,const char* fileName,float textureSize);
+
+	void add_quad(PCTMeshData* data,Vector3f* vertices,const Rect& textureRect,float textureSize);
+
+	void build_cube(PCTMeshData* data,float dx,float dy,float dz,const Rect& textureRect,float textureSize);
+
 	void build_cube(PCTMeshData& data,float dx,float dy,float dz);
 
 	void build_unit_cube(PCTMeshData& data);
@@ -75,7 +82,7 @@ namespace data {
 
 	void add_xz_plane(PCMeshData& data,float width,float height);
 
-	void add_grid(PCTMeshData* data, float cellSize, int countX, int countY);
+	void add_grid(PCTMeshData* data, float cellSize, int countX, int countY,const Rect& textureRect,float textureSize);
 
 	void add_line(PCMeshData& data,const Vector3f& start,const Vector3f& end,float thickness);
 }

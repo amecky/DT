@@ -2,10 +2,85 @@
 #include "Mesh.h"
 #include <Matrix.h>
 #include "VIBuffer.h"
-
+#include "..\utils\JSONReader.h"
 
 namespace data {
 
+	void getTextureCoordinates(const Rect& textureRect,int textureWidth,float textureHeight,float* u1,float* v1,float* u2,float* v2,bool useHalfTexel) {
+		if ( useHalfTexel ) {
+			float halfTexel = 0.5f;
+			float const width   = textureWidth;
+			float const height  = textureHeight;
+
+			float kUOffset = halfTexel/width;
+			float kVOffset = halfTexel/height;
+
+			*u1 = static_cast<float>(textureRect.left)/width  + kUOffset;
+			*v1 = static_cast<float>(textureRect.top)/height + kVOffset;  
+
+			*u2 = *u1 + static_cast<float>(textureRect.width()) /width   - 2.0f*kUOffset;
+			*v2 = *v1 + static_cast<float>(textureRect.height())/height  - 2.0f*kVOffset;
+		}
+		else {
+			*u1 = static_cast<float>(textureRect.left)/textureWidth;
+			*u2 = static_cast<float>(textureRect.right)/textureWidth;
+			*v1 = static_cast<float>(textureRect.top)/textureHeight;
+			*v2 = static_cast<float>(textureRect.bottom)/textureHeight;
+		}
+	}
+
+	void build_cube(PCTMeshData* data,float dx,float dy,float dz,const Rect& textureRect,float textureSize) {
+		float hx = dx * 0.5f;
+		float hy = dy * 0.5f;
+		float hz = dz * 0.5f;
+		float u1,v1,u2,v2;
+
+		getTextureCoordinates(textureRect,textureSize,textureSize,&u1,&v1,&u2,&v2,true);
+
+		// front
+		Quad<PCTVertex> front;
+		front.v[0] = PCTVertex( hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
+		front.v[1] = PCTVertex( hx,  hy, hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
+		front.v[2] = PCTVertex(-hx,  hy, hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
+		front.v[3] = PCTVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),u2,v2);
+		data->addQuad(front);
+		// back
+		Quad<PCTVertex> back;
+		back.v[0] = PCTVertex( -hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
+		back.v[1] = PCTVertex( -hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
+		back.v[2] = PCTVertex(  hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
+		back.v[3] = PCTVertex(  hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u2,v2);
+		data->addQuad(back);
+		// left
+		Quad<PCTVertex> left;
+		left.v[0] = PCTVertex( hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
+		left.v[1] = PCTVertex( hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
+		left.v[2] = PCTVertex( hx,  hy,  hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
+		left.v[3] = PCTVertex( hx, -hy,  hz, D3DCOLOR_XRGB(255, 255, 255),u2,v2);
+		data->addQuad(left);
+		// right
+		Quad<PCTVertex> right;
+		right.v[0] = PCTVertex( -hx, -hy,  hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
+		right.v[1] = PCTVertex( -hx,  hy,  hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
+		right.v[2] = PCTVertex( -hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
+		right.v[3] = PCTVertex( -hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u2,v2);
+		data->addQuad(right);
+		// top
+		Quad<PCTVertex> top;
+		top.v[0] = PCTVertex(  hx, hy,  hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
+		top.v[1] = PCTVertex(  hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
+		top.v[2] = PCTVertex( -hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
+		top.v[3] = PCTVertex( -hx,hy,  hz, D3DCOLOR_XRGB(255, 255, 2550),u2,v2);
+		data->addQuad(top);
+
+		// bottom
+		Quad<PCTVertex> bottom;
+		bottom.v[0] = PCTVertex( hx, -hy,-hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
+		bottom.v[1] = PCTVertex( hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
+		bottom.v[2] = PCTVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
+		bottom.v[3] = PCTVertex(-hx, -hy,-hz, D3DCOLOR_XRGB(255, 255, 255),u2,v2);
+		data->addQuad(bottom);
+	}
 	// -----------------------------------------------------------
 	// build cube
 	// -----------------------------------------------------------
@@ -95,24 +170,38 @@ namespace data {
 		data->addQuad(plane);
 	}
 
-	void add_grid(PCTMeshData* data, float cellSize, int countX, int countY) {
+	void add_grid(PCTMeshData* data, float cellSize, int countX, int countY,const Rect& textureRect,float textureSize) {
 		float x = countX * cellSize * -0.5f + cellSize;
 		float y = countY * cellSize * -0.5f + cellSize;
-		for (int sx = 0; sx < countX; ++sx) {
-			x = countX * cellSize * -0.5f + cellSize;
-			for (int sy = 0; sy < countY; ++sy) {
-				LOG << "creating at " << x << " " << y;
-				Quad<PCTVertex> plane;
+		float u1,v1,u2,v2;
 
-				plane.v[0] = PCTVertex(x           , y - cellSize, 0.0f, 0.0f, 1.0f);
-				plane.v[1] = PCTVertex(x           , y           , 0.0f, 0.0f, 0.0f);
-				plane.v[2] = PCTVertex(x - cellSize, y           , 0.0f, 1.0f, 0.0f);
-				plane.v[3] = PCTVertex(x - cellSize, y - cellSize, 0.0f, 1.0f, 1.0f);
+		getTextureCoordinates(textureRect,textureSize,textureSize,&u1,&v1,&u2,&v2,true);
+		for (int sx = 0; sx < countX; ++sx) {			
+			for (int sy = 0; sy < countY; ++sy) {
+				//LOG << "creating at " << x << " " << y;
+				float nx = x + sx * cellSize;
+				float ny = y + sy * cellSize;
+				Quad<PCTVertex> plane;
+				plane.v[0] = PCTVertex(nx           , ny - cellSize, 0.0f, u1, v2);
+				plane.v[1] = PCTVertex(nx           , ny           , 0.0f, u1, v1);
+				plane.v[2] = PCTVertex(nx - cellSize, ny           , 0.0f, u2, v1);
+				plane.v[3] = PCTVertex(nx - cellSize, ny - cellSize, 0.0f, u2, v2);
 				data->addQuad(plane);
-				x += cellSize;
+				//x += cellSize;
 			}
-			y += cellSize;
+			//y += cellSize;
 		}
+	}
+
+	void add_quad(PCTMeshData* data,Vector3f* vertices,const Rect& textureRect,float textureSize) {
+		float u1,v1,u2,v2;
+		getTextureCoordinates(textureRect,textureSize,textureSize,&u1,&v1,&u2,&v2,true);
+		Quad<PCTVertex> plane;
+		plane.v[0] = PCTVertex(vertices[0].x, vertices[0].y, vertices[0].z, u1, v2);
+		plane.v[1] = PCTVertex(vertices[1].x, vertices[1].y, vertices[1].z, u1, v1);
+		plane.v[2] = PCTVertex(vertices[2].x, vertices[2].y, vertices[2].z, u2, v1);
+		plane.v[3] = PCTVertex(vertices[3].x, vertices[3].y, vertices[3].z, u2, v2);
+		data->addQuad(plane);
 	}
 
 	void add_line(PCTMeshData& data,const Vector3f& start,const Vector3f& end,float thickness) {
@@ -164,5 +253,26 @@ namespace data {
 		plane.v[3] = PCVertex(  end.x, end.y, end.z, D3DCOLOR_XRGB(192, 0, 0));
 		data.addQuad(plane);
 
+	}
+
+	void load_mesh(PCTMeshData* data,const char* fileName,float textureSize) {
+		JSONReader reader;
+		if ( reader.parse(fileName) ) {
+			std::vector<Category*> categories = reader.getCategories();
+			Vector3f vertices[4];
+			for ( size_t i = 0; i < categories.size(); ++i ) {
+				Category* c = categories[i];
+				vertices[0] = c->getVector3f("v0");
+				vertices[1] = c->getVector3f("v1");
+				vertices[2] = c->getVector3f("v2");
+				vertices[3] = c->getVector3f("v3");
+				Rect r;
+				c->getRect("texture",&r);
+				data::add_quad(data,vertices,r,textureSize);
+			}
+		}
+		else {
+			LOGE << "File not found";
+		}
 	}
 }

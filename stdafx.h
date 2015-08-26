@@ -18,4 +18,5 @@
 #include <tchar.h>
 
 
-// TODO: reference additional headers your program requires here
+typedef unsigned int IdString;
+typedef unsigned int uint32;

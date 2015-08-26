@@ -7,63 +7,8 @@
 #include <Vector.h>
 #include <map>
 
-struct PCTVertex {
-
-	float x,y,z;		
-	float u,v;
-	D3DXCOLOR color;
-
-	PCTVertex() {}
-
-	PCTVertex(float _x,float _y,float _z,D3DXCOLOR _color,float _u,float _v) : x(_x) , y(_y) , z(_z) , color(_color) , u(_u) , v(_v) {}
-
-	PCTVertex(const Vector3f& p,D3DXCOLOR _color,float _u,float _v) : x(p.x) , y(p.y) , z(p.z) , color(_color) , u(_u) , v(_v) {}
-
-	PCTVertex(float _x,float _y,float _z,float _u,float _v) : x(_x) , y(_y) , z(_z) , color(D3DCOLOR_XRGB(255,255,255)) , u(_u) , v(_v) {}
-};
-
-struct PCVertex {
-
-	float x,y,z;	
-	D3DXCOLOR color;
-
-	PCVertex() {}
-
-	PCVertex(float _x,float _y,float _z,DWORD _color) : x(_x) , y(_y) , z(_z) , color(_color) {}
-
-	PCVertex(float _x,float _y,float _z) : x(_x) , y(_y) , z(_z) , color(D3DCOLOR_XRGB(255,255,255)){}
-};
-
-template<class T>
-struct Quad {
-
-	T v[4];
-
-};
-
 class VIBuffer;
 struct BufferDescriptor;
-
-enum VDUSAGE {
-	VDU_POSITION,VDU_NORMAL,VDU_COLOR,VDU_TEXCOORD,VDU_POSITIONT,VDU_BINORMAL,VDU_TANGENT,VDU_END
-};
-
-enum VDTYPE {
-	VT_FLOAT4,VT_FLOAT3,VT_COLOR,VT_FLOAT2,VT_END
-};
-
-struct VDElement {
-	VDTYPE type;
-	VDUSAGE usage;
-};
-
-struct VertexDeclaration {
-
-	int size;
-	IDirect3DVertexDeclaration9* declaration;
-
-	VertexDeclaration() : size(0) , declaration(0) {}
-};
 
 class DX {
 
@@ -75,8 +20,8 @@ typedef std::vector<BlendState> BlendStates;
 public:
 	DX(void);
 	~DX(void);
-	void init(HWND hWnd);
-	void begin();
+	void init(HWND hWnd,int sizeX,int sizeY);
+	void begin(const D3DXCOLOR& clearColor);
 	void end();
 	void render();
 	void shutdown();
@@ -98,6 +43,12 @@ public:
 	void setBlendState(int id);
 	const D3DXMATRIX& getViewMatrix() const {
 		return *_camera.GetViewMatrix();
+	}
+	void moveCamera(const Vector3f& cp) {
+		_camera.setPosition(cp.x,cp.y,cp.z);
+	}
+	void updateCamera() {
+		_camera.tick();
 	}
 private:
 	LPDIRECT3D9 _d3d;    // the pointer to our Direct3D interface

@@ -13,9 +13,13 @@ World::~World(void) {
 	
 }
 
+void World::remove(MID id) {
+	
+}
+
 MID World::create(const Vector3f& pos,MeshData* meshData) {
 	if ( _array.total == 0 ) {
-		allocate(32);
+		allocate(512);
 	}
 	if ( _array.num + 1 >= _array.total ) {
 		allocate(_array.total * 2);

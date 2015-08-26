@@ -1,24 +1,29 @@
 #include "..\..\StdAfx.h"
-#include "CubeTest.h"
+#include "CubeMeshTest.h"
 #include "..\..\renderer\DX.h"
 #include "..\..\renderer\render_types.h"
 #include "..\..\renderer\VIBuffer.h"
 #include "..\..\World.h"
+#include "..\..\utils\JSONReader.h"
 
-//BaseApp *app = new CubeTest();
+//BaseApp *app = new CubeMeshTest();
 
-CubeTest::CubeTest() {
+CubeMeshTest::CubeMeshTest() {
+	_settings.tickCamera = true;
+	_settings.screenSizeX = 1024;
+	_settings.screenSizeY = 768;
+	_settings.clearColor = D3DCOLOR_XRGB(0,0,0);
 }
 
 
-CubeTest::~CubeTest() {
+CubeMeshTest::~CubeMeshTest() {
 	delete _data;
 	delete _world;
 }
 
 
-void CubeTest::loadContent() {
-	// PCT buffer
+void CubeMeshTest::loadContent() {
+
 	BufferDescriptor desc;
 	desc.declarationID = 0;
 	desc.vertexSize = sizeof(PCTVertex);
@@ -28,11 +33,9 @@ void CubeTest::loadContent() {
 	int tex_id = _dx.loadTexture("ref_256");
 
 	_data = new PCTMeshData(id, 0, 64);
-	data::build_cube(*_data, 1.0f, 1.0f, 1.0f);
 	_data->setTextureID(tex_id);
 
 	_world = new World(&_dx);
-	// animated cube
 	_id = _world->create(Vector3f(0.0f, 0.0f, 0.0f), _data);	
 
 	_rotating = false;
@@ -45,9 +48,11 @@ void CubeTest::loadContent() {
 	LOG << "'2' - toggle scale";
 	LOG << "'3' - toggle movement";
 	LOG << "'4' - reset";
+
+	data::load_mesh(_data,"test.mesh",256.0f);	
 }
 
-void CubeTest::tick(float dt) {
+void CubeMeshTest::tick(float dt) {
 	_timer += dt;
 	if ( _rotating ) {
 		_world->rotate(_id,Vector3f(0.0f,0.0f,_timer));
@@ -64,11 +69,11 @@ void CubeTest::tick(float dt) {
 	_world->tick(dt);
 }
 
-void CubeTest::render() {
+void CubeMeshTest::render() {
 	_world->render();
 }
 
-void CubeTest::onChar(char ascii, unsigned int state) {
+void CubeMeshTest::onChar(char ascii, unsigned int state) {
 	if ( ascii == '1' ) {
 		_rotating = !_rotating;
 	}

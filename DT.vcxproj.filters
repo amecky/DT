@@ -26,6 +26,12 @@
     <Filter Include="examples\01_cubes">
       <UniqueIdentifier>{8a01f938-8699-46e7-a82f-41a9c29e3185}</UniqueIdentifier>
     </Filter>
+    <Filter Include="examples\02_cube_mesh">
+      <UniqueIdentifier>{25fa89cb-29d1-40f9-88d0-994e2f4a254f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="examples\03_breakout">
+      <UniqueIdentifier>{14b42476-e4e8-498b-97f8-1682d9f038a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -90,6 +96,18 @@
     <ClInclude Include="examples\01_cube\CubeTest.h">
       <Filter>examples\01_cubes</Filter>
     </ClInclude>
+    <ClInclude Include="examples\02_cube_mesh\CubeMeshTest.h">
+      <Filter>examples\02_cube_mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\03_breakout\Breakout.h">
+      <Filter>examples\03_breakout</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\stringutils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\JSONReader.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -133,6 +151,18 @@
     </ClCompile>
     <ClCompile Include="examples\01_cube\CubeTest.cpp">
       <Filter>examples\01_cubes</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\02_cube_mesh\CubeMeshTest.cpp">
+      <Filter>examples\02_cube_mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\03_breakout\Breakout.cpp">
+      <Filter>examples\03_breakout</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\stringutils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\JSONReader.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

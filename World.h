@@ -80,6 +80,7 @@ public:
 	World(DX* dx);
 	~World(void);
 	MID create(const Vector3f& pos,MeshData* meshData);
+	void remove(MID id);
 	void render();
 	void tick(float dt);
 	void translate(MID id,const Vector3f& p);

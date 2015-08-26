@@ -3,16 +3,14 @@
 #include "..\utils\Log.h"
 #include "VIBuffer.h"
 
-DX::DX(void)
-{
+DX::DX(void) {
 }
 
 
-DX::~DX(void)
-{
+DX::~DX(void) {
 }
 
-void DX::init(HWND hWnd) {
+void DX::init(HWND hWnd,int sizeX,int sizeY) {
 	_d3d = Direct3DCreate9(D3D_SDK_VERSION);    // create the Direct3D interface
 
     D3DPRESENT_PARAMETERS d3dpp;    // create a struct to hold various device information
@@ -22,8 +20,8 @@ void DX::init(HWND hWnd) {
     d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;    // discard old frames
     d3dpp.hDeviceWindow = hWnd;    // set the window to be used by Direct3D
 	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
-	d3dpp.BackBufferWidth = 800;
-	d3dpp.BackBufferHeight = 600;
+	d3dpp.BackBufferWidth = sizeX;
+	d3dpp.BackBufferHeight = sizeY;
 	d3dpp.EnableAutoDepthStencil = TRUE;
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
 
@@ -61,6 +59,9 @@ void DX::init(HWND hWnd) {
 	_device->SetRenderState(D3DRS_LIGHTING, FALSE);
 	_device->SetRenderState(D3DRS_ZENABLE, TRUE); 
 	_device->SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
+	_device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+	_device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+	_device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 	_camera.setPosition(0.0f,0.0f,6.0f);
 	_camera.Update();
 	
@@ -103,10 +104,10 @@ void DX::init(HWND hWnd) {
 	//int addBS = renderer::createBlendState("alpha_blend", ds::BL_ONE, ds::BL_ONE, true);
 }
 
-void DX::begin() {
-	_camera.tick();
+void DX::begin(const D3DXCOLOR& clearColor) {
 	// clear the window to a deep blue
-    _device->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 40, 100), 1.0f, 0);
+    //_device->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 40, 100), 1.0f, 0);
+	_device->Clear(0, NULL, D3DCLEAR_TARGET, clearColor, 1.0f, 0);
 	//_device->Clear(0, NULL, D3DCLEAR_TARGET,  D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	_device->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
@@ -129,12 +130,14 @@ void DX::render() {
 }
 
 void DX::shutdown() {
+	LOGC("DX") << "shutdown";
 	for ( size_t i = 0; i < _textureAssets.size(); ++i ) {
 		_textureAssets[i].texture->Release();
 	}
 	BufferList::iterator it = _buffers.begin();
 	while ( it != _buffers.end()) {
 		(*it)->release();
+		delete (*it);
 		it = _buffers.erase(it);
 	}
 	_device->Release();
@@ -264,6 +267,7 @@ void DX::create(int type,VDElement* elements) {
 	vdElements[cnt].UsageIndex = 0;
 	_device->CreateVertexDeclaration(vdElements, &decl.declaration);
 	_declarationMap[type] = decl;
+	delete[] vdElements;
 }
 
 void DX::setVertexDeclaration(int type) {

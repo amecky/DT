@@ -14,7 +14,7 @@ BaseApp::~BaseApp() {
 void BaseApp::init(HWND handle) {
 	LOGC("BaseApp") << "-> init";
 	_handle = handle;
-	_dx.init(_handle);
+	_dx.init(_handle,_settings.screenSizeX,_settings.screenSizeY);
 	profiler::init();
 	LOGC("BaseApp") << "--- load content ---";
 	loadContent();
@@ -25,7 +25,10 @@ void BaseApp::buildFrame() {
 	_timer.tick();
 	profiler::reset();
 	tick(_timer.getElapsedTime());
-	_dx.begin();		
+	if ( _settings.tickCamera ) {
+		_dx.updateCamera();
+	}
+	_dx.begin(_settings.clearColor);		
 	PR_START("RENDERING")
 	render();
 	PR_END("RENDERING")
