@@ -14,7 +14,7 @@ public:
 	void onChar(char ascii, unsigned int state);
 private:
 	World* _world;
-	PCTMeshData* _data;
+	PCMeshData* _data;
 	MID _id;
 	bool _rotating;
 	bool _moving;

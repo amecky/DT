@@ -31,7 +31,6 @@ typedef unsigned int uint32;
 	#endif
 #else
 	#ifndef HR
-		//#define HR(x) x;
 #define HR(x) { HRESULT hr = x ; if ( FAILED(hr) ) { char desc[1024]; sprintf(desc,"(DX) %s - %s",DXGetErrorString(hr),DXGetErrorDescription(hr));	char buf[2048];	sprintf_s(buf,"%s(%d) : Error: %s\n", __FILE__, __LINE__, desc);LOGE << buf; }}
 	#endif
 #endif

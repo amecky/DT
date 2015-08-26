@@ -85,6 +85,8 @@ namespace data {
 	void add_grid(PCTMeshData* data, float cellSize, int countX, int countY,const Rect& textureRect,float textureSize);
 
 	void add_line(PCMeshData& data,const Vector3f& start,const Vector3f& end,float thickness);
+
+	void build_cube(PCMeshData* data, float dx, float dy, float dz);
 }
 
 struct Mesh {

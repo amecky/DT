@@ -3,9 +3,13 @@
 #include "..\utils\Log.h"
 #include "Mesh.h"
 #include "Shader.h"
-
+#include <assert.h>
 
 VIBuffer::VIBuffer(DX* dx,int maxVertices,int vertexSize,int declaration_id) : _dx(dx) , _max(maxVertices) , _declaration_id(declaration_id) , _vertexSize(vertexSize) {
+
+	D3D11_SUBRESOURCE_DATA resourceData;
+	ZeroMemory(&resourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DYNAMIC;                // write access access by CPU and GPU
@@ -13,18 +17,24 @@ VIBuffer::VIBuffer(DX* dx,int maxVertices,int vertexSize,int declaration_id) : _
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;       // use as a vertex buffer
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // allow CPU to write in buffer
 	_dx->getDevice()->CreateBuffer(&bd, NULL, &_buffer);       // create the buffer
-	// create vertex buffer
-	/*
-	int num = _max / 4 * 6;
-	LOG << "max vertices: " << _max;
-	LOG << "num indices: " << num;
-	dx->getDevice()->CreateVertexBuffer(_max * vertexSize,0,0,D3DPOOL_MANAGED,&_buffer,NULL);
-	_dx->getDevice()->CreateIndexBuffer(num * sizeof(UINT), D3DUSAGE_WRITEONLY , D3DFMT_INDEX16, D3DPOOL_MANAGED , &_index_buffer, NULL);
-	//_data = new CustomVertex[_max];
-	int maxQuads = _max / 4;
 
-	WORD* indexBuffer;
-	_index_buffer->Lock(0, num * sizeof(WORD), (void**)&indexBuffer, 0);
+
+	// create static index buffer
+
+	D3D11_BUFFER_DESC indexBufferDesc;
+	ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	int num = _max / 4 * 6;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.ByteWidth = sizeof(WORD) * num;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+	
+	int maxQuads = maxVertices / 4;
+	LOG << "num: " << num << " maxQuads: " << maxQuads;
+	WORD* indexBuffer = new WORD[num];
 	for (int i = 0; i < maxQuads; ++i) {
 		*indexBuffer = i * 4 + 0;
 		++indexBuffer;
@@ -39,21 +49,26 @@ VIBuffer::VIBuffer(DX* dx,int maxVertices,int vertexSize,int declaration_id) : _
 		*indexBuffer = i * 4 + 0;
 		++indexBuffer;
 	}
-	_index_buffer->Unlock();
-	*/
+	D3D11_SUBRESOURCE_DATA indexData;
+	indexData.pSysMem = &indexBuffer;
+	indexData.SysMemPitch = 0;
+	indexData.SysMemSlicePitch = 0;
+	assert(_dx->getDevice() != 0);
+	HR(_dx->getDevice()->CreateBuffer(&indexBufferDesc, &indexData, &_index_buffer));
+	//delete[] indexBuffer;
 }
 
 	
 	
 void VIBuffer::release() {
-	//_index_buffer->Release();
+	_index_buffer->Release();
 	_buffer->Release();
 }
 
 void VIBuffer::fillBuffer(void* data, int num) {
 	D3D11_MAPPED_SUBRESOURCE ms;
 	_dx->getContext()->Map(_buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);   // map the buffer
-	memcpy(ms.pData, data, num);//sizeof(OurVertices));                // copy the data
+	memcpy(ms.pData, data, _vertexSize * num);//sizeof(OurVertices));                // copy the data
 	_dx->getContext()->Unmap(_buffer, NULL);    
 
 	//char* vb;
@@ -69,15 +84,18 @@ void VIBuffer::render(const D3DXMATRIX* worldMatrix,int texture_id,int vertex_de
 	// select which vertex buffer to display
     UINT stride = _vertexSize;
 	UINT offset = 0;
+		
 	_dx->getContext()->IASetVertexBuffers(0, 1, &_buffer, &stride, &offset);
-
+	_dx->getContext()->IASetIndexBuffer(_index_buffer, DXGI_FORMAT_R16_UINT, 0);
       
 	// select which primtive type we are using    
-	_dx->getContext()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	_dx->getContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	int numPrim = _size / 2;
+	int numPrim = _size / 4 * 6;
         // draw the vertex buffer to the back buffer
-	_dx->getContext()->Draw(numPrim, 0);
+	//_dx->getContext()->Draw(numPrim, 0);
+
+	_dx->getContext()->DrawIndexed(numPrim, 0, 0);
 
 	/*
 	//_dx->getDevice()->SetTransform(D3DTS_WORLD,worldMatrix);

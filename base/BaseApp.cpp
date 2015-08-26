@@ -14,7 +14,8 @@ BaseApp::~BaseApp() {
 void BaseApp::init(HWND handle) {
 	LOGC("BaseApp") << "-> init";
 	_handle = handle;
-	_dx.init(_handle,_settings.screenSizeX,_settings.screenSizeY);
+	//_dx.init(_handle,_settings.screenSizeX,_settings.screenSizeY);
+	_dx.initialize(_settings.screenSizeX, _settings.screenSizeY, true, handle, false, 10000.0f, 0.100000000015f);
 	profiler::init();
 	LOGC("BaseApp") << "--- load content ---";
 	loadContent();

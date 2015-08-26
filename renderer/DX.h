@@ -13,6 +13,13 @@ class VIBuffer;
 struct BufferDescriptor;
 class Shader;
 
+enum ConstanBuffer {
+	CB_Appliation,
+	CB_Frame,
+	CB_Object,
+	NumConstantBuffers
+};
+
 struct RenderContext {
 
 };
@@ -75,6 +82,9 @@ public:
 	void selectShader(int id);
 	void prepareShader(Shader* shader, int textureID);
 	Shader* getShader(int id) const;
+
+	bool initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
+
 private:
 	IDXGISwapChain* _swapchain;             // the pointer to the swap chain interface
 	ID3D11Device* _device;                     // the pointer to our Direct3D device interface
@@ -83,7 +93,8 @@ private:
 	ID3D11InputLayout* _layout;            // the pointer to the input layout
 	ID3D11VertexShader* _VS;               // the pointer to the vertex shader
 	ID3D11PixelShader* _PS; 
-
+	ID3D11RasterizerState* _rasterizerState;
+	ID3D11Buffer* _constantBuffers[NumConstantBuffers];
 	//LPDIRECT3D9 _d3d;    // the pointer to our Direct3D interface
 	//LPDIRECT3DDEVICE9 _device;    // the pointer to the device class
 	D3DXMATRIX _world;
@@ -99,5 +110,16 @@ private:
 	int _currentShader;
 	int _currentTexture;
 	int _currentDeclaration;
+
+
+	bool _vsync_enabled;
+	int _videoCardMemory;
+	char _videoCardDescription[128];
+	ID3D11RenderTargetView* _renderTargetView;
+	ID3D11Texture2D* _depthStencilBuffer;
+	ID3D11DepthStencilState* _depthStencilState;
+	ID3D11DepthStencilView* _depthStencilView;
+	ID3D11RasterizerState* _rasterState;
+	ID3D11DepthStencilState* _depthDisabledStencilState;
 };
 

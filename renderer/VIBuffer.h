@@ -27,7 +27,7 @@ private:
 	int _max;
 	DX* _dx;
 	//LPDIRECT3DVERTEXBUFFER9 _buffer;
-	//LPDIRECT3DINDEXBUFFER9 _index_buffer;
+	ID3D11Buffer* _index_buffer;
 	ID3D11Buffer* _buffer;  
 	int _declaration_id;
 	int _vertexSize;

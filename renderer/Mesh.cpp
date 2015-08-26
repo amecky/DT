@@ -134,6 +134,61 @@ namespace data {
 	}
 
 	// -----------------------------------------------------------
+	// build cube
+	// -----------------------------------------------------------
+	void build_cube(PCMeshData* data, float dx, float dy, float dz) {
+		float hx = dx * 0.5f;
+		float hy = dy * 0.5f;
+		float hz = dz * 0.5f;
+		// front
+		Quad<PCVertex> front;
+		front.v[0] = PCVertex(hx, -hy, hz, D3DCOLOR_XRGB(255, 0, 255));
+		front.v[1] = PCVertex(hx, hy, hz, D3DCOLOR_XRGB(255, 0, 2555));
+		front.v[2] = PCVertex(-hx, hy, hz, D3DCOLOR_XRGB(255, 0, 255));
+		front.v[3] = PCVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 0, 255));
+		data->addQuad(front);
+		
+		// back
+		Quad<PCVertex> back;
+		back.v[0] = PCVertex(-hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
+		back.v[1] = PCVertex(-hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
+		back.v[2] = PCVertex(hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
+		back.v[3] = PCVertex(hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
+		data->addQuad(back);
+		// left
+		Quad<PCVertex> left;
+		left.v[0] = PCVertex(hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
+		left.v[1] = PCVertex(hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
+		left.v[2] = PCVertex(hx, hy, hz, D3DCOLOR_XRGB(255, 255, 255));
+		left.v[3] = PCVertex(hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255));
+		data->addQuad(left);
+		/*
+		// right
+		Quad<PCVertex> right;
+		right.v[0] = PCTVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255), 0.0f, 1.0f);
+		right.v[1] = PCTVertex(-hx, hy, hz, D3DCOLOR_XRGB(255, 255, 255), 0.0f, 0.0f);
+		right.v[2] = PCTVertex(-hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0.0f);
+		right.v[3] = PCTVertex(-hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 1.0f);
+		data.addQuad(right);
+		// top
+		Quad<PCVertex> top;
+		top.v[0] = PCTVertex(hx, hy, hz, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 1.0f);
+		top.v[1] = PCTVertex(hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0.0f);
+		top.v[2] = PCTVertex(-hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255), 0.0f, 0.0f);
+		top.v[3] = PCTVertex(-hx, hy, hz, D3DCOLOR_XRGB(255, 255, 2550), 0.0f, 1.0f);
+		data.addQuad(top);
+
+		// bottom
+		Quad<PCVertex> bottom;
+		bottom.v[0] = PCTVertex(hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 1.0f);
+		bottom.v[1] = PCTVertex(hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0.0f);
+		bottom.v[2] = PCTVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255), 0.0f, 0.0f);
+		bottom.v[3] = PCTVertex(-hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255), 0.0f, 1.0f);
+		data.addQuad(bottom);
+		*/
+	}
+
+	// -----------------------------------------------------------
 	// build unit cube
 	// -----------------------------------------------------------
 	void build_unit_cube(PCTMeshData& data) {

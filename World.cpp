@@ -90,7 +90,7 @@ void World::render() {
 		int id = _array.data[j]->getBufferID();
 		VIBuffer* buffer = _dx->getBuffer(id);
 		_array.data[j]->fillBuffer(buffer);
-		_dx->selectTexture(_array.data[j]->getTextureID());
+		//_dx->selectTexture(_array.data[j]->getTextureID());
 		_dx->setWorldTransformation(_array.worlds[j]);
 		_dx->selectVertexDeclaration(_array.data[j]->getVertexDeclaration());
 		if ( _array.shaders[j] == -1 ) {

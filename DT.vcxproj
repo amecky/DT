@@ -39,8 +39,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\math;C:\devtools\DirectX\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\devtools\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\math;C:\devtools\DirectX_SDK\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\devtools\DirectX_SDK\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -55,7 +55,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dx11.lib;d3dx10.lib;dxerr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxgi.lib;d3d11.lib;d3dx11.lib;d3dx10.lib;dxerr.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -76,8 +76,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="DT.ico" />
+    <None Include="pixel_shader.hlsl" />
     <None Include="ReadMe.txt" />
     <None Include="small.ico" />
+    <None Include="vertex_shader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\BaseApp.h" />

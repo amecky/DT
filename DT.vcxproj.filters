@@ -32,6 +32,9 @@
     <Filter Include="examples\03_breakout">
       <UniqueIdentifier>{14b42476-e4e8-498b-97f8-1682d9f038a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="effects">
+      <UniqueIdentifier>{f2ff0d98-d8e4-49b0-bb1c-ab4aa36a24cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -40,6 +43,12 @@
     </None>
     <None Include="DT.ico">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pixel_shader.hlsl">
+      <Filter>effects</Filter>
+    </None>
+    <None Include="vertex_shader.hlsl">
+      <Filter>effects</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

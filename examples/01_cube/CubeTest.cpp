@@ -21,14 +21,14 @@ void CubeTest::loadContent() {
 	// PCT buffer
 	BufferDescriptor desc;
 	desc.declarationID = 0;
-	desc.vertexSize = sizeof(PCTVertex);
+	desc.vertexSize = sizeof(PCVertex);
 	desc.type = 0;
 	int id = _dx.createBuffer(desc);
 
 	int tex_id = _dx.loadTexture("ref_256");
 
-	_data = new PCTMeshData(id, 0, 64);
-	data::build_cube(*_data, 1.0f, 1.0f, 1.0f);
+	_data = new PCMeshData(id, 0, 64);
+	data::build_cube(_data, 1.0f, 1.0f, 1.0f);
 	_data->setTextureID(tex_id);
 
 	_world = new World(&_dx);
