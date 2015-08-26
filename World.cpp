@@ -14,23 +14,26 @@ World::~World(void) {
 }
 
 void World::remove(MID id) {
-	
+	_array.remove(id);
 }
 
-MID World::create(const Vector3f& pos,MeshData* meshData) {
+MID World::create(const Vector3f& pos,MeshData* meshData,int shader) {
 	if ( _array.total == 0 ) {
 		allocate(512);
 	}
 	if ( _array.num + 1 >= _array.total ) {
 		allocate(_array.total * 2);
 	}
-	return _array.create(pos,meshData);		
+	MID id = _array.create(pos,meshData,shader);	
+	D3DXMATRIX t;
+	_array.translate(id,pos);
+	return id;
 }
 
 void World::allocate(int size) {
 	if ( size > _array.total ) {
 		MeshArray sad;
-		int sz = size * (sizeof(MeshArrayIndex) + sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector3f) + sizeof(MID) + sizeof(D3DXMATRIX) + sizeof(MeshData*));
+		int sz = size * (sizeof(MeshArrayIndex) + sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector3f) + sizeof(MID) + sizeof(D3DXMATRIX) + sizeof(MeshData*) + sizeof(int));
 		sad.buffer = new char[sz];
 		sad.total = size;
 		sad.num = 0;
@@ -41,6 +44,7 @@ void World::allocate(int size) {
 		sad.rotations = (Vector3f*)(sad.scales + size);
 		sad.worlds = (D3DXMATRIX*)(sad.rotations + size);			
 		sad.data = (MeshData**)(sad.worlds + size);
+		sad.shaders = (int*)(sad.data + size);
 		if ( _array.buffer != 0 ) {
 			memcpy(sad.indices, _array.indices, _array.num * sizeof(MeshArrayIndex));
 			memcpy(sad.ids, _array.ids, _array.num * sizeof(MID));
@@ -49,6 +53,7 @@ void World::allocate(int size) {
 			memcpy(sad.rotations, _array.rotations, _array.num * sizeof(Vector3f));
 			memcpy(sad.worlds, _array.worlds, _array.num * sizeof(D3DXMATRIX));
 			memcpy(sad.data, _array.data, _array.num * sizeof(MeshData*));
+			memcpy(sad.shaders, _array.shaders, _array.num * sizeof(int*));
 			sad.free_dequeue = _array.free_dequeue;
 			sad.free_enqueue = _array.free_enqueue;
 			sad.num = _array.num;
@@ -76,7 +81,7 @@ void World::tick(float dt) {
 		D3DXMatrixRotationY(&ry,_array.rotations[j].y);
 		D3DXMatrixRotationZ(&rz,_array.rotations[j].z);
 
-		_array.worlds[j] = s * rz * ry * rx * t;// t * rx * ry * rz * s;
+		_array.worlds[j] = s * rz * ry * rx * t;
 	}
 }
 
@@ -85,7 +90,16 @@ void World::render() {
 		int id = _array.data[j]->getBufferID();
 		VIBuffer* buffer = _dx->getBuffer(id);
 		_array.data[j]->fillBuffer(buffer);
-		buffer->render(&_array.worlds[j],_array.data[j]->getTextureID(),_array.data[j]->getVertexDeclaration());
+		_dx->selectTexture(_array.data[j]->getTextureID());
+		_dx->setWorldTransformation(_array.worlds[j]);
+		_dx->selectVertexDeclaration(_array.data[j]->getVertexDeclaration());
+		if ( _array.shaders[j] == -1 ) {
+			buffer->render(&_array.worlds[j],_array.data[j]->getTextureID(),_array.data[j]->getVertexDeclaration());
+		}
+		else {
+			Shader* s = _dx->getShader(_array.shaders[j]);
+			buffer->render(s,_array.data[j]->getTextureID());
+		}
 	}
 }
 

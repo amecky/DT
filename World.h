@@ -24,6 +24,7 @@ struct MeshArray {
 	Vector3f* rotations;
 	D3DXMATRIX* worlds;
 	MeshData** data;
+	int* shaders;
 	char* buffer;
 
 	unsigned short free_enqueue;
@@ -43,7 +44,7 @@ struct MeshArray {
 		}
 	}
 
-	MID create(const Vector3f& pos,MeshData* _data) {
+	MID create(const Vector3f& pos,MeshData* _data,int shader = -1) {
 		MeshArrayIndex &in = indices[free_dequeue];
 		free_dequeue = in.next;
 		in.index = num++;
@@ -52,7 +53,26 @@ struct MeshArray {
 		positions[in.index] = pos;
 		scales[in.index] = Vector3f(1.0f,1.0f,1.0f);
 		rotations[in.index] = Vector3f(0.0f,0.0f,0.0f);
+		shaders[in.index] = shader;
 		return in.id;
+	}
+
+	void remove(MID id) {
+		MeshArrayIndex &in = indices[id];
+		assert(in.index != USHRT_MAX);
+		MID currentID = ids[num - 1];
+		MeshArrayIndex& next = indices[currentID];
+		ids[in.index] = ids[next.index];
+		data[in.index] = data[next.index];
+		positions[in.index] = positions[next.index];
+		scales[in.index] = scales[next.index];		
+		rotations[in.index] = rotations[next.index];		
+		shaders[in.index] = shaders[next.index];	
+		--num;
+		indices[currentID].index = in.index;
+		in.index = USHRT_MAX;
+		indices[free_enqueue].next = id;
+		free_enqueue = id;
 	}
 
 	void translate(MID id,const Vector3f& p) {
@@ -72,6 +92,8 @@ struct MeshArray {
 		assert(in.index != USHRT_MAX);
 		rotations[in.index] = r;
 	}
+
+
 };
 
 class World {
@@ -79,7 +101,7 @@ class World {
 public:
 	World(DX* dx);
 	~World(void);
-	MID create(const Vector3f& pos,MeshData* meshData);
+	MID create(const Vector3f& pos,MeshData* meshData,int shader = -1);
 	void remove(MID id);
 	void render();
 	void tick(float dt);

@@ -2,6 +2,9 @@
 #include "DX.h"
 #include "..\utils\Log.h"
 #include "VIBuffer.h"
+#include "Shader.h"
+
+// https://googledrive.com/host/0B0ND0J8HHfaXUTFFbjRPdWdkT28/DirectX_Template.zip
 
 DX::DX(void) {
 }
@@ -11,62 +14,93 @@ DX::~DX(void) {
 }
 
 void DX::init(HWND hWnd,int sizeX,int sizeY) {
-	_d3d = Direct3DCreate9(D3D_SDK_VERSION);    // create the Direct3D interface
 
-    D3DPRESENT_PARAMETERS d3dpp;    // create a struct to hold various device information
+	DXGI_SWAP_CHAIN_DESC scd;
 
-    ZeroMemory(&d3dpp, sizeof(d3dpp));    // clear out the struct for use
-    d3dpp.Windowed = TRUE;    // program windowed, not fullscreen
-    d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;    // discard old frames
-    d3dpp.hDeviceWindow = hWnd;    // set the window to be used by Direct3D
-	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
-	d3dpp.BackBufferWidth = sizeX;
-	d3dpp.BackBufferHeight = sizeY;
-	d3dpp.EnableAutoDepthStencil = TRUE;
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+    // clear out the struct for use
+    ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-	D3DDISPLAYMODE d3ddm;
-	_d3d->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm);
+    // fill the swap chain description struct
+    scd.BufferCount = 1;                                    // one back buffer
+    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
+    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
+    scd.OutputWindow = hWnd;                                // the window to be used
+    scd.SampleDesc.Count = 4;                               // how many multisamples
+    scd.Windowed = TRUE;                                    // windowed/full-screen mode
 
-	D3DCAPS9 deviceCaps;
-	_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &deviceCaps);
-	D3DFORMAT adapterFormat = D3DFMT_X8R8G8B8;
-	d3dpp.BackBufferFormat = adapterFormat;
-	d3dpp.BackBufferCount = 1;
+    // create a device, device context and swap chain using the information in the scd struct
+    D3D11CreateDeviceAndSwapChain(NULL,
+                                  D3D_DRIVER_TYPE_HARDWARE,
+                                  NULL,
+                                  NULL,
+                                  NULL,
+                                  NULL,
+                                  D3D11_SDK_VERSION,
+                                  &scd,
+                                  &_swapchain,
+                                  &_device,
+                                  NULL,
+                                  &_context);
 
-	DWORD total;
-	_d3d->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, adapterFormat, true, D3DMULTISAMPLE_NONMASKABLE, &total);
-	LOG << "multi sampling: " << total;
-	if ( total > 0 ) {
-		d3dpp.MultiSampleType = D3DMULTISAMPLE_NONMASKABLE;
-		d3dpp.MultiSampleQuality = total - 1;
-		LOG << "multi sample is supported - quality level " << total - 1;
-	}
-	else {
-		LOG << "NO multi sample is supported";
-		d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
-		d3dpp.MultiSampleQuality = 0;
-	}
+	// get the address of the back buffer
+    ID3D11Texture2D *pBackBuffer;
+    _swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 
-    // create a device class using this information and information from the d3dpp stuct
-    _d3d->CreateDevice(D3DADAPTER_DEFAULT,
-                      D3DDEVTYPE_HAL,
-                      hWnd,
-                      D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-                      &d3dpp,
-                      &_device);
+    // use the back buffer address to create the render target
+    _device->CreateRenderTargetView(pBackBuffer, NULL, &_backbuffer);
+    pBackBuffer->Release();
 
+    // set the render target as the back buffer
+    _context->OMSetRenderTargets(1, &_backbuffer, NULL);
+
+    // Set the viewport
+    D3D11_VIEWPORT viewport;
+    ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = sizeX;
+    viewport.Height = sizeY;
+
+    _context->RSSetViewports(1, &viewport);
+
+
+	// load and compile the two shaders
+    ID3D10Blob *VS, *PS;
+    D3DX11CompileFromFile("shader.hlsl", 0, 0, "VShader", "vs_4_0", 0, 0, 0, &VS, 0, 0);
+    D3DX11CompileFromFile("shader.hlsl", 0, 0, "PShader", "ps_4_0", 0, 0, 0, &PS, 0, 0);
+
+    // encapsulate both shaders into shader objects
+    HR(_device->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &_VS));
+    HR(_device->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &_PS));
+
+    // set the shader objects
+    _context->VSSetShader(_VS, 0, 0);
+    _context->PSSetShader(_PS, 0, 0);
+
+    // create the input layout object
+    D3D11_INPUT_ELEMENT_DESC ied[] =
+    {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR"   , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 18, D3D11_INPUT_PER_VERTEX_DATA, 0},
+    };
+
+    HR(_device->CreateInputLayout(ied, 3, VS->GetBufferPointer(), VS->GetBufferSize(), &_layout));
+    _context->IASetInputLayout(_layout);
+	/*
 	_device->SetRenderState(D3DRS_LIGHTING, FALSE);
 	_device->SetRenderState(D3DRS_ZENABLE, TRUE); 
 	_device->SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
 	_device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	_device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	_device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+	*/
 	_camera.setPosition(0.0f,0.0f,6.0f);
 	_camera.Update();
 	
 	 D3DXMatrixIdentity(&_world);
-
+	 /*
 	 // create white texture as default
 	 int id = _textureAssets.size();
 	TextureAsset ta;
@@ -91,7 +125,7 @@ void DX::init(HWND hWnd,int sizeX,int sizeY) {
     }
 	ta.texture->UnlockRect(0);
 	_textureAssets.push_back(ta);
-
+	*/
 	VDElement elements[] = {
 		{VT_FLOAT3, VDU_POSITION } ,
 		{VT_FLOAT2, VDU_TEXCOORD},
@@ -105,6 +139,8 @@ void DX::init(HWND hWnd,int sizeX,int sizeY) {
 }
 
 void DX::begin(const D3DXCOLOR& clearColor) {
+	_context->ClearRenderTargetView(_backbuffer, clearColor);
+	/*
 	// clear the window to a deep blue
     //_device->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 40, 100), 1.0f, 0);
 	_device->Clear(0, NULL, D3DCLEAR_TARGET, clearColor, 1.0f, 0);
@@ -113,16 +149,21 @@ void DX::begin(const D3DXCOLOR& clearColor) {
 
     _device->BeginScene();    
 	_camera.Update();
-	_device->SetTransform(D3DTS_VIEW,_camera.GetViewMatrix());
-	_device->SetTransform(D3DTS_PROJECTION,_camera.GetProjectionMatrix());
+	_device->SetTransform(D3DTS_VIEW,&_camera.GetViewMatrix());
+	_device->SetTransform(D3DTS_PROJECTION,&_camera.GetProjectionMatrix());
 	_device->SetTransform(D3DTS_WORLD,&_world);
 	_currentBlendState = -1;
+	_currentShader = -1;
+	_currentTexture = -1;
+	_currentDeclaration = -1;
 	setBlendState(_currentBlendState);
+	*/
 }
 
 void DX::end() {
-	_device->EndScene(); 
-    _device->Present(NULL, NULL, NULL, NULL);
+	//_device->EndScene(); 
+    //_device->Present(NULL, NULL, NULL, NULL);
+	_swapchain->Present(0, 0);
 }
 
 void DX::render() {
@@ -140,8 +181,14 @@ void DX::shutdown() {
 		delete (*it);
 		it = _buffers.erase(it);
 	}
-	_device->Release();
-	_d3d->Release();
+	_layout->Release();
+    _VS->Release();
+    _PS->Release();
+	_swapchain->Release();
+	_backbuffer->Release();
+    _device->Release();
+    _context->Release();
+	//_d3d->Release();
 }
 
 int DX::createBuffer(const BufferDescriptor& desc) {
@@ -156,6 +203,7 @@ VIBuffer* DX::getBuffer(int idx) const {
 }
 
 int DX::loadTexture(const char* name) {
+	/*
 	int id = _textureAssets.size();
 	TextureAsset ta;
 	//ta.name = string::murmur_hash(name);
@@ -165,12 +213,14 @@ int DX::loadTexture(const char* name) {
 	char fileName[256];
 	sprintf(fileName, "content\\%s.png", name);
 	LOGC("Renderer") << "Trying to load texture " << fileName;
-	D3DXCreateTextureFromFileEx(_device, fileName, 0, 0, 1, 0,D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 0x000000, &imageInfo, NULL, &ta.texture);
+	//D3DXCreateTextureFromFileEx(_device, fileName, 0, 0, 1, 0,D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 0x000000, &imageInfo, NULL, &ta.texture);
 	ta.width = imageInfo.Width;
 	ta.height = imageInfo.Height;
 	LOGC("Renderer") << "ID: " << id << " Width: " << imageInfo.Width << " Height: " << imageInfo.Height << " mip levels " << imageInfo.MipLevels << " Format: " << imageInfo.Format;
 	_textureAssets.push_back(ta);
 	return id;		
+	*/
+	return -1;
 }
 
 void DX::create(int type,VDElement* elements) {
@@ -265,13 +315,13 @@ void DX::create(int type,VDElement* elements) {
 	vdElements[cnt].Method = 0;
 	vdElements[cnt].Usage = 0;
 	vdElements[cnt].UsageIndex = 0;
-	_device->CreateVertexDeclaration(vdElements, &decl.declaration);
+//	_device->CreateVertexDeclaration(vdElements, &decl.declaration);
 	_declarationMap[type] = decl;
 	delete[] vdElements;
 }
 
 void DX::setVertexDeclaration(int type) {
-	_device->SetVertexDeclaration(_declarationMap[type].declaration);
+	//_device->SetVertexDeclaration(_declarationMap[type].declaration);
 }
 
 int DX::createBlendState(const BlendState& state) {
@@ -305,6 +355,7 @@ int DX::createBlendState(int srcAlpha, int dstAlpha, bool alphaEnabled) {
 // Change current blend state if necessary
 // -----------------------------------------------------------------
 void DX::changeBlendState(int id) {
+	/*
 	const BlendState& newState = _blendStates[id];
 	const BlendState& current = _blendStates[_currentBlendState];
 	if (!newState.blendEnable){
@@ -349,6 +400,7 @@ void DX::changeBlendState(int id) {
 			}
 		}
 	}
+	*/
 	_currentBlendState = id;
 }
 
@@ -356,6 +408,7 @@ void DX::changeBlendState(int id) {
 // Sets the blend state without checking and update current blend state
 // ---------------------------------------------------------------------
 void DX::setBlendState(int id) {
+	/*
 	if (id != _currentBlendState) {
 		const BlendState& newState = _blendStates[id];
 		if (!newState.blendEnable){
@@ -376,4 +429,67 @@ void DX::setBlendState(int id) {
 		}
 		_currentBlendState = id;
 	}
+	*/
+}
+
+int DX::loadShader(const char* fileName,const char* techName) {
+	Shader* s = new Shader(this);
+	s->loadShader(fileName,techName);
+	_shaders.push_back(s);
+	return _shaders.size() - 1;
+}
+
+void DX::selectShader(int id) {
+	if ( _currentShader != id ) {
+		_currentShader = id;
+	}
+}
+
+void DX::selectTexture(int id) {
+	if ( _currentTexture != id ) {
+		_currentTexture = id;
+		//_device->SetTexture(0,getTexture(id));
+	}
+}
+
+void DX::setWorldTransformation(const D3DXMATRIX& worldMatrix) {
+	//_device->SetTransform(D3DTS_WORLD,&worldMatrix);
+	_wvp = worldMatrix * _camera.GetViewMatrix() * _camera.GetProjectionMatrix();
+}
+
+void DX::selectVertexDeclaration(int id) {
+	if ( _currentDeclaration != id ) {
+		_currentDeclaration = id;
+		setVertexDeclaration(id);
+	}
+}
+
+void DX::prepareShader(Shader* shader, int textureID) {			
+	shader->setValue("gWVP", _wvp,sizeof(D3DXMATRIX));
+	shader->setValue("gWorld", _world,sizeof(D3DXMATRIX));		
+	//shader->setVector3f("gCameraPos", renderContext->camera->getPosition());
+	//shader->setVector3f("gCameraUp", renderContext->camera->getUpVector());
+	if (textureID != -1) {
+		shader->setTexture("gTex",textureID);
+	}
+	/*
+	if (shader->contains("gWorldInverseTranspose")) {
+		D3DXMATRIX worldInverseTranspose;
+		D3DXMatrixInverse(&worldInverseTranspose, 0, &matrix::convert(renderContext->matWorld));
+		D3DXMatrixTranspose(&worldInverseTranspose, &worldInverseTranspose);
+		shader->setValue("gWorldInverseTranspose", &worldInverseTranspose, sizeof(D3DXMATRIX));
+	}
+	if (shader->contains("gWorldInverse")) {
+		D3DXMATRIX worldInverse;
+		D3DXMatrixInverse(&worldInverse, 0, &matrix::convert(renderContext->matWorld));
+		shader->setValue("gWorldInverse", worldInverse,sizeof(D3DXMATRIX));
+	}
+	shader->setMatrix("gView", renderContext->matView);
+	shader->setMatrix("gProjection", renderContext->matProjection);
+	*/
+	shader->commitChanges();
+}
+
+Shader* DX::getShader(int id) const {
+	return _shaders[id];
 }

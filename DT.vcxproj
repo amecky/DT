@@ -55,7 +55,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d9.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dx11.lib;d3dx10.lib;dxerr.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,24 +81,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\BaseApp.h" />
-    <ClInclude Include="base\DT.h" />
     <ClInclude Include="examples\01_cube\CubeTest.h" />
     <ClInclude Include="examples\02_cube_mesh\CubeMeshTest.h" />
     <ClInclude Include="examples\03_breakout\Breakout.h" />
     <ClInclude Include="math\BezierCurve.h" />
-    <ClInclude Include="particle\ParticleArray.h" />
-    <ClInclude Include="particle\ParticleEmitter.h" />
-    <ClInclude Include="particle\ParticleModifier.h" />
-    <ClInclude Include="particle\ParticleSystem.h" />
     <ClInclude Include="renderer\Camera.h" />
     <ClInclude Include="renderer\DX.h" />
     <ClInclude Include="renderer\Mesh.h" />
     <ClInclude Include="renderer\render_types.h" />
+    <ClInclude Include="renderer\Shader.h" />
     <ClInclude Include="renderer\VIBuffer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TestApp.h" />
     <ClInclude Include="utils\GameTimer.h" />
     <ClInclude Include="utils\JSONReader.h" />
     <ClInclude Include="utils\Log.h" />
@@ -108,22 +103,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\BaseApp.cpp" />
-    <ClCompile Include="base\DT.cpp" />
+    <ClCompile Include="base\WindowsApp.cpp" />
     <ClCompile Include="examples\01_cube\CubeTest.cpp" />
     <ClCompile Include="examples\02_cube_mesh\CubeMeshTest.cpp" />
     <ClCompile Include="examples\03_breakout\Breakout.cpp" />
-    <ClCompile Include="particle\ParticleEmitter.cpp" />
-    <ClCompile Include="particle\ParticleModifier.cpp" />
-    <ClCompile Include="particle\ParticleSystem.cpp" />
     <ClCompile Include="renderer\Camera.cpp" />
     <ClCompile Include="renderer\DX.cpp" />
     <ClCompile Include="renderer\Mesh.cpp" />
+    <ClCompile Include="renderer\Shader.cpp" />
     <ClCompile Include="renderer\VIBuffer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TestApp.cpp" />
     <ClCompile Include="utils\GameTimer.cpp" />
     <ClCompile Include="utils\JSONReader.cpp" />
     <ClCompile Include="utils\Log.cpp" />

@@ -59,19 +59,6 @@
     <ClInclude Include="math\BezierCurve.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="particle\ParticleArray.h">
-      <Filter>particle</Filter>
-    </ClInclude>
-    <ClInclude Include="particle\ParticleSystem.h">
-      <Filter>particle</Filter>
-    </ClInclude>
-    <ClInclude Include="particle\ParticleModifier.h">
-      <Filter>particle</Filter>
-    </ClInclude>
-    <ClInclude Include="particle\ParticleEmitter.h">
-      <Filter>particle</Filter>
-    </ClInclude>
-    <ClInclude Include="TestApp.h" />
     <ClInclude Include="renderer\Camera.h">
       <Filter>renderer</Filter>
     </ClInclude>
@@ -85,9 +72,6 @@
       <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="base\BaseApp.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="base\DT.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="utils\GameTimer.h">
@@ -108,6 +92,9 @@
     <ClInclude Include="utils\JSONReader.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\Shader.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -118,16 +105,6 @@
     </ClCompile>
     <ClCompile Include="World.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="particle\ParticleSystem.cpp">
-      <Filter>particle</Filter>
-    </ClCompile>
-    <ClCompile Include="particle\ParticleModifier.cpp">
-      <Filter>particle</Filter>
-    </ClCompile>
-    <ClCompile Include="particle\ParticleEmitter.cpp">
-      <Filter>particle</Filter>
-    </ClCompile>
-    <ClCompile Include="TestApp.cpp" />
     <ClCompile Include="renderer\Camera.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
@@ -141,9 +118,6 @@
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="base\BaseApp.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="base\DT.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="utils\GameTimer.cpp">
@@ -163,6 +137,12 @@
     </ClCompile>
     <ClCompile Include="utils\JSONReader.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="base\WindowsApp.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\Shader.cpp">
+      <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

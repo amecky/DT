@@ -2,6 +2,9 @@
 #include "..\renderer\DX.h"
 #include "..\utils\GameTimer.h"
 
+// ------------------------------------------
+// Basic game settings
+// ------------------------------------------
 struct BaseSettings {
 
 	int screenSizeX;
@@ -17,6 +20,9 @@ struct BaseSettings {
 	}
 };
 
+// ------------------------------------------
+// Base application
+// ------------------------------------------
 class BaseApp {
 
 public:
@@ -40,5 +46,6 @@ private:
 	HWND _handle;
 	GameTimer _timer;
 	int _ticks;
+	float _time;
 };
 

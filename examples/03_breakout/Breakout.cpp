@@ -6,7 +6,7 @@
 #include "..\..\renderer\Mesh.h"
 #include "..\..\World.h"
 
-BaseApp *app = new Breakout();
+//BaseApp *app = new Breakout();
 
 Breakout::Breakout() {
 	_settings.tickCamera = false;
@@ -29,6 +29,8 @@ Breakout::~Breakout() {
 
 void Breakout::loadContent() {
 	_dx.moveCamera(Vector3f(0.0f,0.0f,6.0f));
+
+	int shader = _dx.loadShader("basic","PTCTech");
 	// PCT buffer
 	BufferDescriptor desc;
 	desc.declarationID = 0;
@@ -39,7 +41,7 @@ void Breakout::loadContent() {
 	int tex_id = _dx.loadTexture("array");
 
 	_bat.data = new PCTMeshData(id, 0, 64);
-	data::build_cube(_bat.data, 1.0f, 0.2f, 0.3f,Rect(128,0,256,128),512.0f);
+	data::build_cube(_bat.data, 1.0f, 0.2f, 0.2f,Rect(128,0,256,128),512.0f);
 	_bat.data->setTextureID(tex_id);
 
 	_brick_data = new PCTMeshData(id, 0, 64);
@@ -64,11 +66,11 @@ void Breakout::loadContent() {
 	_ball.id = _world->create(_ball.position,_ball.data);
 	_ball.aabBox = AABBox(_ball.position,Vector3f(0.1f,0.1f,0.1f));
 	// bricks
-	for ( int i = 0; i < 7; ++i ) {
-		for ( int j = 0;  j < 6; ++j ) {
+	for ( int i = 0; i < 10; ++i ) {
+		for ( int j = 0;  j < 8; ++j ) {
 			Brick b;
-			Vector3f pos = Vector3f(3.5f - i * 1.2f,3.0f - j * 0.6f,0.0f);
-			b.id = _world->create(pos,_brick_data);
+			Vector3f pos = Vector3f(3.5f - i * 0.8f,3.0f - j * 0.4f,0.0f);
+			b.id = _world->create(pos,_brick_data,shader);
 			b.position = pos;
 			b.aabBox = AABBox(pos,Vector3f(0.5f,0.1f,0.1f));
 			_bricks.push_back(b);
@@ -145,7 +147,7 @@ void Breakout::tick(float dt) {
 	Bricks::iterator it = _bricks.begin();
 	while ( it != _bricks.end() ) {
 		if ( _ball.aabBox.collides(it->aabBox)) {
-			//LOG << "we have a hit - brick (" << i << ") : ball";
+			LOG << "we have a hit - brick (" << it->id << ") : ball";
 			_ball.velocity.y *= -1.0f;
 			_ball.position += _ball.velocity * dt;
 			_ball.aabBox.translate(_ball.position);

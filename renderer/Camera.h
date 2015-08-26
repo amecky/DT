@@ -27,10 +27,12 @@ public:
     void SetInvertY( BOOL invert )           { m_invertY = invert; }
     void SetMaxPitch( float maxPitch )       { m_maxPitch = maxPitch; }
 
-    const D3DXMATRIX* GetViewMatrix() const { 
-		return &m_view; 
+    const D3DXMATRIX& GetViewMatrix() const { 
+		return m_view; 
 	}
-    D3DXMATRIX* GetProjectionMatrix()  { return &m_projection; }
+    const D3DXMATRIX& GetProjectionMatrix() const { 
+		return m_projection; 
+	}
     D3DXVECTOR3* GetPosition()         { return &m_position; }
     D3DXVECTOR3* GetLookAt()           { return &m_lookAt; }
     float GetFOV()                     { return m_fov; }

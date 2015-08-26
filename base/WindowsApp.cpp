@@ -1,18 +1,6 @@
-// DT.cpp : Defines the entry point for the application.
-//
-
 #include "..\stdafx.h"
 #include "BaseApp.h"
-#include "..\renderer\DX.h"
 #include "..\utils\Log.h"
-#include "..\renderer\VIBuffer.h"
-#include "..\utils\GameTimer.h"
-#include "..\renderer\Mesh.h"
-#include "..\utils\Profiler.h"
-#include "..\World.h"
-#include "..\math\BezierCurve.h"
-#include "..\particle\ParticleSystem.h"
-#include "..\particle\ParticleModifier.h"
 
 #pragma comment (lib, "d3d9.lib")
 

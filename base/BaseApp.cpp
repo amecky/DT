@@ -3,7 +3,7 @@
 #include "..\utils\Log.h"
 #include "..\utils\Profiler.h"
 
-BaseApp::BaseApp() : _ticks(0) {
+BaseApp::BaseApp() : _ticks(0) , _time(0.0f) {
 }
 
 
@@ -24,6 +24,7 @@ void BaseApp::init(HWND handle) {
 void BaseApp::buildFrame() {
 	_timer.tick();
 	profiler::reset();
+	PR_START("FRAME")
 	tick(_timer.getElapsedTime());
 	if ( _settings.tickCamera ) {
 		_dx.updateCamera();
@@ -34,7 +35,11 @@ void BaseApp::buildFrame() {
 	PR_END("RENDERING")
 	_dx.end();
 	++_ticks;
-	if ( _ticks > 200 ) {
+	_time += _timer.getElapsedTime();
+	PR_END("FRAME")
+	if ( _time >= 1.0f ) {
+		_time -= 1.0f;
+		LOG << "ticks: " << _ticks;
 		profiler::print();
 		_ticks = 0;
 	}

@@ -5,15 +5,15 @@
 #include "..\..\renderer\VIBuffer.h"
 #include "..\..\World.h"
 
-//BaseApp *app = new CubeTest();
+BaseApp *app = new CubeTest();
 
 CubeTest::CubeTest() {
 }
 
 
 CubeTest::~CubeTest() {
-	delete _data;
-	delete _world;
+	//delete _data;
+	//delete _world;
 }
 
 
@@ -48,6 +48,7 @@ void CubeTest::loadContent() {
 }
 
 void CubeTest::tick(float dt) {
+	/*
 	_timer += dt;
 	if ( _rotating ) {
 		_world->rotate(_id,Vector3f(0.0f,0.0f,_timer));
@@ -62,6 +63,7 @@ void CubeTest::tick(float dt) {
 		_world->translate(_id,Vector3f(x,y,0.0f));
 	}
 	_world->tick(dt);
+	*/
 }
 
 void CubeTest::render() {
