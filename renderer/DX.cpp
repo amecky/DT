@@ -134,7 +134,6 @@ void DX::init(HWND hWnd,int sizeX,int sizeY) {
 	};
 	create(0,elements);
 
-	_defaultBlendState = createBlendState(BL_SRC_ALPHA, BL_ONE_MINUS_SRC_ALPHA, true);
 	//int addBS = renderer::createBlendState("alpha_blend", ds::BL_ONE, ds::BL_ONE, true);
 }
 
@@ -324,27 +323,8 @@ void DX::setVertexDeclaration(int type) {
 	//_device->SetVertexDeclaration(_declarationMap[type].declaration);
 }
 
-int DX::createBlendState(const BlendState& state) {
-	_blendStates.push_back(state);
-	return _blendStates.size() - 1;
-}
-
 int DX::createBlendState(int srcRGB, int srcAlpha, int dstRGB, int dstAlpha, bool alphaEnabled, bool separateAlpha) {
-		BlendState bs;
-		bs.blendEnable = alphaEnabled;
-		bs.srcFactorRGB = srcRGB;
-		bs.srcFactorAlpha = srcAlpha;
-		bs.blendModeRGB = BM_ADD;
-		bs.dstFactorRGB = dstRGB;
-		bs.dstFactorAlpha = dstAlpha;
-		bs.blendModeAlpha = BM_ADD;
-		bs.alphaFunc = ALPHA_GREATER;
-		bs.alphaRef = 0;
-		bs.separateAlpha = separateAlpha;
-		bs.mask = 0x0f;
-		bs.flag = 1;
-		_blendStates.push_back(bs);
-		return _blendStates.size() - 1;
+		return -1;
 }
 
 int DX::createBlendState(int srcAlpha, int dstAlpha, bool alphaEnabled) {
@@ -433,10 +413,7 @@ void DX::setBlendState(int id) {
 }
 
 int DX::loadShader(const char* fileName,const char* techName) {
-	Shader* s = new Shader(this);
-	s->loadShader(fileName,techName);
-	_shaders.push_back(s);
-	return _shaders.size() - 1;
+	return -1;
 }
 
 void DX::selectShader(int id) {
@@ -465,29 +442,7 @@ void DX::selectVertexDeclaration(int id) {
 }
 
 void DX::prepareShader(Shader* shader, int textureID) {			
-	shader->setValue("gWVP", _wvp,sizeof(D3DXMATRIX));
-	shader->setValue("gWorld", _world,sizeof(D3DXMATRIX));		
-	//shader->setVector3f("gCameraPos", renderContext->camera->getPosition());
-	//shader->setVector3f("gCameraUp", renderContext->camera->getUpVector());
-	if (textureID != -1) {
-		shader->setTexture("gTex",textureID);
-	}
-	/*
-	if (shader->contains("gWorldInverseTranspose")) {
-		D3DXMATRIX worldInverseTranspose;
-		D3DXMatrixInverse(&worldInverseTranspose, 0, &matrix::convert(renderContext->matWorld));
-		D3DXMatrixTranspose(&worldInverseTranspose, &worldInverseTranspose);
-		shader->setValue("gWorldInverseTranspose", &worldInverseTranspose, sizeof(D3DXMATRIX));
-	}
-	if (shader->contains("gWorldInverse")) {
-		D3DXMATRIX worldInverse;
-		D3DXMatrixInverse(&worldInverse, 0, &matrix::convert(renderContext->matWorld));
-		shader->setValue("gWorldInverse", worldInverse,sizeof(D3DXMATRIX));
-	}
-	shader->setMatrix("gView", renderContext->matView);
-	shader->setMatrix("gProjection", renderContext->matProjection);
-	*/
-	shader->commitChanges();
+	
 }
 
 Shader* DX::getShader(int id) const {

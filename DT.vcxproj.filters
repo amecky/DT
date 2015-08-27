@@ -95,6 +95,12 @@
     <ClInclude Include="renderer\Shader.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\gfx.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\VertexIndexBuffer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -142,6 +148,12 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="renderer\Shader.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gfx.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\VertexIndexBuffer.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>

@@ -29,6 +29,8 @@ void Camera::CreateProjectionMatrix( float fov, float aspect, float nearPlane, f
     m_nearPlane = nearPlane;
     m_farPlane  = farPlane;
     D3DXMatrixPerspectiveFovLH( &m_projection, m_fov, m_aspect, m_nearPlane, m_farPlane );
+
+	D3DXMatrixOrthoLH(&m_projection,800.0f, 600.0f, nearPlane, farPlane);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 

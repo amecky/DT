@@ -55,12 +55,16 @@ public:
 	void fillBuffer(VIBuffer* buffer) {
 		buffer->fillBuffer(_data,_size);
 	}
+	T* getData() const {
+		return _data;
+	}
 private:
 	T* _data;
 };
 
 typedef AbstractMeshData<PCTVertex> PCTMeshData;
 typedef AbstractMeshData<PCVertex> PCMeshData;
+typedef AbstractMeshData<PTVertex> PTMeshData;
 
 namespace data {
 
@@ -71,6 +75,8 @@ namespace data {
 	void build_cube(PCTMeshData* data,float dx,float dy,float dz,const Rect& textureRect,float textureSize);
 
 	void build_cube(PCTMeshData& data,float dx,float dy,float dz);
+
+	void build_cube(PCMeshData* data,float dx,float dy,float dz);
 
 	void build_unit_cube(PCTMeshData& data);
 

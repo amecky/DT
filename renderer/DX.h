@@ -13,16 +13,11 @@ class VIBuffer;
 struct BufferDescriptor;
 class Shader;
 
-struct RenderContext {
-
-};
-
 class DX {
 
 typedef std::vector<TextureAsset> TextureAssets;
 typedef std::vector<VIBuffer*> BufferList;
 typedef std::map<int,VertexDeclaration> DeclarationMap;
-typedef std::vector<BlendState> BlendStates;
 typedef std::vector<Shader*> Shaders;
 
 public:
@@ -45,7 +40,7 @@ public:
 
 	int loadTexture(const char* name);
 	LPDIRECT3DTEXTURE9 getTexture(int id) {
-		return _textureAssets[id].texture;
+		return 0;
 	}
 	void selectTexture(int id);
 
@@ -56,7 +51,6 @@ public:
 
 	int createBlendState(int srcRGB, int srcAlpha, int dstRGB, int dstAlpha, bool alphaEnabled, bool separateAlpha = true);
 	int createBlendState(int srcAlpha, int dstAlpha, bool alphaEnabled);
-	int createBlendState(const BlendState& state);
 	void changeBlendState(int id);
 	void setBlendState(int id);
 
@@ -92,7 +86,6 @@ private:
 	TextureAssets _textureAssets;
 	BufferList _buffers;
 	DeclarationMap _declarationMap;
-	BlendStates _blendStates;
 	Shaders _shaders;
 	int _currentBlendState;
 	int _defaultBlendState;

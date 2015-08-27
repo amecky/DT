@@ -4,6 +4,8 @@
 #include "..\..\renderer\render_types.h"
 #include "..\..\renderer\VIBuffer.h"
 #include "..\..\World.h"
+#include "..\..\renderer\gfx.h"
+#include "..\..\renderer\Shader.h"
 
 BaseApp *app = new CubeTest();
 
@@ -18,7 +20,12 @@ CubeTest::~CubeTest() {
 
 
 void CubeTest::loadContent() {
+	buffer = gfx::createQuadBuffer(32,sizeof(PTVertex));
+	shader = gfx::createShader("texture.vs","texture.ps");
+	texture = gfx::loadTexture("content\\ref_256.png");
+	assert( texture != 0);
 	// PCT buffer
+	/*
 	BufferDescriptor desc;
 	desc.declarationID = 0;
 	desc.vertexSize = sizeof(PCTVertex);
@@ -26,15 +33,23 @@ void CubeTest::loadContent() {
 	int id = _dx.createBuffer(desc);
 
 	int tex_id = _dx.loadTexture("ref_256");
-
-	_data = new PCTMeshData(id, 0, 64);
-	data::build_cube(*_data, 1.0f, 1.0f, 1.0f);
-	_data->setTextureID(tex_id);
-
+	*/
+	_data = new PTMeshData(0, 0, 64);
+	Quad<PTVertex> quad;
+	float hx = 64.0f;
+	float hy = 64.0f;
+	quad.v[0] = PTVertex(-hx, -hy, 0.0f, 0.0f, 1.0f);
+	quad.v[1] = PTVertex(-hx,  hy, 0.0f, 0.0f, 0.0f);
+	quad.v[2] = PTVertex( hx,  hy, 0.0f, 1.0f, 0.0f);
+	quad.v[3] = PTVertex( hx, -hy, 0.0f, 1.0f, 1.0f);
+	_data->addQuad(quad);
+	//data::build_cube(_data, 1.0f, 1.0f, 1.0f);
+	//_data->setTextureID(tex_id);
+	/*
 	_world = new World(&_dx);
 	// animated cube
 	_id = _world->create(Vector3f(0.0f, 0.0f, 0.0f), _data);	
-
+	*/
 	_rotating = false;
 	_moving = false;
 	_scaling = false;
@@ -64,10 +79,13 @@ void CubeTest::tick(float dt) {
 	}
 	_world->tick(dt);
 	*/
+	gfx::fillQuadBuffer(buffer,_data->getData(),4);
 }
 
 void CubeTest::render() {
-	_world->render();
+	gfx::turnZBufferOff();
+	gfx::submitBuffer(buffer);
+	gfx::renderShader(shader,texture);
 }
 
 void CubeTest::onChar(char ascii, unsigned int state) {
