@@ -33,8 +33,8 @@ namespace sprites {
 
 	static SpriteBatchContext* spriteCtx = 0;
 
-	Vector4f getTextureCoordinates(const Rect& textureRect,float textureWidth,float textureHeight,bool useHalfTexel) {
-		Vector4f ret;
+	v4 getTextureCoordinates(const Rect& textureRect,float textureWidth,float textureHeight,bool useHalfTexel) {
+		v4 ret;
 		if ( useHalfTexel ) {
 			float halfTexel = 0.5f;
 			float const width   = textureWidth;
@@ -152,7 +152,7 @@ namespace sprites {
 		spriteCtx->sprites[idx + 3].v = tex.uv.w;
 		Vector2f cor = pos;
 		cor = cor - v2(400,300);//ds::renderer::getSelectedViewport().getPosition();
-		Vector2f p(0, 0);
+		v2 p(0, 0);
 		for (int i = 0; i < 4; ++i) {
 			p.x = VP_ARRAY[i * 2] * tex.dim.x;
 			p.y = VP_ARRAY[i * 2 + 1] * tex.dim.y;

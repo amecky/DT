@@ -7,25 +7,20 @@
 class Breakout : public BaseApp {
 
 struct Brick {
-	MID id;
-	Vector3f position;
+	v2 position;
 	AABBox aabBox;
 };
 
 struct Bat {
-	MID id;
-	PCTMeshData* data;
-	Vector3f position;
+	v2 position;
 	AABBox aabBox;
 };
 
 struct Ball {
 
 	bool sticky;
-	Vector3f position;
-	PCTMeshData* data;
-	MID id;
-	Vector3f velocity;
+	v2 position;
+	v2 velocity;
 	AABBox aabBox;
 
 };
@@ -41,6 +36,7 @@ public:
 	void onChar(char ascii, unsigned int state);
 private:
 	void movePaddle(float dt);
+	void moveBall(float dt);
 	float _timer;
 	Texture _brickTexture;
 	Bricks _bricks;

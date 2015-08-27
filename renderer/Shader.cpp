@@ -154,6 +154,20 @@ bool Shader::initialize(ID3D11Device* device,char* vsFilename, char* psFilename)
 		return false;
 	}
 
+	D3D11_BLEND_DESC blendDesc;
+	ZeroMemory( &blendDesc, sizeof( blendDesc ) );
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	
+	device->CreateBlendState( &blendDesc, &_alphaBlendState);	
+
 	return true;
 }
 
@@ -207,7 +221,8 @@ void Shader::render(ID3D11DeviceContext* deviceContext, int indexCount) {
     // Set the vertex and pixel shaders that will be used to render this triangle.
     deviceContext->VSSetShader(_vertexShader, NULL, 0);
     deviceContext->PSSetShader(_pixelShader, NULL, 0);
-
+	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	deviceContext->OMSetBlendState( _alphaBlendState, blendFactor,0xFFFFFFFF );
 	// Set the sampler state in the pixel shader.
 	deviceContext->PSSetSamplers(0, 1, &_sampleState);
 

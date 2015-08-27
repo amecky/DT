@@ -3,6 +3,7 @@
 #include <Vector.h>
 #include <d3d11.h>
 #include <d3dx11tex.h>
+#include "..\stdafx.h"
 
 struct TextureAsset {
 	//IdString name;
@@ -20,19 +21,19 @@ struct TextureAsset {
 struct Texture {
 
 	//IdString hashName;
-	Vector4f uv;
-	Vector2f dim;
+	v4 uv;
+	v2 dim;
 	int textureID;
 
 	Texture() : uv(0, 0, 1, 1), dim(32, 32), textureID(0) {}
 
-	const Vector2f getUV(int idx) const {
+	const v2 getUV(int idx) const {
 		switch (idx) {
-			case 0: return Vector2f(uv.x, uv.y); break;
-			case 1: return Vector2f(uv.z, uv.y); break;
-			case 2: return Vector2f(uv.z, uv.w); break;
-			case 3: return Vector2f(uv.x, uv.w); break;
-			default: return Vector2f(0, 0);
+			case 0: return v2(uv.x, uv.y); break;
+			case 1: return v2(uv.z, uv.y); break;
+			case 2: return v2(uv.z, uv.w); break;
+			case 3: return v2(uv.x, uv.w); break;
+			default: return v2(0, 0);
 		}
 	}
 };
@@ -139,18 +140,18 @@ struct Rect {
 
 struct AABBox {
 
-	Vector3f position;
-	Vector3f extent;
-	Vector3f _min;
-	Vector3f _max;
+	v2 position;
+	v2 extent;
+	v2 _min;
+	v2 _max;
 
-	AABBox() : position(0,0,0) , extent(0,0,0) {}
+	AABBox() : position(0,0) , extent(0,0) {}
 
-	AABBox(const Vector3f& p,const Vector3f& e) : position(p) , extent(e) {
+	AABBox(const v2& p,const v2& e) : position(p) , extent(e) {
 		calculateMinMax();
 	}
 
-	void translate(const Vector3f& p) {
+	void translate(const v2& p) {
 		position = p;
 		calculateMinMax();
 	}
@@ -159,17 +160,13 @@ struct AABBox {
 		return(_max.x > other._min.x && 
 				_min.x < other._max.x &&
 				_max.y > other._min.y &&
-				_min.y < other._max.y &&
-				_max.z > other._min.z &&
-				_min.z < other._max.z);
+				_min.y < other._max.y);
 	}
 
 	void calculateMinMax() {
 		_min.x = position.x - extent.x;
 		_min.y = position.y - extent.y;
-		_min.z = position.z - extent.z;
 		_max.x = position.x + extent.x;
 		_max.y = position.y + extent.y;
-		_max.z = position.z + extent.z;
 	}
 };
