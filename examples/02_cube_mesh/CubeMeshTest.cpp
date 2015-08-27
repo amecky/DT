@@ -1,8 +1,6 @@
 #include "..\..\StdAfx.h"
 #include "CubeMeshTest.h"
-#include "..\..\renderer\DX.h"
 #include "..\..\renderer\render_types.h"
-#include "..\..\renderer\VIBuffer.h"
 #include "..\..\World.h"
 #include "..\..\utils\JSONReader.h"
 
@@ -23,7 +21,7 @@ CubeMeshTest::~CubeMeshTest() {
 
 
 void CubeMeshTest::loadContent() {
-
+	/*
 	BufferDescriptor desc;
 	desc.declarationID = 0;
 	desc.vertexSize = sizeof(PCTVertex);
@@ -50,6 +48,7 @@ void CubeMeshTest::loadContent() {
 	LOG << "'4' - reset";
 
 	data::load_mesh(_data,"test.mesh",256.0f);	
+	*/
 }
 
 void CubeMeshTest::tick(float dt) {

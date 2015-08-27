@@ -1,7 +1,6 @@
 #pragma once
-#include "..\renderer\DX.h"
 #include "..\utils\GameTimer.h"
-
+#include <d3dx9core.h>
 // ------------------------------------------
 // Basic game settings
 // ------------------------------------------
@@ -40,7 +39,6 @@ public:
 		return _settings;
 	}
 protected:
-	DX _dx;	
 	BaseSettings _settings;
 private:
 	HWND _handle;

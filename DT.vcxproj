@@ -86,14 +86,13 @@
     <ClInclude Include="examples\03_breakout\Breakout.h" />
     <ClInclude Include="math\BezierCurve.h" />
     <ClInclude Include="renderer\Camera.h" />
-    <ClInclude Include="renderer\DX.h" />
     <ClInclude Include="renderer\gfx.h" />
     <ClInclude Include="renderer\Mesh.h" />
     <ClInclude Include="renderer\render_types.h" />
     <ClInclude Include="renderer\Shader.h" />
     <ClInclude Include="renderer\VertexIndexBuffer.h" />
-    <ClInclude Include="renderer\VIBuffer.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="sprites\SpriteBatch.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="utils\GameTimer.h" />
@@ -110,12 +109,11 @@
     <ClCompile Include="examples\02_cube_mesh\CubeMeshTest.cpp" />
     <ClCompile Include="examples\03_breakout\Breakout.cpp" />
     <ClCompile Include="renderer\Camera.cpp" />
-    <ClCompile Include="renderer\DX.cpp" />
     <ClCompile Include="renderer\gfx.cpp" />
     <ClCompile Include="renderer\Mesh.cpp" />
     <ClCompile Include="renderer\Shader.cpp" />
     <ClCompile Include="renderer\VertexIndexBuffer.cpp" />
-    <ClCompile Include="renderer\VIBuffer.cpp" />
+    <ClCompile Include="sprites\SpriteBatch.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

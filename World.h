@@ -1,5 +1,4 @@
 #pragma once
-#include "renderer\DX.h"
 #include <d3dx9math.h>
 #include "renderer\Mesh.h"
 #include <assert.h>
@@ -99,7 +98,7 @@ struct MeshArray {
 class World {
 
 public:
-	World(DX* dx);
+	World();
 	~World(void);
 	MID create(const Vector3f& pos,MeshData* meshData,int shader = -1);
 	void remove(MID id);
@@ -111,6 +110,5 @@ public:
 private:
 	void allocate(int size);
 	MeshArray _array;
-	DX* _dx;
 };
 

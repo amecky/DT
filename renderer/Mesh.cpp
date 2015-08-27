@@ -1,7 +1,6 @@
 #include "..\StdAfx.h"
 #include "Mesh.h"
 #include <Matrix.h>
-#include "VIBuffer.h"
 #include "..\utils\JSONReader.h"
 
 namespace data {

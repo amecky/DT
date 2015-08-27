@@ -1,6 +1,7 @@
 #pragma once
 #include "..\stdafx.h"
 #include <d3dx9math.h>
+#include "Camera.h"
 
 class VertexIndexBuffer;
 class Shader;
@@ -24,11 +25,13 @@ namespace gfx {
 
 	Shader* createShader(char* vsFilename, char* psFilename);
 
-	void renderShader(Shader* shader,TextureAsset* asset);
+	void renderShader(Shader* shader,TextureAsset* asset,int indexCount);
 
-	TextureAsset* loadTexture(char* fileName);
+	TextureAsset* loadTexture(const char* fileName);
 
 	void turnZBufferOn();
 
 	void turnZBufferOff();
+
+	Camera* getCamera();
 }

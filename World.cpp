@@ -1,8 +1,7 @@
 #include "StdAfx.h"
 #include "World.h"
-#include "renderer\VIBuffer.h"
 
-World::World(DX* dx) : _dx(dx) {	
+World::World() {	
 }
 
 
@@ -86,21 +85,7 @@ void World::tick(float dt) {
 }
 
 void World::render() {
-	for ( int j = 0; j < _array.num; ++j ) {
-		int id = _array.data[j]->getBufferID();
-		VIBuffer* buffer = _dx->getBuffer(id);
-		_array.data[j]->fillBuffer(buffer);
-		_dx->selectTexture(_array.data[j]->getTextureID());
-		_dx->setWorldTransformation(_array.worlds[j]);
-		_dx->selectVertexDeclaration(_array.data[j]->getVertexDeclaration());
-		if ( _array.shaders[j] == -1 ) {
-			buffer->render(&_array.worlds[j],_array.data[j]->getTextureID(),_array.data[j]->getVertexDeclaration());
-		}
-		else {
-			Shader* s = _dx->getShader(_array.shaders[j]);
-			buffer->render(s,_array.data[j]->getTextureID());
-		}
-	}
+	
 }
 
 void World::translate(MID id,const Vector3f& p) {

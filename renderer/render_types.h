@@ -9,6 +9,12 @@ struct TextureAsset {
 	ID3D11ShaderResourceView* texture;
 	int width;
 	int height;
+
+	TextureAsset() : texture(0) , width(0) , height(0) {}
+
+	~TextureAsset() {
+		SAFE_RELEASE(texture);
+	}
 };
 
 struct Texture {

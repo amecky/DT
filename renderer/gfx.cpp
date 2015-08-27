@@ -33,6 +33,10 @@ static RenderContext* ctx = 0;
 
 namespace gfx {
 
+	Camera* getCamera() {
+		return &ctx->camera;
+	}
+
 	void turnZBufferOn() {
 		ctx->deviceContext->OMSetDepthStencilState(ctx->depthStencilState, 1);	
 	}
@@ -42,7 +46,7 @@ namespace gfx {
 		ctx->deviceContext->OMSetDepthStencilState(ctx->depthDisabledStencilState, 1);
 	}
 
-	TextureAsset* loadTexture(char* fileName) {
+	TextureAsset* loadTexture(const char* fileName) {
 		TextureAsset* asset = new TextureAsset;
 		HRESULT result = D3DX11CreateShaderResourceViewFromFile(ctx->device, fileName, NULL, NULL, &asset->texture, NULL);
 		if(FAILED(result)) {
@@ -51,11 +55,11 @@ namespace gfx {
 		return asset;
 	}
 
-	void renderShader(Shader* shader,TextureAsset* asset) {
+	void renderShader(Shader* shader,TextureAsset* asset,int indexCount) {
 		D3DXMATRIX world;
 		D3DXMatrixIdentity(&world);
 		if ( shader->setShaderParameters(ctx->deviceContext,world,ctx->camera.GetViewMatrix(),ctx->camera.GetProjectionMatrix(),asset->texture)) {
-			shader->render(ctx->deviceContext,6);
+			shader->render(ctx->deviceContext,indexCount);
 		}
 		else {
 			LOG << "cannot set shader parameter";

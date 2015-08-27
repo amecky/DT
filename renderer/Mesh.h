@@ -1,9 +1,7 @@
 #pragma once
-#include "DX.h"
 #include <d3dx9math.h>
-
-class VIBuffer;
-
+#include "render_types.h"
+#include "VertexIndexBuffer.h"
 
 class MeshData {
 
@@ -19,7 +17,7 @@ public:
 	int getTextureID() const {
 		return _textureID;
 	}
-	virtual void fillBuffer(VIBuffer* buffer) = 0;
+	virtual void fillBuffer(VertexIndexBuffer* buffer) = 0;
 	int getBufferID() const {
 		return _buffer_id;
 	}
@@ -52,8 +50,8 @@ public:
 			_data[_size++] = quad.v[3];
 		}
 	}
-	void fillBuffer(VIBuffer* buffer) {
-		buffer->fillBuffer(_data,_size);
+	void fillBuffer(VertexIndexBuffer* buffer) {
+		//buffer->fillBuffer(_data,_size);
 	}
 	T* getData() const {
 		return _data;
@@ -91,6 +89,8 @@ namespace data {
 	void add_grid(PCTMeshData* data, float cellSize, int countX, int countY,const Rect& textureRect,float textureSize);
 
 	void add_line(PCMeshData& data,const Vector3f& start,const Vector3f& end,float thickness);
+
+	void getTextureCoordinates(const Rect& textureRect,int textureWidth,float textureHeight,float* u1,float* v1,float* u2,float* v2,bool useHalfTexel);
 }
 
 struct Mesh {

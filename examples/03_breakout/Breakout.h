@@ -2,6 +2,7 @@
 #include "..\..\base\BaseApp.h"
 #include "..\..\renderer\Mesh.h"
 #include "..\..\World.h"
+#include <vector>
 
 class Breakout : public BaseApp {
 
@@ -40,10 +41,8 @@ public:
 	void onChar(char ascii, unsigned int state);
 private:
 	void movePaddle(float dt);
-	World* _world;
-	PCTMeshData* _brick_data;
-	PCTMeshData* _floor_data;
 	float _timer;
+	Texture _brickTexture;
 	Bricks _bricks;
 	Ball _ball;
 	Bat _bat;

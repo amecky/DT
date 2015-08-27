@@ -30,6 +30,7 @@ void BaseApp::buildFrame() {
 	tick(_timer.getElapsedTime());
 	if ( _settings.tickCamera ) {
 		//_dx.updateCamera();
+		gfx::getCamera()->tick();
 	}
 	gfx::beginRendering(_settings.clearColor);
 	PR_START("RENDERING")

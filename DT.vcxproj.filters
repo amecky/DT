@@ -32,6 +32,9 @@
     <Filter Include="examples\03_breakout">
       <UniqueIdentifier>{14b42476-e4e8-498b-97f8-1682d9f038a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sprites">
+      <UniqueIdentifier>{9b7ed35b-3108-46fc-8199-1d568015a6a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -62,13 +65,7 @@
     <ClInclude Include="renderer\Camera.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\DX.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\Mesh.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\VIBuffer.h">
       <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="base\BaseApp.h">
@@ -101,6 +98,9 @@
     <ClInclude Include="renderer\VertexIndexBuffer.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="sprites\SpriteBatch.h">
+      <Filter>sprites</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -114,13 +114,7 @@
     <ClCompile Include="renderer\Camera.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\DX.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\Mesh.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\VIBuffer.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="base\BaseApp.cpp">
@@ -155,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="renderer\VertexIndexBuffer.cpp">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="sprites\SpriteBatch.cpp">
+      <Filter>sprites</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
