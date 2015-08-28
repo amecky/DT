@@ -21,6 +21,10 @@
 typedef unsigned int IdString;
 typedef unsigned int uint32;
 
+const float PI =  3.1415926535897932384626433832795f;
+const float TWO_PI = 2.0f * PI;
+const float HALF_PI = 0.5f * PI;
+
 #ifndef SAFE_RELEASE
 #define SAFE_RELEASE(p)      { if ( (p) && (p) != NULL) { (p)->Release(); (p)=NULL; } }
 #endif

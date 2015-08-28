@@ -35,6 +35,9 @@
     <Filter Include="sprites">
       <UniqueIdentifier>{9b7ed35b-3108-46fc-8199-1d568015a6a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="examples\04_slingy">
+      <UniqueIdentifier>{fb424136-a73a-47cd-abfa-c5b20634c30d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -101,6 +104,12 @@
     <ClInclude Include="sprites\SpriteBatch.h">
       <Filter>sprites</Filter>
     </ClInclude>
+    <ClInclude Include="math\mathutils.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\04_slingy\Slingy.h">
+      <Filter>examples\04_slingy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -152,6 +161,12 @@
     </ClCompile>
     <ClCompile Include="sprites\SpriteBatch.cpp">
       <Filter>sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="math\mathutils.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\04_slingy\Slingy.cpp">
+      <Filter>examples\04_slingy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

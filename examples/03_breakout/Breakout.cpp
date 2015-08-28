@@ -5,33 +5,34 @@
 #include "..\..\sprites\SpriteBatch.h"
 #include "..\..\utils\Log.h"
 
-BaseApp *app = new Breakout();
+//BaseApp *app = new Breakout();
 
 Breakout::Breakout() {
 	_settings.tickCamera = false;
 	_settings.screenSizeX = 1024;
 	_settings.screenSizeY = 768;
-	//_settings.clearColor = D3DCOLOR_XRGB(0,0,0);
+	_settings.clearColor = D3DCOLOR_XRGB(0,0,0);
 	//_CrtSetBreakAlloc(339);
 }
 
 
 Breakout::~Breakout() {
+	sprites::shutdown();
 }
 
 
 void Breakout::loadContent() {
 	sprites::intialize("content\\array.png");
-	_brickTexture = sprites::buildTexture(Rect(350,0,70,30),512.0f,512.0f,true);
+	_brickTexture = sprites::buildTexture(Rect(60,0,60,25),512.0f,512.0f,true);
 	_bat.position = v2(400,60);
 	_bat.aabBox = AABBox(_bat.position,v2(45,15));
 	_ball.position = v2(400,120);
 	_ball.aabBox = AABBox(_ball.position,v2(10,10));
-	for ( int x = 0; x < 10; ++x ) {
+	for ( int x = 0; x < 12; ++x ) {
 		for ( int y = 0; y < 6; ++y ) {
 			Brick b;
-			b.position = v2(40 + x * 80,370 + y * 40);
-			b.aabBox = AABBox(b.position,v2(35,15));
+			b.position = v2(40 + x * 65,370 + y * 30);
+			b.aabBox = AABBox(b.position,v2(30,12));
 			_bricks.push_back(b);
 		}
 	}
@@ -80,16 +81,21 @@ void Breakout::tick(float dt) {
 	movePaddle(dt);
 	moveBall(dt);
 	if ( _ball.aabBox.collides(_bat.aabBox) ) {
-		LOG << "collision";
+		LOG << "collision - bat and ball";
 		_ball.velocity.y *= -1.0f;
 		_ball.position += _ball.velocity * dt;
 	}
-	for ( size_t i = 0; i < _bricks.size(); ++i ) {
-		Brick& b = _bricks[i];
-		if ( _ball.aabBox.collides(b.aabBox)) {
+	Bricks::iterator it = _bricks.begin();
+	while ( it != _bricks.end()) {		
+		if ( _ball.aabBox.collides(it->aabBox)) {
+			LOG << "collision ball and btick";
 			_ball.velocity.y *= -1.0f;
 			_ball.position += _ball.velocity * dt;
+			it = _bricks.erase(it);
 		}		
+		else {
+			++it;
+		}
 	}
 }
 
@@ -98,8 +104,8 @@ void Breakout::render() {
 	for ( size_t i = 0; i < _bricks.size(); ++i ) {
 		sprites::draw(_bricks[i].position,_brickTexture);	
 	}
-	sprites::draw(_ball.position,sprites::buildTexture(Rect(382,2,20,20),512.0f,512.0f,true));
-	sprites::draw(_bat.position,sprites::buildTexture(Rect(350,80,90,30),512.0f,512.0f,true));
+	sprites::draw(_ball.position,sprites::buildTexture(Rect(30,50,24,24),512.0f,512.0f,true));
+	sprites::draw(_bat.position,sprites::buildTexture(Rect(0,80,90,30),512.0f,512.0f,true));
 	sprites::end();
 }
 

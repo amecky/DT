@@ -84,7 +84,9 @@
     <ClInclude Include="examples\01_cube\CubeTest.h" />
     <ClInclude Include="examples\02_cube_mesh\CubeMeshTest.h" />
     <ClInclude Include="examples\03_breakout\Breakout.h" />
+    <ClInclude Include="examples\04_slingy\Slingy.h" />
     <ClInclude Include="math\BezierCurve.h" />
+    <ClInclude Include="math\mathutils.h" />
     <ClInclude Include="renderer\Camera.h" />
     <ClInclude Include="renderer\gfx.h" />
     <ClInclude Include="renderer\Mesh.h" />
@@ -108,6 +110,8 @@
     <ClCompile Include="examples\01_cube\CubeTest.cpp" />
     <ClCompile Include="examples\02_cube_mesh\CubeMeshTest.cpp" />
     <ClCompile Include="examples\03_breakout\Breakout.cpp" />
+    <ClCompile Include="examples\04_slingy\Slingy.cpp" />
+    <ClCompile Include="math\mathutils.cpp" />
     <ClCompile Include="renderer\Camera.cpp" />
     <ClCompile Include="renderer\gfx.cpp" />
     <ClCompile Include="renderer\Mesh.cpp" />
