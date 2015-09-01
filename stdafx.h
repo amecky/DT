@@ -20,6 +20,7 @@
 
 typedef unsigned int IdString;
 typedef unsigned int uint32;
+typedef unsigned char uchar;
 
 const float PI =  3.1415926535897932384626433832795f;
 const float TWO_PI = 2.0f * PI;

@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <d3dx11tex.h>
 #include "..\stdafx.h"
+#include "..\math\mathutils.h"
 
 struct TextureAsset {
 	//IdString name;
@@ -16,6 +17,38 @@ struct TextureAsset {
 	~TextureAsset() {
 		SAFE_RELEASE(texture);
 	}
+};
+
+struct Color {
+
+	float r;
+	float g;
+	float b;
+	float a;
+
+	Color() : r(0.0f), g(0.0f), b(0.0f), a(1.0f) {}
+	Color(float _r, float _g, float _b, float _a) : r(_r), g(_g), b(_b), a(_a) {}
+	Color(BYTE _r, BYTE _g, BYTE _b, BYTE _a) {
+		r = static_cast<float>(_r) / 255.0f;
+		g = static_cast<float>(_g) / 255.0f;
+		b = static_cast<float>(_b) / 255.0f;
+		a = static_cast<float>(_a) / 255.0f;
+	}
+	Color(int _r, int _g, int _b, int _a) {
+		r = static_cast<float>(_r) / 255.0f;
+		g = static_cast<float>(_g) / 255.0f;
+		b = static_cast<float>(_b) / 255.0f;
+		a = static_cast<float>(_a) / 255.0f;
+	}
+
+	bool operator == (const Color& other) {
+		return r == other.r && g == other.g && b == other.b && a == other.a;
+	}
+
+	bool operator != (const Color& other) {
+		return r != other.r || g != other.g || b != other.b || a != other.a;
+	}
+
 };
 
 struct Texture {
@@ -36,6 +69,50 @@ struct Texture {
 			default: return v2(0, 0);
 		}
 	}
+};
+
+// -------------------------------------------------------
+// Character definition
+// -------------------------------------------------------
+struct CharDef {
+
+	int ascii;
+	int startX;
+	int startY;
+	int width;
+	Texture texture;
+
+	CharDef() : ascii(-1), startX(0), startY(0), width(0) {}
+
+};
+
+// -------------------------------------------------------
+// Font definition
+// -------------------------------------------------------
+struct FontDefinition {
+
+	int startChar;// " : "32",
+	int endChar;// " : "128",
+	int charHeight;// " : "14",
+	int gridHeight;// " : "21",
+	int startX;// " : "0",
+	int startY;// " : "300",
+	int width;// " : "405",
+	int height;// " : "168",
+	int padding;// " : "6",
+	int textureSize;// " : "1024"
+	CharDef definitions[255];
+
+	void addChar(uint32 ascii, int startX, int startY, int width) {
+		CharDef cd;
+		cd.ascii = ascii;
+		cd.startX = startX;
+		cd.startY = startY;
+		cd.width = width;
+		cd.texture = math::buildTexture(static_cast<float>(startY), static_cast<float>(startX), static_cast<float>(width), static_cast<float>(charHeight), static_cast<float>(textureSize), static_cast<float>(textureSize), true);
+		definitions[ascii] = cd;
+	}
+
 };
 
 struct PCTVertex {

@@ -10,9 +10,9 @@ BaseApp *app = new Slingy();
 
 Slingy::Slingy() {
 	_settings.tickCamera = false;
-	_settings.screenSizeX = 800;
-	_settings.screenSizeY = 600;
-	//_settings.clearColor = D3DCOLOR_XRGB(0,0,0);
+	_settings.screenSizeX = 1024;
+	_settings.screenSizeY = 768;
+	_settings.clearColor = D3DCOLOR_XRGB(0,0,0);
 	//_CrtSetBreakAlloc(339);
 }
 
@@ -24,15 +24,15 @@ Slingy::~Slingy() {
 
 void Slingy::loadContent() {
 	sprites::intialize("content\\array.png");
-	_ballTexture = math::buildTexture(Rect(0,200,30,30),512.0f,512.0f,true);
-	_tailTexture = math::buildTexture(Rect(30,200,24,15),512.0f,512.0f,true);
+	_ballTexture = math::buildTexture(Rect(0,38,40,40),512.0f,512.0f,true);
+	_tailTexture = math::buildTexture(Rect(0,0,32,32),512.0f,512.0f,true);
 	_ball.position = v2(400,300);
 	_ball.aabBox = AABBox(_ball.position,v2(15,15));
 	_ball.angle = 0.0f;
 	for ( int i = 0; i < 6; ++i ) {
 		Tail t;
 		t.position = _ball.position;
-		t.position.x -= 26.0f * i;
+		t.position.x -= 35.0f * (i+1);
 		t.aabBox = AABBox(t.position,v2(10,10));
 		t.angle = 0.0f;
 		_tails.push_back(t);
@@ -88,8 +88,8 @@ void Slingy::moveTail(float dt) {
 	v2 parent = _ball.position;
 	for ( size_t i = 0; i < _tails.size(); ++i ) {
 		v2 diff = parent - _tails[i].position;
-		if ( sqr_length(diff) > 20.0f ) {
-			float tooFar = length(diff) - 20.0f;
+		if ( sqr_length(diff) > 32.0f ) {
+			float tooFar = length(diff) - 32.0f;
 			v2 translate = normalize(diff) * tooFar;
 			_tails[i].position += translate;
 			_tails[i].aabBox.translate(_tails[i].position);
@@ -143,19 +143,17 @@ void Slingy::tick(float dt) {
 void Slingy::render() {
 	sprites::begin();
 
-	drawLine(v2(100,100),v2(300,200),3);
-
-	sprites::draw(v2(100,100),_tailTexture);
-
-	sprites::draw(v2(300,200),_tailTexture);
-
 	for ( size_t i = 0; i < _walls.size(); ++i ) {
 		sprites::draw(_walls[i].position,_walls[i].texture);
 	}
-	sprites::draw(_ball.position,_ballTexture,_ball.angle);
+
+	sprites::draw(_ball.position, _ballTexture, _ball.angle, 1.0f, 1.0f, D3DCOLOR_XRGB(192,0,0));
+
 	for ( size_t i = 0; i < _tails.size(); ++i ) {
-		sprites::draw(_tails[i].position,_tailTexture,_tails[i].angle);
+		sprites::draw(_tails[i].position, _tailTexture, _tails[i].angle, 1.0f, 1.0f, D3DCOLOR_XRGB(192, 0, 192));
 	}
+
+	sprites::drawText("Hello World", 100, 20);
 	sprites::end();
 }
 

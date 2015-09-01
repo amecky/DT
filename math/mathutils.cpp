@@ -1,5 +1,6 @@
 #include "mathutils.h"
 #include "..\stdafx.h"
+#include "..\renderer\render_types.h"
 
 namespace math {
 
@@ -67,6 +68,11 @@ namespace math {
 			ret.w = textureRect.bottom/textureHeight;
 		}
 		return ret;
+	}
+
+	Texture buildTexture(float top, float left, float width, float height, float textureWidth, float textureHeight, bool useHalfTexel) {
+		Rect r(top, left, width, height);
+		return buildTexture(r, textureWidth, textureHeight, useHalfTexel);
 	}
 
 	Texture buildTexture(const Rect& r, float textureWidth, float textureHeight, bool useHalfTexel) {

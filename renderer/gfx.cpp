@@ -55,6 +55,129 @@ namespace gfx {
 		return asset;
 	}
 
+	BYTE* getImageData(ID3D11ShaderResourceView* shaderResourceView,int* nWidth,int*  nHeight) {
+		ID3D11Resource* resource = NULL;;
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+
+		if (shaderResourceView)	{
+			shaderResourceView->GetResource(&resource);
+			shaderResourceView->GetDesc(&srvDesc);
+		}
+		else {
+			return NULL;
+		}
+		ID3D11Texture2D* tex = (ID3D11Texture2D*)resource;
+		if (tex) {
+			D3D11_TEXTURE2D_DESC description;
+			tex->GetDesc(&description);
+			description.BindFlags = 0;
+			description.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+			description.Usage = D3D11_USAGE_STAGING;
+
+			ID3D11Texture2D* texTemp = NULL;
+
+			HRESULT hr = ctx->device->CreateTexture2D(&description, NULL, &texTemp);
+			if (FAILED(hr))	{
+				if (texTemp) {
+					texTemp->Release();
+					texTemp = NULL;
+				}
+				return NULL;
+			}
+			ctx->deviceContext->CopyResource(texTemp, tex);
+
+			D3D11_MAPPED_SUBRESOURCE  mapped;
+			unsigned int subresource = 0;
+			hr = ctx->deviceContext->Map(texTemp, 0, D3D11_MAP_READ, 0, &mapped);
+			if (FAILED(hr)) {
+				texTemp->Release();
+				texTemp = NULL;
+				return NULL;
+			}
+
+			*nWidth = description.Width;
+			*nHeight = description.Height;
+			const int pitch = mapped.RowPitch;
+			BYTE* source = (BYTE*)(mapped.pData);
+			BYTE* dest = new BYTE[(*nWidth)*(*nHeight) * 4];
+			BYTE* destTemp = dest;
+			for (int i = 0; i < *nHeight; ++i)
+			{
+				memcpy(destTemp, source, *nWidth * 4);
+				source += pitch;
+				destTemp += *nWidth * 4;
+			}
+			ctx->deviceContext->Unmap(texTemp, 0);
+			return dest;
+		}
+		else
+			return NULL;
+	}
+
+	Color getColor(BYTE* data, int x, int y, int width) {
+		int idx = x * 4 + y * width * 4;
+		Color c((int)data[idx],(int)data[idx + 1],(int)data[idx + 2],(int)data[idx + 3]);
+		return c;
+	}
+
+	void initializeBitmapFont(FontDefinition& fontDefinition,TextureAsset* textureAsset, const Color& fillColor) {
+		int width = 0;
+		int height = 0;
+		BYTE* data = getImageData(textureAsset->texture, &width, &height);
+		LOG << "width: " << width << " height: " << height;
+		int idx = 100 * 4 + 1 * width * 4;
+		LOG << "r: " << (int)data[idx];
+		LOG << "g: " << (int)data[idx + 1];
+		LOG << "b: " << (int)data[idx + 2];
+		LOG << "a: " << (int)data[idx + 3];
+		
+		
+		int x = fontDefinition.startX + fontDefinition.padding - 1;
+		int y = fontDefinition.startY + fontDefinition.padding;
+		uint32 ascii = fontDefinition.startChar;
+		Color c = getColor(data, x, y, width);
+		bool running = true;
+		bool isChar = false;
+		int charStartedX = 0;
+		int charStartedY = 0;
+		int charCount = 0;
+		while (running) {
+			++x;
+			if (x > (fontDefinition.startX + fontDefinition.width)) {
+				x = fontDefinition.startX + fontDefinition.padding - 1;
+				y += fontDefinition.padding + fontDefinition.gridHeight;// - 1;
+				isChar = false;
+				charCount = 0;
+			}
+			if (y >= (fontDefinition.startY + fontDefinition.height)) {
+				running = false;
+			}
+			if (y >= height) {
+				running = false;
+			}
+			if (running) {
+				c = getColor(data, x, y, width);
+				if ( c != fillColor && !isChar) {
+					isChar = true;
+					charStartedX = x;
+					charStartedY = y;
+				}
+				else if (c == fillColor && isChar) {
+					isChar = false;
+					int width = x - charStartedX - 1;
+					++charCount;
+					fontDefinition.addChar(ascii, charStartedX + 1, charStartedY, width);
+					//LOG << "ascii: '" << ascii << "' at " << charStartedX << " " << charStartedY;
+					++ascii;
+				}
+
+			}
+		}
+
+		delete[] data;
+
+	}
+
 	void renderShader(Shader* shader,TextureAsset* asset,int indexCount) {
 		D3DXMATRIX world;
 		D3DXMatrixIdentity(&world);

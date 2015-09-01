@@ -1,32 +1,19 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: texture.vs
-////////////////////////////////////////////////////////////////////////////////
-
-
-/////////////
-// GLOBALS //
-/////////////
-cbuffer MatrixBuffer
-{
+cbuffer MatrixBuffer {
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
 };
 
-
-//////////////
-// TYPEDEFS //
-//////////////
-struct VertexInputType
-{
+struct VertexInputType {
     float4 position : POSITION;
     float2 tex : TEXCOORD0;
+    float4 color : COLOR0;
 };
 
-struct PixelInputType
-{
+struct PixelInputType {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
+    float4 color : COLOR0;
 };
 
 
@@ -45,7 +32,7 @@ PixelInputType TextureVertexShader(VertexInputType input)
     output.position = mul(input.position, worldMatrix);
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
-    
+    output.color = input.color;
 	// Store the texture coordinates for the pixel shader.
 	output.tex = input.tex;
     

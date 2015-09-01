@@ -5,6 +5,7 @@
 #include "..\renderer\gfx.h"
 #include "..\renderer\Mesh.h"
 #include "..\math\mathutils.h"
+#include "..\utils\Log.h"
 #include <assert.h>
 
 namespace sprites {
@@ -19,13 +20,14 @@ namespace sprites {
 	struct SpriteBatchContext {
 
 		int maxSprites;
-		PTVertex sprites[MAX_SPRITES * 4];
+		PCTVertex sprites[MAX_SPRITES * 4];
 		int size;
 		int index;
 		int maxVertices;
 		VertexIndexBuffer* buffer;
 		Shader* shader;
 		TextureAsset* texture;
+		FontDefinition fontDefinition;
 
 		SpriteBatchContext() : size(0) {}
 
@@ -41,9 +43,23 @@ namespace sprites {
 		spriteCtx->size = 0;
 		spriteCtx->index = 0;
 		spriteCtx->maxVertices = MAX_SPRITES * 4;
-		spriteCtx->buffer = gfx::createQuadBuffer(MAX_SPRITES * 4,sizeof(PTVertex));
+		spriteCtx->buffer = gfx::createQuadBuffer(MAX_SPRITES * 4,sizeof(PCTVertex));
 		spriteCtx->shader = gfx::createShader("texture.vs","texture.ps");
 		spriteCtx->texture = gfx::loadTexture(textureName);//"content\\ref_256.png");
+		
+
+		spriteCtx->fontDefinition.startChar = 32;// " : "32",
+		spriteCtx->fontDefinition.endChar = 128;// " : "128",
+		spriteCtx->fontDefinition.charHeight = 14;// " : "14",
+		spriteCtx->fontDefinition.gridHeight = 21;// " : "21",
+		spriteCtx->fontDefinition.startX = 0;// " : "0",
+		spriteCtx->fontDefinition.startY = 100;// " : "300",
+		spriteCtx->fontDefinition.width = 405;// " : "405",
+		spriteCtx->fontDefinition.height = 168;// " : "168",
+		spriteCtx->fontDefinition.padding = 6;// " : "6",
+		spriteCtx->fontDefinition.textureSize = 512;// " : "1024"
+
+		gfx::initializeBitmapFont(spriteCtx->fontDefinition, spriteCtx->texture, Color(255, 0, 255, 255));
 		return true;
 	}
 
@@ -80,7 +96,22 @@ namespace sprites {
 		begin();
 	}
 
-	void draw(const v2& pos,const Texture& tex, float rotation, float scaleX, float scaleY) {
+	void drawText(const char* text, int x, int y) {
+		int len = strlen(text);
+		int xp = x;
+		for (int i = 0; i < len; ++i ) {
+			if (text[i] != '\0') {
+				CharDef cd = spriteCtx->fontDefinition.definitions[text[i]];
+				if (cd.ascii == -1) {
+					LOG << "MISSING: '" << (int)text[i] << "'";
+				}
+				draw(v2(xp, y), cd.texture);
+				xp += cd.width;
+			}
+		}
+	}
+
+	void draw(const v2& pos,const Texture& tex, float rotation, float scaleX, float scaleY,const D3DXCOLOR& color) {
 		assert(spriteCtx != 0);
 		int vertexCount = spriteCtx->index;
 		if ((vertexCount + 4) >= spriteCtx->maxVertices  ) {
@@ -107,7 +138,7 @@ namespace sprites {
 			spriteCtx->sprites[idx + i].x = np.x;
 			spriteCtx->sprites[idx + i].y = np.y;
 			spriteCtx->sprites[idx + i].z = 0.0f;
-			//spriteCtx->sprites[idx + i].color = color;
+			spriteCtx->sprites[idx + i].color = color;
 		}
 		spriteCtx->index += 4;
 		++spriteCtx->size;

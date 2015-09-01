@@ -2,10 +2,14 @@
 #include "..\stdafx.h"
 #include <d3dx9math.h>
 #include "Camera.h"
+#include <d3d11.h>
+#include <d3dx11tex.h>
 
 class VertexIndexBuffer;
 class Shader;
 struct TextureAsset;
+struct FontDefinition;
+struct Color;
 
 namespace gfx {
 
@@ -34,4 +38,8 @@ namespace gfx {
 	void turnZBufferOff();
 
 	Camera* getCamera();
+
+	void initializeBitmapFont(FontDefinition& fontDefinition,TextureAsset* textureAsset, const Color& fillColor);
+
+	BYTE* getImageData(ID3D11ShaderResourceView* shaderResourceView, int* nWidth, int*  nHeight);
 }

@@ -42,4 +42,5 @@ private:
 	ParticleEmitter* _emitter;
 	ModifierData _modifierData;
 	ModifierDataIndices _modifierDataIndices;
+	Texture _texture;
 };
