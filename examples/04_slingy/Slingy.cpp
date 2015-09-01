@@ -24,8 +24,8 @@ Slingy::~Slingy() {
 
 void Slingy::loadContent() {
 	sprites::intialize("content\\array.png");
-	_ballTexture = sprites::buildTexture(Rect(0,200,30,30),512.0f,512.0f,true);
-	_tailTexture = sprites::buildTexture(Rect(30,200,24,15),512.0f,512.0f,true);
+	_ballTexture = math::buildTexture(Rect(0,200,30,30),512.0f,512.0f,true);
+	_tailTexture = math::buildTexture(Rect(30,200,24,15),512.0f,512.0f,true);
 	_ball.position = v2(400,300);
 	_ball.aabBox = AABBox(_ball.position,v2(15,15));
 	_ball.angle = 0.0f;
@@ -37,7 +37,7 @@ void Slingy::loadContent() {
 		t.angle = 0.0f;
 		_tails.push_back(t);
 	}
-
+	/*
 	FILE *fp = fopen("l1.txt", "rb");
 	char* text;
 	if (fp) {
@@ -58,12 +58,21 @@ void Slingy::loadContent() {
 		}
 		delete[] text;
 	}
+	*/
+}
+
+void Slingy::drawLine(const v2& start,const v2& end,int thickness) {
+	v2 diff = end - start;	
+	int l = length(diff);
+	diff *= 0.5f;
+	float angle = math::get_target_angle(end,start);
+	sprites::draw(start + diff,math::buildTexture(Rect(275,0,l,thickness),512.0f,512.0f,true),angle);
 }
 
 void Slingy::addWall(const v2& p,int width,int height) {
 	Wall w;
 	w.position = p;
-	w.texture = sprites::buildTexture(Rect(275,0,width,height),512.0f,512.0f,true);
+	w.texture = math::buildTexture(Rect(275,0,width,height),512.0f,512.0f,true);
 	w.aabBox = AABBox(p,v2(width/2,height/2));
 	_walls.push_back(w);
 }
@@ -133,6 +142,13 @@ void Slingy::tick(float dt) {
 
 void Slingy::render() {
 	sprites::begin();
+
+	drawLine(v2(100,100),v2(300,200),3);
+
+	sprites::draw(v2(100,100),_tailTexture);
+
+	sprites::draw(v2(300,200),_tailTexture);
+
 	for ( size_t i = 0; i < _walls.size(); ++i ) {
 		sprites::draw(_walls[i].position,_walls[i].texture);
 	}

@@ -110,6 +110,18 @@
     <ClInclude Include="examples\04_slingy\Slingy.h">
       <Filter>examples\04_slingy</Filter>
     </ClInclude>
+    <ClInclude Include="particle\ParticleArray.h">
+      <Filter>particle</Filter>
+    </ClInclude>
+    <ClInclude Include="particle\ParticleEmitter.h">
+      <Filter>particle</Filter>
+    </ClInclude>
+    <ClInclude Include="particle\ParticleModifier.h">
+      <Filter>particle</Filter>
+    </ClInclude>
+    <ClInclude Include="particle\ParticleSystem.h">
+      <Filter>particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -167,6 +179,15 @@
     </ClCompile>
     <ClCompile Include="examples\04_slingy\Slingy.cpp">
       <Filter>examples\04_slingy</Filter>
+    </ClCompile>
+    <ClCompile Include="particle\ParticleEmitter.cpp">
+      <Filter>particle</Filter>
+    </ClCompile>
+    <ClCompile Include="particle\ParticleModifier.cpp">
+      <Filter>particle</Filter>
+    </ClCompile>
+    <ClCompile Include="particle\ParticleSystem.cpp">
+      <Filter>particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

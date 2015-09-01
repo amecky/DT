@@ -4,7 +4,7 @@
 #include "..\..\renderer\Mesh.h"
 #include "..\..\sprites\SpriteBatch.h"
 #include "..\..\utils\Log.h"
-
+#include "..\..\math\mathutils.h"
 //BaseApp *app = new Breakout();
 
 Breakout::Breakout() {
@@ -23,7 +23,7 @@ Breakout::~Breakout() {
 
 void Breakout::loadContent() {
 	sprites::intialize("content\\array.png");
-	_brickTexture = sprites::buildTexture(Rect(60,0,60,25),512.0f,512.0f,true);
+	_brickTexture = math::buildTexture(Rect(60,0,60,25),512.0f,512.0f,true);
 	_bat.position = v2(400,60);
 	_bat.aabBox = AABBox(_bat.position,v2(45,15));
 	_ball.position = v2(400,120);
@@ -104,8 +104,8 @@ void Breakout::render() {
 	for ( size_t i = 0; i < _bricks.size(); ++i ) {
 		sprites::draw(_bricks[i].position,_brickTexture);	
 	}
-	sprites::draw(_ball.position,sprites::buildTexture(Rect(30,50,24,24),512.0f,512.0f,true));
-	sprites::draw(_bat.position,sprites::buildTexture(Rect(0,80,90,30),512.0f,512.0f,true));
+	sprites::draw(_ball.position,math::buildTexture(Rect(30,50,24,24),512.0f,512.0f,true));
+	sprites::draw(_bat.position,math::buildTexture(Rect(0,80,90,30),512.0f,512.0f,true));
 	sprites::end();
 }
 

@@ -87,6 +87,10 @@
     <ClInclude Include="examples\04_slingy\Slingy.h" />
     <ClInclude Include="math\BezierCurve.h" />
     <ClInclude Include="math\mathutils.h" />
+    <ClInclude Include="particle\ParticleArray.h" />
+    <ClInclude Include="particle\ParticleEmitter.h" />
+    <ClInclude Include="particle\ParticleModifier.h" />
+    <ClInclude Include="particle\ParticleSystem.h" />
     <ClInclude Include="renderer\Camera.h" />
     <ClInclude Include="renderer\gfx.h" />
     <ClInclude Include="renderer\Mesh.h" />
@@ -112,6 +116,9 @@
     <ClCompile Include="examples\03_breakout\Breakout.cpp" />
     <ClCompile Include="examples\04_slingy\Slingy.cpp" />
     <ClCompile Include="math\mathutils.cpp" />
+    <ClCompile Include="particle\ParticleEmitter.cpp" />
+    <ClCompile Include="particle\ParticleModifier.cpp" />
+    <ClCompile Include="particle\ParticleSystem.cpp" />
     <ClCompile Include="renderer\Camera.cpp" />
     <ClCompile Include="renderer\gfx.cpp" />
     <ClCompile Include="renderer\Mesh.cpp" />

@@ -10,8 +10,6 @@ namespace sprites {
 
 	void flush();
 
-	Texture buildTexture(const Rect& r, float textureWidth = 1024.0f, float textureHeight = 1024.0f, bool useHalfTexel = true);
-
 	void begin();
 
 	void end();

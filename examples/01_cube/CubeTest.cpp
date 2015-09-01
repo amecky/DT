@@ -7,7 +7,7 @@
 #include "..\..\renderer\Mesh.h"
 #include "..\..\renderer\Shader.h"
 #include "..\..\sprites\SpriteBatch.h"
-
+#include "..\..\math\mathutils.h"
 //BaseApp *app = new CubeTest();
 
 CubeTest::CubeTest() {
@@ -46,7 +46,7 @@ void CubeTest::render() {
 	if ( _scaling ) {
 		s = 1.0f + sin(_timer) * 0.2f;		
 	}
-	sprites::draw(v2(400,300),sprites::buildTexture(Rect(0,0,256,256),256.0f,256.0f,true),angle,s,s);	
+	sprites::draw(v2(400,300),math::buildTexture(Rect(0,0,256,256),256.0f,256.0f,true),angle,s,s);	
 	sprites::end();
 }
 

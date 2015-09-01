@@ -40,4 +40,61 @@ namespace math {
 		}
 		return angle;
 	}
+
+	v4 getTextureCoordinates(const Rect& textureRect,float textureWidth,float textureHeight,bool useHalfTexel) {
+		v4 ret;
+		if ( useHalfTexel ) {
+			float halfTexel = 0.5f;
+			float const width   = textureWidth;
+			float const height  = textureHeight;
+
+			float tw = textureRect.width() / textureWidth;
+			float th = textureRect.height() / textureHeight;
+
+			float kUOffset = halfTexel/width;
+			float kVOffset = halfTexel/height;
+
+			ret.x = textureRect.left/width  + kUOffset;
+			ret.y = textureRect.top/height + kVOffset;  
+
+			ret.z = ret.x + tw   - 2.0f*kUOffset;
+			ret.w = ret.y + th  - 2.0f*kVOffset;
+		}
+		else {
+			ret.x = textureRect.left/textureWidth;
+			ret.z = textureRect.right/textureWidth;
+			ret.y = textureRect.top/textureHeight;
+			ret.w = textureRect.bottom/textureHeight;
+		}
+		return ret;
+	}
+
+	Texture buildTexture(const Rect& r, float textureWidth, float textureHeight, bool useHalfTexel) {
+		Texture ret;
+		ret.uv = getTextureCoordinates(r, textureWidth, textureHeight,true);
+		ret.textureID = 0;
+		ret.dim = Vector2f(r.width(), r.height());
+		return ret;
+	}
+
+	v2 srt(const Vector2f& v,const Vector2f& u,float scaleX,float scaleY,float rotation) {
+		float sx = u.x * scaleX;
+		float sy = u.y * scaleY;
+
+		// rotation clock wise
+		//float xt = cosf(rotation) * sx + sinf(rotation) * sy;
+		//float yt = -sinf(rotation) * sx + cosf(rotation) * sy;
+
+		// rotation counter clock wise
+		//float xt = cosf(rotation) * sx - sinf(rotation) * sy;
+		//float yt = sinf(rotation) * sx + cosf(rotation) * sy;
+
+		float xt = cos(rotation) * sx - sin(rotation) * sy;
+		float yt =sin(rotation) * sx + cos(rotation) * sy;
+
+		xt += v.x;
+		yt += v.y;
+
+		return Vector2f(xt,yt);
+	}
 }

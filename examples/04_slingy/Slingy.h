@@ -44,6 +44,7 @@ private:
 	void moveTail(float dt);
 	void resetBall();
 	void addWall(const v2& p,int width,int height);
+	void drawLine(const v2& start,const v2& end,int thickness);
 	float _timer;
 	Texture _ballTexture;
 	Texture _tailTexture;
