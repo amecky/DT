@@ -20,6 +20,9 @@ typedef std::vector<int> ModifierDataIndices;
 public:
 	ParticleSystem(int max,int texture_id);
 	~ParticleSystem() {}
+	void setTexture(const Texture& texture) {
+		_texture = texture;
+	}
 	void tick(float dt);
 	void render();
 	void setTTL(float ttl,float random);
@@ -40,7 +43,7 @@ private:
 	ParticleArray _array;
 	Modifiers _modifiers;
 	ParticleEmitter* _emitter;
-	ModifierData _modifierData;
+	ParticleDataBuffer _modifierData;
 	ModifierDataIndices _modifierDataIndices;
 	Texture _texture;
 };

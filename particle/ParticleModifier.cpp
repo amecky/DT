@@ -1,6 +1,6 @@
 #include "ParticleModifier.h"
 
-void lifeOverTime(const ModifierData& data, int dataIndex, ParticleArray* array, float dt) {
+void lifeOverTime(const ParticleDataBuffer& data, int dataIndex, ParticleArray* array, float dt) {
 	LiveOverTimeData myData;
 	if (data.get(dataIndex, &myData, sizeof(LiveOverTimeData))) {
 		for (int i = 0; i < array->countAlive; ++i) {
@@ -17,14 +17,14 @@ void lifeOverTime(const ModifierData& data, int dataIndex, ParticleArray* array,
 	}
 }
 
-void moveParticle(const ModifierData& data, int dataIndex, ParticleArray* array, float dt) {
+void moveParticle(const ParticleDataBuffer& data, int dataIndex, ParticleArray* array, float dt) {
 	for ( int i = 0; i < array->countAlive; ++i ) {
 		array->velocity[i] += array->acceleration[i] * dt;
 		array->position[i] += array->velocity[i] * dt;
 	}
 }
 
-void colorizeParticle(const ModifierData& data, int dataIndex, ParticleArray* array, float dt) {
+void colorizeParticle(const ParticleDataBuffer& data, int dataIndex, ParticleArray* array, float dt) {
 	ParticleColorData myData;
 	if (data.get(dataIndex, &myData, sizeof(ParticleColorData))) {
 		for ( int i = 0; i < array->countAlive; ++i ) {
@@ -37,7 +37,7 @@ void colorizeParticle(const ModifierData& data, int dataIndex, ParticleArray* ar
 	}
 }
 
-void scaleParticle(const ModifierData& data, int dataIndex, ParticleArray* array, float dt) {
+void scaleParticle(const ParticleDataBuffer& data, int dataIndex, ParticleArray* array, float dt) {
 	ParticleScaleData myData;
 	if (data.get(dataIndex, &myData, sizeof(ParticleScaleData))) {
 		for ( int i = 0; i < array->countAlive; ++i ) {

@@ -11,6 +11,13 @@ struct TextureAsset;
 struct FontDefinition;
 struct Color;
 
+namespace assets {
+
+	int loadTexture(const char* name);
+
+	ID3D11ShaderResourceView* getRawTexture(int id);
+}
+
 namespace gfx {
 
 	bool initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
@@ -29,9 +36,9 @@ namespace gfx {
 
 	Shader* createShader(char* vsFilename, char* psFilename);
 
-	void renderShader(Shader* shader,TextureAsset* asset,int indexCount);
+	void renderShader(Shader* shader,int texture_id,int indexCount);
 
-	TextureAsset* loadTexture(const char* fileName);
+	//TextureAsset* loadTexture(const char* fileName);
 
 	void turnZBufferOn();
 
@@ -39,7 +46,7 @@ namespace gfx {
 
 	Camera* getCamera();
 
-	void initializeBitmapFont(FontDefinition& fontDefinition,TextureAsset* textureAsset, const Color& fillColor);
+	void initializeBitmapFont(FontDefinition& fontDefinition,int texture_id, const Color& fillColor);
 
 	BYTE* getImageData(ID3D11ShaderResourceView* shaderResourceView, int* nWidth, int*  nHeight);
 }

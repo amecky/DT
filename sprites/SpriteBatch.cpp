@@ -26,7 +26,7 @@ namespace sprites {
 		int maxVertices;
 		VertexIndexBuffer* buffer;
 		Shader* shader;
-		TextureAsset* texture;
+		int texture;
 		FontDefinition fontDefinition;
 
 		SpriteBatchContext() : size(0) {}
@@ -45,8 +45,8 @@ namespace sprites {
 		spriteCtx->maxVertices = MAX_SPRITES * 4;
 		spriteCtx->buffer = gfx::createQuadBuffer(MAX_SPRITES * 4,sizeof(PCTVertex));
 		spriteCtx->shader = gfx::createShader("texture.vs","texture.ps");
-		spriteCtx->texture = gfx::loadTexture(textureName);//"content\\ref_256.png");
-		
+		spriteCtx->texture = assets::loadTexture(textureName);//"content\\ref_256.png");
+		assert(spriteCtx->texture != -1);
 
 		spriteCtx->fontDefinition.startChar = 32;// " : "32",
 		spriteCtx->fontDefinition.endChar = 128;// " : "128",
@@ -64,7 +64,7 @@ namespace sprites {
 	}
 
 	void shutdown() {
-		delete spriteCtx->texture;
+		//delete spriteCtx->texture;
 		delete spriteCtx->shader;
 		delete spriteCtx->buffer;
 		delete spriteCtx;

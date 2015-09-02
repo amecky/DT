@@ -9,7 +9,11 @@
 #include "Camera.h"
 #include "render_types.h"
 #include "..\utils\Log.h"
+#include "..\utils\stringutils.h"
 
+// -------------------------------------------------
+// RenderContext
+// -------------------------------------------------
 struct RenderContext {
 
 	bool vsync_enabled;
@@ -27,10 +31,81 @@ struct RenderContext {
 	Camera camera;
 };
 
+// -------------------------------------------------
+// AssetContext
+// -------------------------------------------------
+struct AssetContext {
+
+	std::vector<TextureAsset> textures;
+
+};
+
 static RenderContext* ctx = 0;
 
+static AssetContext* assetCtx = 0;
 
+// -------------------------------------------------
+// assets
+// -------------------------------------------------
+namespace assets {
 
+	void initialize() {
+		assetCtx = new AssetContext;
+	}
+
+	// -------------------------------------------------
+	// find texture
+	// -------------------------------------------------
+	int findTexture(const char* name) {
+		IdString hash = string::murmur_hash(name);
+		for (size_t i = 0; i < assetCtx->textures.size(); ++i) {
+			if (assetCtx->textures[i].hashName == hash) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	// -------------------------------------------------
+	// load texture
+	// -------------------------------------------------
+	int loadTexture(const char* name) {
+		LOGC("assets") << "load texture: " << name;
+		int idx = findTexture(name);
+		if (idx != -1) {
+			LOGC("assets") << "found already existing texture - returning " << idx;
+			return idx;
+		}
+		TextureAsset asset;
+		char fileName[256];
+		sprintf(fileName, "content\\%s.png", name);
+		LOGC("assets") << "loading texture from file: " << fileName;
+		HRESULT result = D3DX11CreateShaderResourceViewFromFile(ctx->device, fileName, NULL, NULL, &asset.texture, NULL);
+		if (FAILED(result)) {
+			return -1;
+		}
+		assetCtx->textures.push_back(asset);
+		return assetCtx->textures.size() - 1;
+	}
+
+	ID3D11ShaderResourceView* getRawTexture(int id) {
+		assert(id >= 0 && id < assetCtx->textures.size());
+		return assetCtx->textures[id].texture;
+	}
+
+	void shutdown() {
+		LOGC("assets") << "shutting down context";
+		for (size_t i = 0; i < assetCtx->textures.size(); ++i) {
+			SAFE_RELEASE(assetCtx->textures[i].texture);
+		}
+		delete assetCtx;
+		assetCtx = 0;
+	}
+}
+
+// -------------------------------------------------
+// gfx
+// -------------------------------------------------
 namespace gfx {
 
 	Camera* getCamera() {
@@ -45,16 +120,7 @@ namespace gfx {
 	void turnZBufferOff() {
 		ctx->deviceContext->OMSetDepthStencilState(ctx->depthDisabledStencilState, 1);
 	}
-
-	TextureAsset* loadTexture(const char* fileName) {
-		TextureAsset* asset = new TextureAsset;
-		HRESULT result = D3DX11CreateShaderResourceViewFromFile(ctx->device, fileName, NULL, NULL, &asset->texture, NULL);
-		if(FAILED(result)) {
-			return 0;
-		}
-		return asset;
-	}
-
+	
 	BYTE* getImageData(ID3D11ShaderResourceView* shaderResourceView,int* nWidth,int*  nHeight) {
 		ID3D11Resource* resource = NULL;;
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
@@ -120,10 +186,12 @@ namespace gfx {
 		return c;
 	}
 
-	void initializeBitmapFont(FontDefinition& fontDefinition,TextureAsset* textureAsset, const Color& fillColor) {
+	void initializeBitmapFont(FontDefinition& fontDefinition, int texture_id, const Color& fillColor) {
 		int width = 0;
 		int height = 0;
-		BYTE* data = getImageData(textureAsset->texture, &width, &height);
+		ID3D11ShaderResourceView* texture = assets::getRawTexture(texture_id);
+		assert(texture != 0);
+		BYTE* data = getImageData(texture, &width, &height);
 		int x = fontDefinition.startX + fontDefinition.padding - 1;
 		int y = fontDefinition.startY + fontDefinition.padding;
 		uint32 ascii = fontDefinition.startChar;
@@ -167,10 +235,10 @@ namespace gfx {
 		delete[] data;
 	}
 
-	void renderShader(Shader* shader,TextureAsset* asset,int indexCount) {
+	void renderShader(Shader* shader,int texture_id,int indexCount) {
 		D3DXMATRIX world;
 		D3DXMatrixIdentity(&world);
-		if ( shader->setShaderParameters(ctx->deviceContext,world,ctx->camera.GetViewMatrix(),ctx->camera.GetProjectionMatrix(),asset->texture)) {
+		if (shader->setShaderParameters(ctx->deviceContext, world, ctx->camera.GetViewMatrix(), ctx->camera.GetProjectionMatrix(), texture_id)) {
 			shader->render(ctx->deviceContext,indexCount);
 		}
 		else {
@@ -229,6 +297,9 @@ namespace gfx {
 	// shutdown
 	// ----------------------------------------------
 	void shutdown() {
+		
+		assets::shutdown();
+
 		assert(ctx != 0);
 		// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 		if(ctx->swapChain) {
@@ -574,6 +645,9 @@ namespace gfx {
 
 		ctx->camera.setPosition(0.0f,0.0f,-10.0f);
 		ctx->camera.Update();
+
+		assets::initialize();
+
 		return true;
 	}
 

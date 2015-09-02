@@ -21,7 +21,7 @@ public:
 	bool loadShader(const char* fxName, const char* techName);
 	bool initialize(ID3D11Device* device,char* vsFilename, char* psFilename);
 	bool setShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-											 D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture);
+											 D3DXMATRIX projectionMatrix, int texture_id);
 	void render(ID3D11DeviceContext* deviceContext, int indexCount);
 private:
 	ID3D11VertexShader* _vertexShader;

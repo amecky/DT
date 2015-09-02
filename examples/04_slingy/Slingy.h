@@ -3,6 +3,7 @@
 #include "..\..\renderer\Mesh.h"
 #include "..\..\World.h"
 #include <vector>
+#include "..\..\particle\ParticleSystem.h"
 
 class Slingy : public BaseApp {
 
@@ -67,5 +68,8 @@ private:
 	Ball _ball;
 	Tails _tails;
 	Walls _walls;
+
+	ParticleSystem* _particles;
+	ParticleEmitter* _emitter;
 };
 

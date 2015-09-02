@@ -7,16 +7,14 @@
 #include "..\math\mathutils.h"
 
 struct TextureAsset {
-	//IdString name;
+
+	IdString hashName;
 	ID3D11ShaderResourceView* texture;
 	int width;
 	int height;
 
 	TextureAsset() : texture(0) , width(0) , height(0) {}
 
-	~TextureAsset() {
-		SAFE_RELEASE(texture);
-	}
 };
 
 struct Color {
@@ -71,7 +69,7 @@ struct Color {
 
 struct Texture {
 
-	//IdString hashName;
+	IdString hashName;
 	v4 uv;
 	v2 dim;
 	int textureID;

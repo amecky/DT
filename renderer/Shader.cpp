@@ -5,6 +5,7 @@
 #include <d3dx10math.h>
 #include <d3dx11async.h>
 #include <fstream>
+#include "gfx.h"
 
 Shader::Shader() {
 }
@@ -180,7 +181,7 @@ bool Shader::initialize(ID3D11Device* device,char* vsFilename, char* psFilename)
 }
 
 bool Shader::setShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-											 D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture) {
+											 D3DXMATRIX projectionMatrix, int texture_id) {
 	HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
 	MatrixBufferType* dataPtr;
@@ -215,6 +216,7 @@ bool Shader::setShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX 
 	// Now set the constant buffer in the vertex shader with the updated values.
     deviceContext->VSSetConstantBuffers(bufferNumber, 1, &_matrixBuffer);
 
+	ID3D11ShaderResourceView* texture = assets::getRawTexture(texture_id);
 	// Set shader texture resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 1, &texture);
 

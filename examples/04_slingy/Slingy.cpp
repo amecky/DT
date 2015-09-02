@@ -12,18 +12,20 @@ Slingy::Slingy() {
 	_settings.tickCamera = false;
 	_settings.screenSizeX = 800;
 	_settings.screenSizeY = 600;
-	_settings.clearColor = Color(0,0,0);
+	//_settings.clearColor = Color(0,0,0);
 	//_CrtSetBreakAlloc(339);
 }
 
 
 Slingy::~Slingy() {
+	delete _emitter;
+	delete _particles;
 	sprites::shutdown();
 }
 
 
 void Slingy::loadContent() {
-	sprites::intialize("content\\array.png");
+	sprites::intialize("array");
 	_ballTexture = math::buildTexture(Rect(0,38,24,24),512.0f,512.0f,true);
 	_tailTexture = math::buildTexture(Rect(0,0,22,22),512.0f,512.0f,true);
 
@@ -73,7 +75,14 @@ void Slingy::loadContent() {
 		_tails.push_back(t);
 	}
 
-	
+	_particles = new ParticleSystem(256, 0);
+	_particles->setTexture(math::buildTexture(60, 0, 20, 20, 512.0f, 512.0f, true));
+	_emitter = new ParticleEmitter;
+	_emitter->createRing(40.0f);
+	_emitter->createRadialVelocity(40.0f,10.0f);
+	_particles->setEmitter(_emitter);
+	_particles->setTTL(2.0f,0.2f);
+	_particles->activateMovement();
 
 }
 
@@ -133,6 +142,8 @@ void Slingy::tick(float dt) {
 
 	_timer += dt;
 
+	_particles->tick(dt);
+
 	if ( !_ball.sticky ) {
 		float da = 0.0f;
 		if ( GetAsyncKeyState('A') != 0 ) {
@@ -176,6 +187,9 @@ void Slingy::render() {
 		sprites::draw(_stars[i].position,_stars[i].texture);
 	}
 	sprites::drawText("Hello World", 100, 20,Color(192,0,0));
+
+	_particles->render();
+
 	sprites::end();
 }
 
@@ -185,5 +199,8 @@ void Slingy::onChar(char ascii, unsigned int state) {
 			_ball.sticky = false;
 			_ball.velocity = math::get_radial_velocity(_ball.angle,150.0f);
 		}
+	}
+	if (ascii == '2'){
+		_particles->start(v2(400, 300));
 	}
 }

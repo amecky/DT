@@ -9,56 +9,42 @@ struct EmitterData {
 	float ttl;
 };
 
-class ParticleGenerator {
+typedef void(*ParticleGenerator)(const ParticleDataBuffer&, int, ParticleArray*, int, int);
 
-public:
-	ParticleGenerator() {}
-	virtual ~ParticleGenerator() {}
-	virtual void create(ParticleArray* array,int start,int end) = 0;
-};
+//void createDefaultParticles(const ParticleDataBuffer& data,int index,ParticleArray* array, int start, int end);
 
-class DefaultParticleGenerator : public ParticleGenerator {
+struct RingData {
 
-public:
-	DefaultParticleGenerator() {}
-	virtual ~DefaultParticleGenerator() {}
-	void create(ParticleArray* array,int start,int end);
+	float radius;
 
 };
 
-class RingGenerator : public ParticleGenerator {
+void createParticleRing(const ParticleDataBuffer& data, int index, ParticleArray* array, int start, int end);
 
-public:
-	RingGenerator(float radius) : ParticleGenerator() , _radius(radius) {}
-	virtual ~RingGenerator() {}
-	void create(ParticleArray* array,int start,int end);
-private:
-	float _radius;
+struct RadialVelocityData {
+	float velocity;
+	float random;
 };
 
-class RadialVelocityGenerator : public ParticleGenerator {
-
-public:
-	RadialVelocityGenerator(float v) : ParticleGenerator() , _velocity(v) {}
-	virtual ~RadialVelocityGenerator() {}
-	void create(ParticleArray* array,int start,int end);
-private:
-	float _velocity;
-};
+void setRadialVelocity(const ParticleDataBuffer& data, int index, ParticleArray* array, int start, int end);
 
 class ParticleEmitter {
 
-typedef std::vector<ParticleGenerator*> Generators;
-
+typedef std::vector<ParticleGenerator> Generators;
+typedef std::vector<int> EmitterDataIndices;
 public:
 	ParticleEmitter() {
-		_generators.push_back(new DefaultParticleGenerator());
+		_emitterData.allocate(1024);
 	}
 	~ParticleEmitter() {}
-	void emitt(ParticleArray* array);
+	void emitt(const v2& position,ParticleArray* array);
 	void add(ParticleGenerator* generator) {
-		_generators.push_back(generator);
+		_generators.push_back(*generator);
 	}
+	void createRing(float radius);
+	void createRadialVelocity(float velocity,float random);
 private:
 	Generators _generators;
+	ParticleDataBuffer _emitterData;
+	EmitterDataIndices _emitterDataIndices;
 };
