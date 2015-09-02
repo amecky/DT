@@ -67,7 +67,7 @@ void ParticleSystem::activateMovement() {
 	_modifiers.push_back(&moveParticle);
 }
 
-void ParticleSystem::colorize(D3DXCOLOR start,D3DXCOLOR end) {
+void ParticleSystem::colorize(const Color& start,const Color& end) {
 	ParticleColorData data;
 	data.start = start;
 	data.end = end;

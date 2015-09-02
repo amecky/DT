@@ -1,5 +1,5 @@
 #pragma once
-#include <d3dx9core.h>
+//#include <d3dx9core.h>
 #include <Vector.h>
 #include <d3d11.h>
 #include <d3dx11tex.h>
@@ -34,6 +34,12 @@ struct Color {
 		b = static_cast<float>(_b) / 255.0f;
 		a = static_cast<float>(_a) / 255.0f;
 	}
+	Color(int _r, int _g, int _b) {
+		r = static_cast<float>(_r) / 255.0f;
+		g = static_cast<float>(_g) / 255.0f;
+		b = static_cast<float>(_b) / 255.0f;
+		a = 1.0f;
+	}
 	Color(int _r, int _g, int _b, int _a) {
 		r = static_cast<float>(_r) / 255.0f;
 		g = static_cast<float>(_g) / 255.0f;
@@ -47,6 +53,18 @@ struct Color {
 
 	bool operator != (const Color& other) {
 		return r != other.r || g != other.g || b != other.b || a != other.a;
+	}
+
+	float* operator() () {
+		return &r;
+	}
+
+	operator FLOAT* () {
+		return &r;
+	}
+
+    operator CONST FLOAT* () const {
+		return &r;
 	}
 
 };
@@ -119,15 +137,15 @@ struct PCTVertex {
 
 	float x,y,z;		
 	float u,v;
-	D3DXCOLOR color;
+	Color color;
 
 	PCTVertex() {}
 
-	PCTVertex(float _x,float _y,float _z,D3DXCOLOR _color,float _u,float _v) : x(_x) , y(_y) , z(_z) , color(_color) , u(_u) , v(_v) {}
+	PCTVertex(float _x,float _y,float _z,Color _color,float _u,float _v) : x(_x) , y(_y) , z(_z) , color(_color) , u(_u) , v(_v) {}
 
-	PCTVertex(const Vector3f& p,D3DXCOLOR _color,float _u,float _v) : x(p.x) , y(p.y) , z(p.z) , color(_color) , u(_u) , v(_v) {}
+	PCTVertex(const Vector3f& p,Color _color,float _u,float _v) : x(p.x) , y(p.y) , z(p.z) , color(_color) , u(_u) , v(_v) {}
 
-	PCTVertex(float _x,float _y,float _z,float _u,float _v) : x(_x) , y(_y) , z(_z) , color(D3DCOLOR_XRGB(255,255,255)) , u(_u) , v(_v) {}
+	PCTVertex(float _x,float _y,float _z,float _u,float _v) : x(_x) , y(_y) , z(_z) , color(1.0f,1.0f,1.0f,1.0f) , u(_u) , v(_v) {}
 };
 
 struct PTVertex {
@@ -143,40 +161,19 @@ struct PTVertex {
 struct PCVertex {
 
 	float x,y,z;	
-	D3DXCOLOR color;
+	Color color;
 
 	PCVertex() {}
 
-	PCVertex(float _x,float _y,float _z,DWORD _color) : x(_x) , y(_y) , z(_z) , color(_color) {}
+	PCVertex(float _x,float _y,float _z,const Color& _color) : x(_x) , y(_y) , z(_z) , color(_color) {}
 
-	PCVertex(float _x,float _y,float _z) : x(_x) , y(_y) , z(_z) , color(D3DCOLOR_XRGB(255,255,255)){}
+	PCVertex(float _x,float _y,float _z) : x(_x) , y(_y) , z(_z) , color(1.0f,1.0f,1.0f,1.0f){}
 };
 
 template<class T>
 struct Quad {
 
 	T v[4];
-
-};
-
-enum VDUSAGE {
-	VDU_POSITION,VDU_NORMAL,VDU_COLOR,VDU_TEXCOORD,VDU_POSITIONT,VDU_BINORMAL,VDU_TANGENT,VDU_END
-};
-
-enum VDTYPE {
-	VT_FLOAT4,VT_FLOAT3,VT_COLOR,VT_FLOAT2,VT_END
-};
-
-struct VDElement {
-	VDTYPE type;
-	VDUSAGE usage;
-};
-
-struct VertexDeclaration {
-
-	int size;
-	IDirect3DVertexDeclaration9* declaration;
-	VertexDeclaration() : size(0) , declaration(0) {}
 
 };
 

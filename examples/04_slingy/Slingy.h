@@ -23,6 +23,18 @@ struct Tail {
 
 };
 
+struct Exit {
+	v2 position;
+	Texture texture;
+	AABBox aabBox;
+};
+
+struct Star {
+	v2 position;
+	Texture texture;
+	AABBox aabBox;
+};
+
 struct Wall {
 	v2 position;
 	AABBox aabBox;
@@ -31,6 +43,7 @@ struct Wall {
 
 typedef std::vector<Tail> Tails;
 typedef std::vector<Wall> Walls;
+typedef std::vector<Star> Stars;
 
 public:
 	Slingy();
@@ -48,6 +61,9 @@ private:
 	float _timer;
 	Texture _ballTexture;
 	Texture _tailTexture;
+	Exit _exit;
+	Stars _stars;
+	v2 _startPos;
 	Ball _ball;
 	Tails _tails;
 	Walls _walls;

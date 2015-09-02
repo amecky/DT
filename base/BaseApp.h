@@ -1,6 +1,7 @@
 #pragma once
 #include "..\utils\GameTimer.h"
-#include <d3dx9core.h>
+//#include <d3dx9core.h>
+#include "..\renderer\render_types.h"
 // ------------------------------------------
 // Basic game settings
 // ------------------------------------------
@@ -9,13 +10,13 @@ struct BaseSettings {
 	int screenSizeX;
 	int screenSizeY;
 	bool tickCamera;
-	D3DXCOLOR clearColor;
+	Color clearColor;
 
 	BaseSettings() {
 		screenSizeX = 800;
 		screenSizeY = 600;
 		tickCamera = true;
-		clearColor = D3DCOLOR_XRGB(0, 40, 100);
+		clearColor = Color(0, 40, 100);
 	}
 };
 

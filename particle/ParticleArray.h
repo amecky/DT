@@ -13,7 +13,7 @@ struct ParticleArray {
 	float* rotation;
 	v3* timer;	
 	float* random;
-	D3DXCOLOR* color;
+	Color* color;
 	int* type;
 	PCTVertex* vertices;
 	char* buffer;
@@ -30,7 +30,7 @@ struct ParticleArray {
 	}
 
 	void initialize(unsigned int maxParticles) {
-		int size = maxParticles * ( sizeof(v2) * 4 + sizeof(v2) + sizeof(float) + sizeof(v3) + sizeof(float) + sizeof(D3DXCOLOR) + sizeof(int) + 4 * sizeof(PCTVertex));
+		int size = maxParticles * ( sizeof(v2) * 4 + sizeof(v2) + sizeof(float) + sizeof(v3) + sizeof(float) + sizeof(Color) + sizeof(int) + 4 * sizeof(PCTVertex));
 		buffer = new char[size];
 		position = (v2*)(buffer);
 		velocity = (v2*)(position + maxParticles);
@@ -40,7 +40,7 @@ struct ParticleArray {
 		timer = (Vector3f*)(scale + maxParticles);
 		rotation = (float*)(timer + maxParticles);
 		random = (float*)(rotation + maxParticles);
-		color = (D3DXCOLOR*)(random + maxParticles);
+		color = (Color*)(random + maxParticles);
 		type = (int*)(color + maxParticles);
 		vertices = (PCTVertex*)(type + maxParticles);
 		count = maxParticles;

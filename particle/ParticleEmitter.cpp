@@ -2,7 +2,7 @@
 
 void DefaultParticleGenerator::create(ParticleArray* array,int start,int end) {
 	for ( int i = start; i < end; ++i ) {
-		array->color[i] = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+		array->color[i] = Color(1.0f,1.0f,1.0f,1.0f);
 		array->scale[i] = Vector2f(1,1);
 		array->rotation[i] = 0.0f;
 		array->timer[i] = Vector3f(0,1,2);

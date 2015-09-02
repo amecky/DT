@@ -124,14 +124,6 @@ namespace gfx {
 		int width = 0;
 		int height = 0;
 		BYTE* data = getImageData(textureAsset->texture, &width, &height);
-		LOG << "width: " << width << " height: " << height;
-		int idx = 100 * 4 + 1 * width * 4;
-		LOG << "r: " << (int)data[idx];
-		LOG << "g: " << (int)data[idx + 1];
-		LOG << "b: " << (int)data[idx + 2];
-		LOG << "a: " << (int)data[idx + 3];
-		
-		
 		int x = fontDefinition.startX + fontDefinition.padding - 1;
 		int y = fontDefinition.startY + fontDefinition.padding;
 		uint32 ascii = fontDefinition.startChar;
@@ -167,15 +159,12 @@ namespace gfx {
 					int width = x - charStartedX - 1;
 					++charCount;
 					fontDefinition.addChar(ascii, charStartedX + 1, charStartedY, width);
-					//LOG << "ascii: '" << ascii << "' at " << charStartedX << " " << charStartedY;
 					++ascii;
 				}
 
 			}
 		}
-
 		delete[] data;
-
 	}
 
 	void renderShader(Shader* shader,TextureAsset* asset,int indexCount) {
@@ -216,8 +205,9 @@ namespace gfx {
 	// ----------------------------------------------
 	// begin rendering
 	// ----------------------------------------------
-	void beginRendering(const D3DXCOLOR& color) {
+	void beginRendering(const Color& color) {
 		assert(ctx != 0);
+		D3DXCOLOR clr;
 		ctx->deviceContext->ClearRenderTargetView(ctx->renderTargetView, color);
 		ctx->deviceContext->ClearDepthStencilView(ctx->depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}

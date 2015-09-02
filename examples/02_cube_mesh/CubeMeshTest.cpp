@@ -10,7 +10,7 @@ CubeMeshTest::CubeMeshTest() {
 	_settings.tickCamera = true;
 	_settings.screenSizeX = 1024;
 	_settings.screenSizeY = 768;
-	_settings.clearColor = D3DCOLOR_XRGB(0,0,0);
+	_settings.clearColor = Color(0,0,0);
 }
 
 

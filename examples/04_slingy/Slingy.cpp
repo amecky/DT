@@ -10,9 +10,9 @@ BaseApp *app = new Slingy();
 
 Slingy::Slingy() {
 	_settings.tickCamera = false;
-	_settings.screenSizeX = 1024;
-	_settings.screenSizeY = 768;
-	_settings.clearColor = D3DCOLOR_XRGB(0,0,0);
+	_settings.screenSizeX = 800;
+	_settings.screenSizeY = 600;
+	_settings.clearColor = Color(0,0,0);
 	//_CrtSetBreakAlloc(339);
 }
 
@@ -24,20 +24,9 @@ Slingy::~Slingy() {
 
 void Slingy::loadContent() {
 	sprites::intialize("content\\array.png");
-	_ballTexture = math::buildTexture(Rect(0,38,40,40),512.0f,512.0f,true);
-	_tailTexture = math::buildTexture(Rect(0,0,32,32),512.0f,512.0f,true);
-	_ball.position = v2(400,300);
-	_ball.aabBox = AABBox(_ball.position,v2(15,15));
-	_ball.angle = 0.0f;
-	for ( int i = 0; i < 6; ++i ) {
-		Tail t;
-		t.position = _ball.position;
-		t.position.x -= 35.0f * (i+1);
-		t.aabBox = AABBox(t.position,v2(10,10));
-		t.angle = 0.0f;
-		_tails.push_back(t);
-	}
-	/*
+	_ballTexture = math::buildTexture(Rect(0,38,24,24),512.0f,512.0f,true);
+	_tailTexture = math::buildTexture(Rect(0,0,22,22),512.0f,512.0f,true);
+
 	FILE *fp = fopen("l1.txt", "rb");
 	char* text;
 	if (fp) {
@@ -48,17 +37,44 @@ void Slingy::loadContent() {
 		fread (text, 1, size, fp);
 		fclose(fp);
 		LOG << "size: " << size;
-		for ( int i = 0; i < 15; ++i ) {
-			char* line = text + i * 21;
-			for ( int j = 0; j < 20; ++j ) {
+		for ( int i = 0; i < 30; ++i ) {
+			char* line = text + i * 41;
+			for ( int j = 0; j < 40; ++j ) {
 				if ( line[j] == 'x' ) {
-					addWall(v2(20 + j*40,20 + i*40),40,40);
+					addWall(v2(20 + j*20,10 + (29-i)*20),20,20);
+				}
+				else if ( line[j] == 'E' ) {
+					_exit.position = v2(20 + j*20,10 + (29-i)*20);
+					_exit.texture = math::buildTexture(30,105,24,24,512.0f,512.0f,true);
+				}
+				else if ( line[j] == 'S' ) {
+					_startPos = v2(20 + j*20,10 + (29-i)*20);
+				}
+				else if ( line[j] == '*' ) {
+					Star s;
+					s.position = v2(20 + j*20,10 + (29-i)*20);
+					s.texture = math::buildTexture(0,75,26,26,512.0f,512.0f,true);
+					_stars.push_back(s);
 				}
 			}
 		}
 		delete[] text;
 	}
-	*/
+
+	_ball.position = _startPos;
+	_ball.aabBox = AABBox(_ball.position,v2(15,15));
+	_ball.angle = 0.0f;
+	for ( int i = 0; i < 10; ++i ) {
+		Tail t;
+		t.position = _ball.position;
+		t.position.x -= 22.0f;
+		t.aabBox = AABBox(t.position,v2(10,10));
+		t.angle = 0.0f;
+		_tails.push_back(t);
+	}
+
+	
+
 }
 
 void Slingy::drawLine(const v2& start,const v2& end,int thickness) {
@@ -72,7 +88,7 @@ void Slingy::drawLine(const v2& start,const v2& end,int thickness) {
 void Slingy::addWall(const v2& p,int width,int height) {
 	Wall w;
 	w.position = p;
-	w.texture = math::buildTexture(Rect(275,0,width,height),512.0f,512.0f,true);
+	w.texture = math::buildTexture(Rect(30,75,width,height),512.0f,512.0f,true);
 	w.aabBox = AABBox(p,v2(width/2,height/2));
 	_walls.push_back(w);
 }
@@ -80,16 +96,19 @@ void Slingy::addWall(const v2& p,int width,int height) {
 void Slingy::resetBall() {
 	_ball.sticky = true;
 	_ball.angle = 0.0f;
-	_ball.position = v2(400,300);
+	_ball.position = _startPos;
 	_ball.aabBox.translate(_ball.position);
+	for ( size_t i = 0; i < _tails.size(); ++i ) {
+		_tails[i].position = v2(_startPos.x - 22.0f,_startPos.y);
+	}
 }
 
 void Slingy::moveTail(float dt) {
 	v2 parent = _ball.position;
 	for ( size_t i = 0; i < _tails.size(); ++i ) {
 		v2 diff = parent - _tails[i].position;
-		if ( sqr_length(diff) > 32.0f ) {
-			float tooFar = length(diff) - 32.0f;
+		if ( sqr_length(diff) > 22.0f ) {
+			float tooFar = length(diff) - 22.0f;
 			v2 translate = normalize(diff) * tooFar;
 			_tails[i].position += translate;
 			_tails[i].aabBox.translate(_tails[i].position);
@@ -124,7 +143,7 @@ void Slingy::tick(float dt) {
 		}
 		if ( da != 0.0f ) {
 			_ball.angle += da * dt * 2.0f;
-			_ball.velocity = math::get_radial_velocity(_ball.angle,150.0f);
+			_ball.velocity = math::get_radial_velocity(_ball.angle,80.0f);
 		}
 
 		moveBall(dt);
@@ -147,13 +166,16 @@ void Slingy::render() {
 		sprites::draw(_walls[i].position,_walls[i].texture);
 	}
 
-	sprites::draw(_ball.position, _ballTexture, _ball.angle, 1.0f, 1.0f, D3DCOLOR_XRGB(192,0,0));
+	sprites::draw(_ball.position, _ballTexture, _ball.angle, 1.0f, 1.0f, Color(192,0,0));
 
 	for ( size_t i = 0; i < _tails.size(); ++i ) {
-		sprites::draw(_tails[i].position, _tailTexture, _tails[i].angle, 1.0f, 1.0f, D3DCOLOR_XRGB(192, 0, 192));
+		sprites::draw(_tails[i].position, _tailTexture, _tails[i].angle, 1.0f, 1.0f, Color(192, 0, 192));
 	}
-
-	sprites::drawText("Hello World", 100, 20);
+	sprites::draw(_exit.position,_exit.texture);
+	for ( size_t i = 0; i < _stars.size(); ++i ) {
+		sprites::draw(_stars[i].position,_stars[i].texture);
+	}
+	sprites::drawText("Hello World", 100, 20,Color(192,0,0));
 	sprites::end();
 }
 

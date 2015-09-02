@@ -38,46 +38,46 @@ namespace data {
 
 		// front
 		Quad<PCTVertex> front;
-		front.v[0] = PCTVertex( hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
-		front.v[1] = PCTVertex( hx,  hy, hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
-		front.v[2] = PCTVertex(-hx,  hy, hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
-		front.v[3] = PCTVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),u2,v2);
+		front.v[0] = PCTVertex( hx, -hy, hz, Color(255, 255, 255),u1,v2);
+		front.v[1] = PCTVertex( hx,  hy, hz, Color(255, 255, 255),u1,v1);
+		front.v[2] = PCTVertex(-hx,  hy, hz, Color(255, 255, 255),u2,v1);
+		front.v[3] = PCTVertex(-hx, -hy, hz, Color(255, 255, 255),u2,v2);
 		data->addQuad(front);
 		// back
 		Quad<PCTVertex> back;
-		back.v[0] = PCTVertex( -hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
-		back.v[1] = PCTVertex( -hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
-		back.v[2] = PCTVertex(  hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
-		back.v[3] = PCTVertex(  hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u2,v2);
+		back.v[0] = PCTVertex( -hx, -hy, -hz, Color(255, 255, 255),u1,v2);
+		back.v[1] = PCTVertex( -hx,  hy, -hz, Color(255, 255, 255),u1,v1);
+		back.v[2] = PCTVertex(  hx,  hy, -hz, Color(255, 255, 255),u2,v1);
+		back.v[3] = PCTVertex(  hx, -hy, -hz, Color(255, 255, 255),u2,v2);
 		data->addQuad(back);
 		// left
 		Quad<PCTVertex> left;
-		left.v[0] = PCTVertex( hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
-		left.v[1] = PCTVertex( hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
-		left.v[2] = PCTVertex( hx,  hy,  hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
-		left.v[3] = PCTVertex( hx, -hy,  hz, D3DCOLOR_XRGB(255, 255, 255),u2,v2);
+		left.v[0] = PCTVertex( hx, -hy, -hz, Color(255, 255, 255),u1,v2);
+		left.v[1] = PCTVertex( hx,  hy, -hz, Color(255, 255, 255),u1,v1);
+		left.v[2] = PCTVertex( hx,  hy,  hz, Color(255, 255, 255),u2,v1);
+		left.v[3] = PCTVertex( hx, -hy,  hz, Color(255, 255, 255),u2,v2);
 		data->addQuad(left);
 		// right
 		Quad<PCTVertex> right;
-		right.v[0] = PCTVertex( -hx, -hy,  hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
-		right.v[1] = PCTVertex( -hx,  hy,  hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
-		right.v[2] = PCTVertex( -hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
-		right.v[3] = PCTVertex( -hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u2,v2);
+		right.v[0] = PCTVertex( -hx, -hy,  hz, Color(255, 255, 255),u1,v2);
+		right.v[1] = PCTVertex( -hx,  hy,  hz, Color(255, 255, 255),u1,v1);
+		right.v[2] = PCTVertex( -hx,  hy, -hz, Color(255, 255, 255),u2,v1);
+		right.v[3] = PCTVertex( -hx, -hy, -hz, Color(255, 255, 255),u2,v2);
 		data->addQuad(right);
 		// top
 		Quad<PCTVertex> top;
-		top.v[0] = PCTVertex(  hx, hy,  hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
-		top.v[1] = PCTVertex(  hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
-		top.v[2] = PCTVertex( -hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
-		top.v[3] = PCTVertex( -hx,hy,  hz, D3DCOLOR_XRGB(255, 255, 2550),u2,v2);
+		top.v[0] = PCTVertex(  hx, hy,  hz, Color(255, 255, 255),u1,v2);
+		top.v[1] = PCTVertex(  hx, hy, -hz, Color(255, 255, 255),u1,v1);
+		top.v[2] = PCTVertex( -hx, hy, -hz, Color(255, 255, 255),u2,v1);
+		top.v[3] = PCTVertex( -hx,hy,  hz, Color(255, 255, 2550),u2,v2);
 		data->addQuad(top);
 
 		// bottom
 		Quad<PCTVertex> bottom;
-		bottom.v[0] = PCTVertex( hx, -hy,-hz, D3DCOLOR_XRGB(255, 255, 255),u1,v2);
-		bottom.v[1] = PCTVertex( hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),u1,v1);
-		bottom.v[2] = PCTVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),u2,v1);
-		bottom.v[3] = PCTVertex(-hx, -hy,-hz, D3DCOLOR_XRGB(255, 255, 255),u2,v2);
+		bottom.v[0] = PCTVertex( hx, -hy,-hz, Color(255, 255, 255),u1,v2);
+		bottom.v[1] = PCTVertex( hx, -hy, hz, Color(255, 255, 255),u1,v1);
+		bottom.v[2] = PCTVertex(-hx, -hy, hz, Color(255, 255, 255),u2,v1);
+		bottom.v[3] = PCTVertex(-hx, -hy,-hz, Color(255, 255, 255),u2,v2);
 		data->addQuad(bottom);
 	}
 	// -----------------------------------------------------------
@@ -89,46 +89,46 @@ namespace data {
 		float hz = dz * 0.5f;
 		// front
 		Quad<PCTVertex> front;
-		front.v[0] = PCTVertex( hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),0.0f,1.0f);
-		front.v[1] = PCTVertex( hx,  hy, hz, D3DCOLOR_XRGB(255, 255, 2555),0.0f,0.0f);
-		front.v[2] = PCTVertex(-hx,  hy, hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,0.0f);
-		front.v[3] = PCTVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,1.0f);
+		front.v[0] = PCTVertex( hx, -hy, hz, Color(255, 255, 255),0.0f,1.0f);
+		front.v[1] = PCTVertex( hx,  hy, hz, Color(255, 255, 2555),0.0f,0.0f);
+		front.v[2] = PCTVertex(-hx,  hy, hz, Color(255, 255, 255),1.0f,0.0f);
+		front.v[3] = PCTVertex(-hx, -hy, hz, Color(255, 255, 255),1.0f,1.0f);
 		data.addQuad(front);
 		// back
 		Quad<PCTVertex> back;
-		back.v[0] = PCTVertex( -hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),0.0f,1.0f);
-		back.v[1] = PCTVertex( -hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),0.0f,0.0f);
-		back.v[2] = PCTVertex(  hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,0.0f);
-		back.v[3] = PCTVertex(  hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,1.0f);
+		back.v[0] = PCTVertex( -hx, -hy, -hz, Color(255, 255, 255),0.0f,1.0f);
+		back.v[1] = PCTVertex( -hx,  hy, -hz, Color(255, 255, 255),0.0f,0.0f);
+		back.v[2] = PCTVertex(  hx,  hy, -hz, Color(255, 255, 255),1.0f,0.0f);
+		back.v[3] = PCTVertex(  hx, -hy, -hz, Color(255, 255, 255),1.0f,1.0f);
 		data.addQuad(back);
 		// left
 		Quad<PCTVertex> left;
-		left.v[0] = PCTVertex( hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),0.0f,1.0f);
-		left.v[1] = PCTVertex( hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),0.0f,0.0f);
-		left.v[2] = PCTVertex( hx,  hy,  hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,0.0f);
-		left.v[3] = PCTVertex( hx, -hy,  hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,1.0f);
+		left.v[0] = PCTVertex( hx, -hy, -hz, Color(255, 255, 255),0.0f,1.0f);
+		left.v[1] = PCTVertex( hx,  hy, -hz, Color(255, 255, 255),0.0f,0.0f);
+		left.v[2] = PCTVertex( hx,  hy,  hz, Color(255, 255, 255),1.0f,0.0f);
+		left.v[3] = PCTVertex( hx, -hy,  hz, Color(255, 255, 255),1.0f,1.0f);
 		data.addQuad(left);
 		// right
 		Quad<PCTVertex> right;
-		right.v[0] = PCTVertex( -hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),0.0f,1.0f);
-		right.v[1] = PCTVertex( -hx,  hy, hz, D3DCOLOR_XRGB(255, 255, 255),0.0f,0.0f);
-		right.v[2] = PCTVertex( -hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,0.0f);
-		right.v[3] = PCTVertex( -hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,1.0f);
+		right.v[0] = PCTVertex( -hx, -hy, hz, Color(255, 255, 255),0.0f,1.0f);
+		right.v[1] = PCTVertex( -hx,  hy, hz, Color(255, 255, 255),0.0f,0.0f);
+		right.v[2] = PCTVertex( -hx,  hy, -hz, Color(255, 255, 255),1.0f,0.0f);
+		right.v[3] = PCTVertex( -hx, -hy, -hz, Color(255, 255, 255),1.0f,1.0f);
 		data.addQuad(right);
 		// top
 		Quad<PCTVertex> top;
-		top.v[0] = PCTVertex(  hx, hy,  hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,1.0f);
-		top.v[1] = PCTVertex(  hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,0.0f);
-		top.v[2] = PCTVertex( -hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255),0.0f,0.0f);
-		top.v[3] = PCTVertex( -hx,hy,  hz, D3DCOLOR_XRGB(255, 255, 2550),0.0f,1.0f);
+		top.v[0] = PCTVertex(  hx, hy,  hz, Color(255, 255, 255),1.0f,1.0f);
+		top.v[1] = PCTVertex(  hx, hy, -hz, Color(255, 255, 255),1.0f,0.0f);
+		top.v[2] = PCTVertex( -hx, hy, -hz, Color(255, 255, 255),0.0f,0.0f);
+		top.v[3] = PCTVertex( -hx,hy,  hz, Color(255, 255, 2550),0.0f,1.0f);
 		data.addQuad(top);
 
 		// bottom
 		Quad<PCTVertex> bottom;
-		bottom.v[0] = PCTVertex( hx, -hy,-hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,1.0f);
-		bottom.v[1] = PCTVertex( hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),1.0f,0.0f);
-		bottom.v[2] = PCTVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255),0.0f,0.0f);
-		bottom.v[3] = PCTVertex(-hx, -hy,-hz, D3DCOLOR_XRGB(255, 255, 255),0.0f,1.0f);
+		bottom.v[0] = PCTVertex( hx, -hy,-hz, Color(255, 255, 255),1.0f,1.0f);
+		bottom.v[1] = PCTVertex( hx, -hy, hz, Color(255, 255, 255),1.0f,0.0f);
+		bottom.v[2] = PCTVertex(-hx, -hy, hz, Color(255, 255, 255),0.0f,0.0f);
+		bottom.v[3] = PCTVertex(-hx, -hy,-hz, Color(255, 255, 255),0.0f,1.0f);
 		data.addQuad(bottom);
 	}
 
@@ -213,10 +213,10 @@ namespace data {
 		Quad<PCTVertex> plane;
 		Vector3f sn = start + dn;
 		Vector3f en = end + dn;
-		plane.v[0] = PCTVertex(  start.x, start.y,  start.z, D3DCOLOR_XRGB(255, 0, 255), 0.0f,v2);
-		plane.v[1] = PCTVertex(  sn.x, sn.y,sn.z, D3DCOLOR_XRGB(255, 0, 255), 0.0f,0.0f);
-		plane.v[2] = PCTVertex(  en.x, en.y, en.z, D3DCOLOR_XRGB(255, 0, 255), u2,0.0f);
-		plane.v[3] = PCTVertex(  end.x, end.y, end.z, D3DCOLOR_XRGB(255, 0, 255), u2,v2);
+		plane.v[0] = PCTVertex(  start.x, start.y,  start.z, Color(255, 0, 255), 0.0f,v2);
+		plane.v[1] = PCTVertex(  sn.x, sn.y,sn.z, Color(255, 0, 255), 0.0f,0.0f);
+		plane.v[2] = PCTVertex(  en.x, en.y, en.z, Color(255, 0, 255), u2,0.0f);
+		plane.v[3] = PCTVertex(  end.x, end.y, end.z, Color(255, 0, 255), u2,v2);
 		data.addQuad(plane);
 
 	}
@@ -229,10 +229,10 @@ namespace data {
 		float v2 = 1.0f;//height;
 		// top
 		Quad<PCVertex> plane;
-		plane.v[0] = PCVertex(  hx, hy,  hz, D3DCOLOR_XRGB(255, 0, 0));
-		plane.v[1] = PCVertex(  hx, hy, -hz, D3DCOLOR_XRGB(255, 0, 0));
-		plane.v[2] = PCVertex( -hx, hy, -hz, D3DCOLOR_XRGB(255, 0, 0));
-		plane.v[3] = PCVertex( -hx, hy,  hz, D3DCOLOR_XRGB(255, 0, 0));
+		plane.v[0] = PCVertex(  hx, hy,  hz, Color(255, 0, 0));
+		plane.v[1] = PCVertex(  hx, hy, -hz, Color(255, 0, 0));
+		plane.v[2] = PCVertex( -hx, hy, -hz, Color(255, 0, 0));
+		plane.v[3] = PCVertex( -hx, hy,  hz, Color(255, 0, 0));
 		data.addQuad(plane);
 	}
 
@@ -246,10 +246,10 @@ namespace data {
 		Quad<PCVertex> plane;
 		Vector3f sn = start + dn;
 		Vector3f en = end + dn;
-		plane.v[0] = PCVertex(  start.x, start.y,  start.z, D3DCOLOR_XRGB(192, 0, 0));
-		plane.v[1] = PCVertex(  sn.x, sn.y,sn.z, D3DCOLOR_XRGB(192, 0, 0));
-		plane.v[2] = PCVertex(  en.x, en.y, en.z, D3DCOLOR_XRGB(192, 0, 0));
-		plane.v[3] = PCVertex(  end.x, end.y, end.z, D3DCOLOR_XRGB(192, 0, 0));
+		plane.v[0] = PCVertex(  start.x, start.y,  start.z, Color(192, 0, 0));
+		plane.v[1] = PCVertex(  sn.x, sn.y,sn.z, Color(192, 0, 0));
+		plane.v[2] = PCVertex(  en.x, en.y, en.z, Color(192, 0, 0));
+		plane.v[3] = PCVertex(  end.x, end.y, end.z, Color(192, 0, 0));
 		data.addQuad(plane);
 
 	}
@@ -284,46 +284,46 @@ namespace data {
 		float hz = dz * 0.5f;
 		// front
 		Quad<PCVertex> front;
-		front.v[0] = PCVertex( hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255));
-		front.v[1] = PCVertex( hx,  hy, hz, D3DCOLOR_XRGB(255, 255, 2555));
-		front.v[2] = PCVertex(-hx,  hy, hz, D3DCOLOR_XRGB(255, 255, 255));
-		front.v[3] = PCVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255));
+		front.v[0] = PCVertex( hx, -hy, hz, Color(255, 255, 255));
+		front.v[1] = PCVertex( hx,  hy, hz, Color(255, 255, 2555));
+		front.v[2] = PCVertex(-hx,  hy, hz, Color(255, 255, 255));
+		front.v[3] = PCVertex(-hx, -hy, hz, Color(255, 255, 255));
 		data->addQuad(front);
 		// back
 		Quad<PCVertex> back;
-		back.v[0] = PCVertex( -hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
-		back.v[1] = PCVertex( -hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
-		back.v[2] = PCVertex(  hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
-		back.v[3] = PCVertex(  hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
+		back.v[0] = PCVertex( -hx, -hy, -hz, Color(255, 255, 255));
+		back.v[1] = PCVertex( -hx,  hy, -hz, Color(255, 255, 255));
+		back.v[2] = PCVertex(  hx,  hy, -hz, Color(255, 255, 255));
+		back.v[3] = PCVertex(  hx, -hy, -hz, Color(255, 255, 255));
 		data->addQuad(back);
 		// left
 		Quad<PCVertex> left;
-		left.v[0] = PCVertex( hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
-		left.v[1] = PCVertex( hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
-		left.v[2] = PCVertex( hx,  hy,  hz, D3DCOLOR_XRGB(255, 255, 255));
-		left.v[3] = PCVertex( hx, -hy,  hz, D3DCOLOR_XRGB(255, 255, 255));
+		left.v[0] = PCVertex( hx, -hy, -hz, Color(255, 255, 255));
+		left.v[1] = PCVertex( hx,  hy, -hz, Color(255, 255, 255));
+		left.v[2] = PCVertex( hx,  hy,  hz, Color(255, 255, 255));
+		left.v[3] = PCVertex( hx, -hy,  hz, Color(255, 255, 255));
 		data->addQuad(left);
 		// right
 		Quad<PCVertex> right;
-		right.v[0] = PCVertex( -hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255));
-		right.v[1] = PCVertex( -hx,  hy, hz, D3DCOLOR_XRGB(255, 255, 255));
-		right.v[2] = PCVertex( -hx,  hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
-		right.v[3] = PCVertex( -hx, -hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
+		right.v[0] = PCVertex( -hx, -hy, hz, Color(255, 255, 255));
+		right.v[1] = PCVertex( -hx,  hy, hz, Color(255, 255, 255));
+		right.v[2] = PCVertex( -hx,  hy, -hz, Color(255, 255, 255));
+		right.v[3] = PCVertex( -hx, -hy, -hz, Color(255, 255, 255));
 		data->addQuad(right);
 		// top
 		Quad<PCVertex> top;
-		top.v[0] = PCVertex(  hx, hy,  hz, D3DCOLOR_XRGB(255, 255, 255));
-		top.v[1] = PCVertex(  hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
-		top.v[2] = PCVertex( -hx, hy, -hz, D3DCOLOR_XRGB(255, 255, 255));
-		top.v[3] = PCVertex( -hx,hy,  hz, D3DCOLOR_XRGB(255, 255, 2550));
+		top.v[0] = PCVertex(  hx, hy,  hz, Color(255, 255, 255));
+		top.v[1] = PCVertex(  hx, hy, -hz, Color(255, 255, 255));
+		top.v[2] = PCVertex( -hx, hy, -hz, Color(255, 255, 255));
+		top.v[3] = PCVertex( -hx,hy,  hz, Color(255, 255, 2550));
 		data->addQuad(top);
 
 		// bottom
 		Quad<PCVertex> bottom;
-		bottom.v[0] = PCVertex( hx, -hy,-hz, D3DCOLOR_XRGB(255, 255, 255));
-		bottom.v[1] = PCVertex( hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255));
-		bottom.v[2] = PCVertex(-hx, -hy, hz, D3DCOLOR_XRGB(255, 255, 255));
-		bottom.v[3] = PCVertex(-hx, -hy,-hz, D3DCOLOR_XRGB(255, 255, 255));
+		bottom.v[0] = PCVertex( hx, -hy,-hz, Color(255, 255, 255));
+		bottom.v[1] = PCVertex( hx, -hy, hz, Color(255, 255, 255));
+		bottom.v[2] = PCVertex(-hx, -hy, hz, Color(255, 255, 255));
+		bottom.v[3] = PCVertex(-hx, -hy,-hz, Color(255, 255, 255));
 		data->addQuad(bottom);
 	}
 }

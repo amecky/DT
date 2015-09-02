@@ -24,7 +24,7 @@ public:
 	void render();
 	void setTTL(float ttl,float random);
 	void activateMovement();
-	void colorize(D3DXCOLOR start,D3DXCOLOR end);
+	void colorize(const Color& start,const Color& end);
 	void scale(float min,float max);
 	void add(ParticleModifier* m) {
 		_modifiers.push_back(*m);

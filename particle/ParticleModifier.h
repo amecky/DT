@@ -57,8 +57,8 @@ void lifeOverTime(const ModifierData& data, int dataIndex, ParticleArray* array,
 void moveParticle(const ModifierData& data, int dataIndex, ParticleArray* array, float dt);
 
 struct ParticleColorData {
-	D3DXCOLOR start;
-	D3DXCOLOR end;
+	Color start;
+	Color end;
 };
 
 void colorizeParticle(const ModifierData& data, int dataIndex, ParticleArray* array, float dt);

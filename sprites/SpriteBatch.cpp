@@ -96,22 +96,37 @@ namespace sprites {
 		begin();
 	}
 
-	void drawText(const char* text, int x, int y) {
+	v2 calculateTextSize(const char* text,int padding) {
+		int len = strlen(text);
+		int xp = 0;
+		for (int i = 0; i < len; ++i ) {
+			if (text[i] != '\0') {
+				CharDef cd = spriteCtx->fontDefinition.definitions[text[i]];
+				if (cd.ascii != -1) {
+					xp += cd.width;
+					xp += padding;
+				}
+			}
+		}
+		return v2(xp,spriteCtx->fontDefinition.charHeight);
+	}
+
+	void drawText(const char* text, int x, int y,const Color& color,int padding) {
 		int len = strlen(text);
 		int xp = x;
 		for (int i = 0; i < len; ++i ) {
 			if (text[i] != '\0') {
 				CharDef cd = spriteCtx->fontDefinition.definitions[text[i]];
-				if (cd.ascii == -1) {
-					LOG << "MISSING: '" << (int)text[i] << "'";
+				if (cd.ascii != -1) {
+					draw(v2(xp, y), cd.texture,0.0f,1.0f,1.0f,color);
+					xp += cd.width;
+					xp += padding;
 				}
-				draw(v2(xp, y), cd.texture);
-				xp += cd.width;
 			}
 		}
 	}
 
-	void draw(const v2& pos,const Texture& tex, float rotation, float scaleX, float scaleY,const D3DXCOLOR& color) {
+	void draw(const v2& pos,const Texture& tex, float rotation, float scaleX, float scaleY,const Color& color) {
 		assert(spriteCtx != 0);
 		int vertexCount = spriteCtx->index;
 		if ((vertexCount + 4) >= spriteCtx->maxVertices  ) {

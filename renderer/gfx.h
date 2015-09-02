@@ -15,7 +15,7 @@ namespace gfx {
 
 	bool initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
 
-	void beginRendering(const D3DXCOLOR& color);
+	void beginRendering(const Color& color);
 
 	void endRendering();
 
