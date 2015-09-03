@@ -1,11 +1,20 @@
 #include "ParticleEmitter.h"
 
+const int NUM_DEFINITIONS = 3;
+
+const GeneratorDefinition DEFINITIONS[] = {
+	{"ring",&createParticleRing},
+	{"radial_velocity",&setRadialVelocity},
+	{"ttl",&setLifecycle},
+	//{"colorize",&colorizeParticle},
+};
+
 void createDefaultParticles(const v2& position,ParticleArray* array, int start, int end) {
 	for ( int i = start; i < end; ++i ) {
 		array->color[i] = Color(1.0f,1.0f,1.0f,1.0f);
-		array->scale[i] = Vector2f(1,1);
+		array->scale[i] = v2(1,1);
 		array->rotation[i] = 0.0f;
-		array->timer[i] = Vector3f(0,1,2);
+		array->timer[i] = v3(0,1,2);
 		array->random[i] = 1.0f;
 		array->acceleration[i] = v2(0,0);
 		array->velocity[i] = v2(0, 0);
@@ -21,8 +30,9 @@ void createParticleRing(const ParticleDataBuffer& data, int index, ParticleArray
 		float step = 2.0f * D3DX_PI / static_cast<float>(d);
 		float angle = 0.0f;
 		for (int i = start; i < end; ++i) {
-			float x = myData.radius * cos(angle);
-			float y = myData.radius * sin(angle);
+			float r = myData.radius + math::random(-myData.random,myData.random);
+			float x = r * cos(angle);
+			float y = r * sin(angle);
 			v2 p(x, y);
 			array->normal[i] = normalize(p);
 			array->position[i] += p;
@@ -31,42 +41,47 @@ void createParticleRing(const ParticleDataBuffer& data, int index, ParticleArray
 	}
 }
 
+
 void setRadialVelocity(const ParticleDataBuffer& data, int index, ParticleArray* array, int start, int end) {
 	RadialVelocityData myData;
 	if (data.get(index, &myData, sizeof(RadialVelocityData))) {
 		for (int i = start; i < end; ++i) {
-			array->velocity[i] = array->normal[i] * myData.velocity;
+			float v = myData.velocity + math::random(-myData.random,myData.random);
+			array->velocity[i] = array->normal[i] * v;
 		}
 	}
 }
 
-void ParticleEmitter::createRing(float radius) {
-	RingData data;
-	data.radius = radius;
-	int id = _emitterData.add(data);
-	_emitterDataIndices.push_back(id);
-	_generators.push_back(&createParticleRing);
+void setLifecycle(const ParticleDataBuffer& data, int index, ParticleArray* array, int start, int end) {
+	TTLData myData;
+	if (data.get(index, &myData, sizeof(TTLData))) {
+		for (int i = start; i < end; ++i) {
+			array->timer[i].z = myData.ttl + math::random(-myData.random,myData.random);
+		}
+	}
 }
 
-void ParticleEmitter::createRadialVelocity(float velocity,float random) {
-	RadialVelocityData data;
-	data.velocity = velocity;
-	data.random = random;
-	int id = _emitterData.add(data);
-	_emitterDataIndices.push_back(id);
-	_generators.push_back(&setRadialVelocity);
+
+int ParticleEmitter::findFunctionIndex(const char* name) {
+	for ( int i =0; i < NUM_DEFINITIONS; ++i ) {
+		if ( strcmp(name,DEFINITIONS[i].name) == 0 ) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 void ParticleEmitter::emitt(const v2& position, ParticleArray* array) {
 	int s = array->countAlive;
-	int e = s + 16;
+	int e = s + 64;
 	if ( e - s > 0 ) {
 		if ( e >= array->count ) {
 			e = array->count;
 		}
 		createDefaultParticles(position,array, s, e);
 		for (size_t i = 0; i < _generators.size(); ++i) {
-			(*_generators[i])(_emitterData, _emitterDataIndices[i], array, s, e);
+			const Generator& g = _generators[i];
+			(*DEFINITIONS[g.definitionIndex].function)(_emitterData, g.dataIndex, array, s, e);
 		}
 		for (int i = s; i < e; ++i) {
 			array->wake(i);

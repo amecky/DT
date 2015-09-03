@@ -70,6 +70,5 @@ private:
 	Walls _walls;
 
 	ParticleSystem* _particles;
-	ParticleEmitter* _emitter;
 };
 

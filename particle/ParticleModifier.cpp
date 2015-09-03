@@ -1,19 +1,16 @@
 #include "ParticleModifier.h"
 
 void lifeOverTime(const ParticleDataBuffer& data, int dataIndex, ParticleArray* array, float dt) {
-	LiveOverTimeData myData;
-	if (data.get(dataIndex, &myData, sizeof(LiveOverTimeData))) {
-		for (int i = 0; i < array->countAlive; ++i) {
-			array->timer[i].x += dt;
-			array->timer[i].y = array->timer[i].x / array->timer[i].z;
+	for (int i = 0; i < array->countAlive; ++i) {
+		array->timer[i].x += dt;
+		array->timer[i].y = array->timer[i].x / array->timer[i].z;
+	}
+	int cnt = 0;
+	while (cnt < array->countAlive) {
+		if (array->timer[cnt].x > array->timer[cnt].z) {
+			array->kill(cnt);
 		}
-		int cnt = 0;
-		while (cnt < array->countAlive) {
-			if (array->timer[cnt].x > array->timer[cnt].z) {
-				array->kill(cnt);
-			}
-			++cnt;
-		}
+		++cnt;
 	}
 }
 

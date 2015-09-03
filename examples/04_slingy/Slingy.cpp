@@ -18,7 +18,6 @@ Slingy::Slingy() {
 
 
 Slingy::~Slingy() {
-	delete _emitter;
 	delete _particles;
 	sprites::shutdown();
 }
@@ -76,14 +75,16 @@ void Slingy::loadContent() {
 	}
 
 	_particles = new ParticleSystem(256, 0);
-	_particles->setTexture(math::buildTexture(60, 0, 20, 20, 512.0f, 512.0f, true));
-	_emitter = new ParticleEmitter;
-	_emitter->createRing(40.0f);
-	_emitter->createRadialVelocity(40.0f,10.0f);
-	_particles->setEmitter(_emitter);
-	_particles->setTTL(2.0f,0.2f);
-	_particles->activateMovement();
-
+	_particles->setTexture(math::buildTexture(60, 30, 20, 20, 512.0f, 512.0f, true));
+	// generators
+	_particles->addGenerator("ring",RingData(2.0f,0.0f));
+	_particles->addGenerator("radial_velocity",RadialVelocityData(180.0f,120.0f));
+	_particles->addGenerator("ttl",TTLData(0.6f,0.2f));
+	// modifiers
+	_particles->addModifier("lifecycle");
+	_particles->addModifier("move");
+	_particles->addModifier("scale",ParticleScaleData(0.4f,0.75f));
+	_particles->addModifier("colorize",ParticleColorData(Color(255,255,0),Color(255,0,0,64)));
 }
 
 void Slingy::drawLine(const v2& start,const v2& end,int thickness) {
@@ -97,7 +98,7 @@ void Slingy::drawLine(const v2& start,const v2& end,int thickness) {
 void Slingy::addWall(const v2& p,int width,int height) {
 	Wall w;
 	w.position = p;
-	w.texture = math::buildTexture(Rect(30,75,width,height),512.0f,512.0f,true);
+	w.texture = math::buildTexture(Rect(60,50,20,20),512.0f,512.0f,true);
 	w.aabBox = AABBox(p,v2(width/2,height/2));
 	_walls.push_back(w);
 }
@@ -172,11 +173,11 @@ void Slingy::tick(float dt) {
 
 void Slingy::render() {
 	sprites::begin();
-
+	/*
 	for ( size_t i = 0; i < _walls.size(); ++i ) {
 		sprites::draw(_walls[i].position,_walls[i].texture);
 	}
-
+	*/
 	sprites::draw(_ball.position, _ballTexture, _ball.angle, 1.0f, 1.0f, Color(192,0,0));
 
 	for ( size_t i = 0; i < _tails.size(); ++i ) {

@@ -17,4 +17,8 @@ namespace math {
 	Texture buildTexture(float top,float left,float width,float height, float textureWidth = 1024.0f, float textureHeight = 1024.0f, bool useHalfTexel = true);
 
 	v2 srt(const Vector2f& v,const Vector2f& u,float scaleX,float scaleY,float rotation);
+
+	float random(float min,float max);
+
+	v2 random(const v2& min,const v2& max);
 }

@@ -1,6 +1,7 @@
 #include "mathutils.h"
 #include "..\stdafx.h"
 #include "..\renderer\render_types.h"
+#include "..\utils\mtrand.h"
 
 namespace math {
 
@@ -103,4 +104,19 @@ namespace math {
 
 		return Vector2f(xt,yt);
 	}
+
+	float random(float min,float max) {
+		MTRand_open rand;
+		//rand.seed(GetTickCount());
+		return min + (max - min)* (float)rand();
+	}
+
+	v2 random(const v2& min,const v2& max) {
+		MTRand_open rand;
+		v2 ret;
+		ret.x = min.x + (max.x - min.x)* (float)rand();
+		ret.y = min.y + (max.y - min.y)* (float)rand();
+		return ret;
+	}
+
 }

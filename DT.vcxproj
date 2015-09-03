@@ -104,6 +104,7 @@
     <ClInclude Include="utils\GameTimer.h" />
     <ClInclude Include="utils\JSONReader.h" />
     <ClInclude Include="utils\Log.h" />
+    <ClInclude Include="utils\mtrand.h" />
     <ClInclude Include="utils\Profiler.h" />
     <ClInclude Include="utils\stringutils.h" />
     <ClInclude Include="World.h" />
@@ -132,6 +133,7 @@
     <ClCompile Include="utils\GameTimer.cpp" />
     <ClCompile Include="utils\JSONReader.cpp" />
     <ClCompile Include="utils\Log.cpp" />
+    <ClCompile Include="utils\mtrand.cpp" />
     <ClCompile Include="utils\Profiler.cpp" />
     <ClCompile Include="utils\stringutils.cpp" />
     <ClCompile Include="World.cpp" />

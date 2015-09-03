@@ -122,6 +122,9 @@
     <ClInclude Include="particle\ParticleSystem.h">
       <Filter>particle</Filter>
     </ClInclude>
+    <ClInclude Include="utils\mtrand.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -188,6 +191,9 @@
     </ClCompile>
     <ClCompile Include="particle\ParticleSystem.cpp">
       <Filter>particle</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\mtrand.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
