@@ -85,6 +85,16 @@ void Slingy::loadContent() {
 	_particles->addModifier("move");
 	_particles->addModifier("scale",ParticleScaleData(0.4f,0.75f));
 	_particles->addModifier("colorize",ParticleColorData(Color(255,255,0),Color(255,0,0,64)));
+
+	const ParticleChannel channels[] = {
+		{"pos",0},
+		{"velocity",-1},
+		{"scale",2},
+		{"rotation",1},
+		{"color",3},
+		{"acceleration",-1},
+	};
+	_particles->initialize(channels,6);
 }
 
 void Slingy::drawLine(const v2& start,const v2& end,int thickness) {

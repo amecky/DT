@@ -3,6 +3,7 @@
 #include "..\renderer\Mesh.h"
 #include "ParticleModifier.h"
 #include "ParticleEmitter.h"
+#include "..\utils\stringutils.h"
 #include <vector>
 
 struct ParticleSystemInstance {
@@ -26,6 +27,20 @@ struct Modifier {
 
 };
 
+struct ParticleChannel {
+
+	char* name;
+	IdString hash;
+	int outputMapping;
+
+	ParticleChannel(char* _name,int _mapping) : name(_name) , outputMapping(_mapping) {
+		hash = string::murmur_hash(_name);
+	}
+
+};
+
+// http://www.gdcvault.com/play/1020176/Scripting-Particles-Getting-Native-Speed
+
 class ParticleSystem {
 
 typedef std::vector<Modifier> Modifiers;
@@ -38,6 +53,9 @@ public:
 	void setTexture(const Texture& texture) {
 		_texture = texture;
 	}
+
+	void initialize(ParticleChannel* channels,int length);
+
 	void tick(float dt);
 	void render();
 	template<class T>
@@ -79,4 +97,6 @@ private:
 	ParticleDataBuffer _modifierData;
 	Texture _texture;
 	
+	ParticleBlob _blob;
+	int _channelMapping[4];
 };

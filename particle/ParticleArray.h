@@ -41,6 +41,56 @@ struct ParticleDataBuffer {
 	}
 };
 
+struct ParticleBlob {
+
+	v4* buffer;
+	int size;
+	int total;
+	int countAlive;
+	int channels;
+
+	ParticleBlob() : buffer(0) , size(0) , total(0) , countAlive(0), channels(0) {}
+
+	~ParticleBlob() {
+		if ( buffer != 0 ) {
+			delete[] buffer;
+		}
+	}
+
+	v4* getChannel(int index) {
+		return buffer + index * size;
+	}
+
+	void allocate(int channels,int size) {
+		total = channels * size;
+		buffer = new v4[total];
+	}
+
+	void kill(int id) {
+		if (countAlive > 0) {
+			swap(id, countAlive - 1);
+			--countAlive;
+		}
+	}
+
+	void wake(int id) {
+		if (countAlive < size)	{
+			swap(id, countAlive);
+			++countAlive;
+		}
+	}   
+
+	void swap(int a,int b) {
+		v4* sa = buffer + a;
+		v4* sb = buffer + b;
+		for ( int i = 0; i < channels; ++i ) {
+			*sa = *sb;
+			sa += size;
+			sb += size;
+		}
+	}
+};
+
 struct ParticleArray {
 
 	v2* position;

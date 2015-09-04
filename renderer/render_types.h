@@ -44,6 +44,12 @@ struct Color {
 		b = static_cast<float>(_b) / 255.0f;
 		a = static_cast<float>(_a) / 255.0f;
 	}
+	Color(const v4& v) {
+		r = v.x;
+		g = v.y;
+		b = v.z;
+		a = v.w;
+	}
 
 	bool operator == (const Color& other) {
 		return r == other.r && g == other.g && b == other.b && a == other.a;
