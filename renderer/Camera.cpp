@@ -11,7 +11,7 @@ Camera::Camera() {
     m_position        = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
     m_velocity        = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );  
     m_look            = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
-    CreateProjectionMatrix( D3DX_PI / 3.0f, 1.3f, 0.1f, 1000.0f );
+    CreateProjectionMatrix( 800.0f,600.0f,D3DX_PI / 3.0f, 1.3f, 0.1f, 1000.0f );
     Update();
 } 
 
@@ -23,14 +23,16 @@ Parameters:
 [in] near - Near plane
 [in] far - Far plane
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void Camera::CreateProjectionMatrix( float fov, float aspect, float nearPlane, float farPlane ) {
+void Camera::CreateProjectionMatrix(float screenWidth, float screenHeight, float fov, float aspect, float nearPlane, float farPlane) {
     m_fov       = fov;
     m_aspect    = aspect;
     m_nearPlane = nearPlane;
     m_farPlane  = farPlane;
+	_screenWidth = screenWidth;
+	_screenHeight = screenHeight;
     D3DXMatrixPerspectiveFovLH( &m_projection, m_fov, m_aspect, m_nearPlane, m_farPlane );
 
-	D3DXMatrixOrthoLH(&m_projection,800.0f, 600.0f, nearPlane, farPlane);
+	D3DXMatrixOrthoLH(&m_projection,_screenWidth, _screenHeight, nearPlane, farPlane);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 

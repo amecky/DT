@@ -125,6 +125,9 @@
     <ClInclude Include="utils\mtrand.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="examples\04_slingy\Grid.h">
+      <Filter>examples\04_slingy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -194,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="utils\mtrand.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\04_slingy\Grid.cpp">
+      <Filter>examples\04_slingy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

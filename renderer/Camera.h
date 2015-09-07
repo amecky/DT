@@ -5,7 +5,7 @@ class Camera {
 
 public:
     Camera();
-    void CreateProjectionMatrix( float fov, float aspect, float nearPlane, float farPlane );
+    void CreateProjectionMatrix(float screenWidth,float screenHeight,float fov, float aspect, float nearPlane, float farPlane );
     void MoveForward( float units );
     void Strafe( float units ); 
 	void MoveUp( float units );    
@@ -19,10 +19,10 @@ public:
 	void tick();
 
     void SetLookAt( D3DXVECTOR3* pLookAt );
-    void SetFOV( float fov )            { CreateProjectionMatrix( fov, m_aspect, m_nearPlane, m_farPlane ); }
-    void SetAspectRatio( float aspect ) { CreateProjectionMatrix( m_fov, aspect, m_nearPlane, m_farPlane ); }
-    void SetNearPlane( float plane )    { CreateProjectionMatrix( m_fov, m_aspect, plane, m_farPlane ); }
-    void SetFarPlane( float plane )     { CreateProjectionMatrix( m_fov, m_aspect, m_nearPlane, plane ); }
+    void SetFOV( float fov )            { CreateProjectionMatrix( _screenWidth, _screenHeight, fov, m_aspect, m_nearPlane, m_farPlane ); }
+	void SetAspectRatio(float aspect) { CreateProjectionMatrix(_screenWidth, _screenHeight, m_fov, aspect, m_nearPlane, m_farPlane); }
+	void SetNearPlane(float plane)    { CreateProjectionMatrix(_screenWidth, _screenHeight, m_fov, m_aspect, plane, m_farPlane); }
+	void SetFarPlane(float plane)     { CreateProjectionMatrix(_screenWidth, _screenHeight, m_fov, m_aspect, m_nearPlane, plane); }
     void SetMaxVelocity( float maxVelocity ) { m_maxVelocity = maxVelocity; }
     void SetInvertY( BOOL invert )           { m_invertY = invert; }
     void SetMaxPitch( float maxPitch )       { m_maxPitch = maxPitch; }
@@ -64,5 +64,8 @@ private:
     float       m_farPlane;  
     BOOL        m_invertY;
     BOOL        m_enableYMovement;
+
+	float _screenWidth;
+	float _screenHeight;
 };
 

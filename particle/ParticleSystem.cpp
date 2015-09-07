@@ -46,6 +46,7 @@ void ParticleSystem::tick(float dt) {
 void ParticleSystem::render() {
 	if ( _array.countAlive > 0 ) {
 		// FIXME: define default values
+		/*
 		v4* pos = _blob.getChannel(_channelMapping[0]);
 		v4* scale = _blob.getChannel(_channelMapping[2]);
 		v4* color = _blob.getChannel(_channelMapping[3]);
@@ -56,6 +57,7 @@ void ParticleSystem::render() {
 			++scale;
 			++color;
 		}
+		*/
 		for ( int i = 0; i < _array.countAlive; ++i ) {
 			sprites::draw(_array.position[i],_texture,_array.rotation[i],_array.scale[i].x,_array.scale[i].y,_array.color[i]);
 		}

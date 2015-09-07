@@ -642,7 +642,7 @@ namespace gfx {
 		if(FAILED(result)) {
 			return false;
 		}
-
+		ctx->camera.CreateProjectionMatrix(screenWidth, screenHeight, D3DX_PI / 3.0f, screenWidth/screenHeight, 0.1f, 1000.0f);
 		ctx->camera.setPosition(0.0f,0.0f,-10.0f);
 		ctx->camera.Update();
 

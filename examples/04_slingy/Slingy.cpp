@@ -10,9 +10,9 @@ BaseApp *app = new Slingy();
 
 Slingy::Slingy() {
 	_settings.tickCamera = false;
-	_settings.screenSizeX = 800;
-	_settings.screenSizeY = 600;
-	//_settings.clearColor = Color(0,0,0);
+	_settings.screenSizeX = 1024;
+	_settings.screenSizeY = 768;
+	_settings.clearColor = Color(0,0,0);
 	//_CrtSetBreakAlloc(339);
 }
 
@@ -27,7 +27,8 @@ void Slingy::loadContent() {
 	sprites::intialize("array");
 	_ballTexture = math::buildTexture(Rect(0,38,24,24),512.0f,512.0f,true);
 	_tailTexture = math::buildTexture(Rect(0,0,22,22),512.0f,512.0f,true);
-
+	
+	/*
 	FILE *fp = fopen("l1.txt", "rb");
 	char* text;
 	if (fp) {
@@ -61,6 +62,8 @@ void Slingy::loadContent() {
 		}
 		delete[] text;
 	}
+	*/
+	_startPos = v2(12*30+45,9*30+45);
 
 	_ball.position = _startPos;
 	_ball.aabBox = AABBox(_ball.position,v2(15,15));
@@ -83,10 +86,10 @@ void Slingy::loadContent() {
 	// modifiers
 	_particles->addModifier("lifecycle");
 	_particles->addModifier("move");
-	_particles->addModifier("scale",ParticleScaleData(0.4f,0.75f));
+	_particles->addModifier("scale",ParticleScaleData(0.4f,0.2f));
 	_particles->addModifier("colorize",ParticleColorData(Color(255,255,0),Color(255,0,0,64)));
-
-	const ParticleChannel channels[] = {
+	/*
+	ParticleChannel channels[] = {
 		{"pos",0},
 		{"velocity",-1},
 		{"scale",2},
@@ -95,6 +98,7 @@ void Slingy::loadContent() {
 		{"acceleration",-1},
 	};
 	_particles->initialize(channels,6);
+	*/
 }
 
 void Slingy::drawLine(const v2& start,const v2& end,int thickness) {
@@ -179,6 +183,9 @@ void Slingy::tick(float dt) {
 		}
 
 	}
+
+	_grid.tick(dt);
+	_grid.setHighlight(_ball.position);
 }
 
 void Slingy::render() {
@@ -188,12 +195,13 @@ void Slingy::render() {
 		sprites::draw(_walls[i].position,_walls[i].texture);
 	}
 	*/
+	_grid.render();
 	sprites::draw(_ball.position, _ballTexture, _ball.angle, 1.0f, 1.0f, Color(192,0,0));
 
 	for ( size_t i = 0; i < _tails.size(); ++i ) {
 		sprites::draw(_tails[i].position, _tailTexture, _tails[i].angle, 1.0f, 1.0f, Color(192, 0, 192));
 	}
-	sprites::draw(_exit.position,_exit.texture);
+	//sprites::draw(_exit.position,_exit.texture);
 	for ( size_t i = 0; i < _stars.size(); ++i ) {
 		sprites::draw(_stars[i].position,_stars[i].texture);
 	}

@@ -4,6 +4,7 @@
 #include "..\..\World.h"
 #include <vector>
 #include "..\..\particle\ParticleSystem.h"
+#include "Grid.h"
 
 class Slingy : public BaseApp {
 
@@ -62,13 +63,14 @@ private:
 	float _timer;
 	Texture _ballTexture;
 	Texture _tailTexture;
+	
 	Exit _exit;
 	Stars _stars;
 	v2 _startPos;
 	Ball _ball;
 	Tails _tails;
 	Walls _walls;
-
+	Grid _grid;
 	ParticleSystem* _particles;
 };
 
