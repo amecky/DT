@@ -29,6 +29,13 @@ struct RenderContext {
 	ID3D11RasterizerState* rasterState;
 	ID3D11DepthStencilState* depthDisabledStencilState;
 	Camera camera;
+	v2 screenSize;
+	v2 screenCenter;
+	std::vector<ID3D11BlendState*> blendStates;
+	int currentBlendState;
+	std::vector<ID3D11SamplerState*> samplerStates;	
+	int currentSamplerState;
+	std::vector<ConstantBuffer*> constantBuffers;
 };
 
 // -------------------------------------------------
@@ -107,6 +114,104 @@ namespace assets {
 // gfx
 // -------------------------------------------------
 namespace gfx {
+
+	void setBlendState(int index) {
+		if ( index != ctx->currentBlendState ) {
+			ctx->currentBlendState = index;
+			float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+			ctx->deviceContext->OMSetBlendState( ctx->blendStates[index], blendFactor,0xFFFFFFFF );
+		}
+	}
+
+	int createBlendState(D3D11_BLEND srcBlend, D3D11_BLEND destBlend,D3D11_BLEND srcBlendAlpha, D3D11_BLEND destBlendAlpha) {
+		D3D11_BLEND_DESC blendDesc;
+		ZeroMemory( &blendDesc, sizeof( blendDesc ) );
+		blendDesc.RenderTarget[0].BlendEnable = TRUE;
+		blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].SrcBlend = srcBlend;
+		blendDesc.RenderTarget[0].DestBlend = destBlend;
+		blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].SrcBlendAlpha = srcBlendAlpha;
+		blendDesc.RenderTarget[0].DestBlendAlpha = destBlendAlpha;
+		blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		ID3D11BlendState* blendState;	
+		ctx->device->CreateBlendState( &blendDesc, &blendState);	
+		ctx->blendStates.push_back(blendState);
+		return ctx->blendStates.size() - 1;
+	}
+
+	int createBlendState(D3D11_BLEND srcBlend, D3D11_BLEND destBlend) {
+		return createBlendState(srcBlend,destBlend,srcBlend,destBlend);		
+	}
+
+	
+
+	ID3D11DeviceContext* getDeviceContext() {
+		return ctx->deviceContext;
+	}
+
+	const D3DXMATRIX& getViewMatrix() {
+		return ctx->camera.GetViewMatrix();
+	}
+
+	const D3DXMATRIX& getProjectionMatrix() {
+		return ctx->camera.GetProjectionMatrix();
+	}
+
+	int createConstantBuffer(int elementSize) {
+		ConstantBuffer* buffer = new ConstantBuffer;
+		buffer->create(ctx->device,elementSize);
+		ctx->constantBuffers.push_back(buffer);
+		return ctx->constantBuffers.size() - 1;
+	}
+
+	ConstantBuffer* getConstantBuffer(int index) {
+		return ctx->constantBuffers[index];
+	}
+
+	int createSamplerState(TextureAddressMode mode) {
+		D3D11_SAMPLER_DESC samplerDesc;
+		// Create a texture sampler state description.
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		if ( mode == TAM_WRAP ) {
+			samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+			samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+			samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		}
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MaxAnisotropy = 1;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		samplerDesc.BorderColor[0] = 0;
+		samplerDesc.BorderColor[1] = 0;
+		samplerDesc.BorderColor[2] = 0;
+		samplerDesc.BorderColor[3] = 0;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		// Create the texture sampler state.
+		ID3D11SamplerState* sampleState;
+		HRESULT	result = ctx->device->CreateSamplerState(&samplerDesc, &sampleState);
+		if(FAILED(result)) {
+			return -1;
+		}
+		ctx->samplerStates.push_back(sampleState);
+		return ctx->samplerStates.size() - 1;
+	}
+
+	void setSamplerState(int index) {
+		if ( ctx->currentSamplerState != index ) {
+			ctx->deviceContext->PSSetSamplers(0, 1, &ctx->samplerStates[index]);
+			ctx->currentSamplerState = index;
+		}
+	}
+
+	const v2& getScreenSize() {
+		return ctx->screenSize;
+	}
+
+	const v2& getScreenCenter() {
+		return ctx->screenCenter;
+	}
 
 	Camera* getCamera() {
 		return &ctx->camera;
@@ -236,9 +341,7 @@ namespace gfx {
 	}
 
 	void renderShader(Shader* shader,int texture_id,int indexCount) {
-		D3DXMATRIX world;
-		D3DXMatrixIdentity(&world);
-		if (shader->setShaderParameters(ctx->deviceContext, world, ctx->camera.GetViewMatrix(), ctx->camera.GetProjectionMatrix(), texture_id)) {
+		if (shader->setShaderParameters(ctx->deviceContext, texture_id)) {
 			shader->render(ctx->deviceContext,indexCount);
 		}
 		else {
@@ -246,9 +349,16 @@ namespace gfx {
 		}
 	}
 
+	void attachInputLayout(Shader* shader,const InputLayoutDefinition* definitions,int num) {
+		shader->createInputLayout(ctx->device,definitions,num);
+	}
+
 	Shader* createShader(char* vsFilename, char* psFilename) {
 		Shader* s = new Shader;
-		s->initialize(ctx->device,vsFilename,psFilename);
+		if ( !s->initialize(ctx->device,vsFilename,psFilename) ) {
+			LOG << "Cannot create shader!!!";
+			return 0;
+		}
 		return s;
 	}
 
@@ -278,6 +388,8 @@ namespace gfx {
 		D3DXCOLOR clr;
 		ctx->deviceContext->ClearRenderTargetView(ctx->renderTargetView, color);
 		ctx->deviceContext->ClearDepthStencilView(ctx->depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		ctx->currentSamplerState = -1;
+		ctx->currentBlendState = -1;
 	}
 
 	// ----------------------------------------------
@@ -642,6 +754,8 @@ namespace gfx {
 		if(FAILED(result)) {
 			return false;
 		}
+		ctx->screenSize = v2(screenWidth,screenHeight);
+		ctx->screenCenter = ctx->screenSize * 0.5f;
 		ctx->camera.CreateProjectionMatrix(screenWidth, screenHeight, D3DX_PI / 3.0f, screenWidth/screenHeight, 0.1f, 1000.0f);
 		ctx->camera.setPosition(0.0f,0.0f,-10.0f);
 		ctx->camera.Update();

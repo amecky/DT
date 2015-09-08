@@ -3,31 +3,30 @@
 #include <d3dcommon.h>
 #include <d3d11.h>
 #include <d3dx9math.h>
+#include "ConstantBuffer.h"
+#include "render_types.h"
 // -------------------------------------------------------
 // Shader
 // -------------------------------------------------------
 class Shader {
 
-struct MatrixBufferType	{
-	D3DXMATRIX world;
-	D3DXMATRIX view;
-	D3DXMATRIX projection;
-};
+
 
 public:		
 	Shader();
-	~Shader() {}
+	~Shader();
 	void initialize(const char* techName);
-	bool loadShader(const char* fxName, const char* techName);
+	bool loadPixelShader(ID3D11Device* device,const char* fileName, const char* techName);
+	bool loadVertexShader(ID3D11Device* device,const char* fileName, const char* techName);
+	bool loadShader(const char* fileName, const char* techName,ID3D10Blob* shaderBuffer,const char* profile);
 	bool initialize(ID3D11Device* device,char* vsFilename, char* psFilename);
-	bool setShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-											 D3DXMATRIX projectionMatrix, int texture_id);
+	bool setShaderParameters(ID3D11DeviceContext* deviceContext,int texture_id);
 	void render(ID3D11DeviceContext* deviceContext, int indexCount);
+	void createInputLayout(ID3D11Device* device,const InputLayoutDefinition* definitions,int num);
 private:
 	ID3D11VertexShader* _vertexShader;
 	ID3D11PixelShader* _pixelShader;
 	ID3D11InputLayout* _layout;
-	ID3D11Buffer* _matrixBuffer;
-	ID3D11SamplerState* _sampleState;
-	ID3D11BlendState* _alphaBlendState;
+	ID3D10Blob* _vertexShaderBuffer;
+	int _samplerStateIndex;
 };

@@ -39,8 +39,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\math;C:\devtools\DirectX_SDK\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\devtools\DirectX_SDK\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\math;C:\devtools\DirectX\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\devtools\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -93,6 +93,7 @@
     <ClInclude Include="particle\ParticleModifier.h" />
     <ClInclude Include="particle\ParticleSystem.h" />
     <ClInclude Include="renderer\Camera.h" />
+    <ClInclude Include="renderer\ConstantBuffer.h" />
     <ClInclude Include="renderer\gfx.h" />
     <ClInclude Include="renderer\Mesh.h" />
     <ClInclude Include="renderer\render_types.h" />

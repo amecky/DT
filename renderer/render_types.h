@@ -5,6 +5,11 @@
 #include <d3dx11tex.h>
 #include "..\stdafx.h"
 #include "..\math\mathutils.h"
+#include <d3dx9math.h>
+
+enum TextureAddressMode {
+	 TAM_WRAP,TAM_MIRROR,TAM_CLAMP,TAM_BORDER,TAM_ONCE,TAM_COUNT
+};
 
 struct TextureAsset {
 
@@ -15,6 +20,17 @@ struct TextureAsset {
 
 	TextureAsset() : texture(0) , width(0) , height(0) {}
 
+};
+
+struct ConstantMatrixBuffer	{
+	D3DXMATRIX world;
+	D3DXMATRIX view;
+	D3DXMATRIX projection;
+};
+
+struct InputLayoutDefinition {
+	const char* name;
+	DXGI_FORMAT format;
 };
 
 struct Color {
@@ -150,6 +166,8 @@ struct PCTVertex {
 	PCTVertex(const Vector3f& p,Color _color,float _u,float _v) : x(p.x) , y(p.y) , z(p.z) , color(_color) , u(_u) , v(_v) {}
 
 	PCTVertex(float _x,float _y,float _z,float _u,float _v) : x(_x) , y(_y) , z(_z) , color(1.0f,1.0f,1.0f,1.0f) , u(_u) , v(_v) {}
+
+
 };
 
 struct PTVertex {

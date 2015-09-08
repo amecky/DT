@@ -28,7 +28,8 @@ namespace sprites {
 		Shader* shader;
 		int texture;
 		FontDefinition fontDefinition;
-
+		int constantBufferIndex;
+		int blendState;
 		SpriteBatchContext() : size(0) {}
 
 		~SpriteBatchContext() {}
@@ -36,7 +37,11 @@ namespace sprites {
 
 	static SpriteBatchContext* spriteCtx = 0;
 
-	
+	const InputLayoutDefinition SPRITE_LAYOUT[] = {
+		{"POSITION",DXGI_FORMAT_R32G32B32_FLOAT},
+		{"TEXCOORD",DXGI_FORMAT_R32G32_FLOAT},
+		{"COLOR",DXGI_FORMAT_R32G32B32A32_FLOAT}
+	};
 
 	bool intialize(const char* textureName) {
 		spriteCtx = new SpriteBatchContext;
@@ -45,9 +50,12 @@ namespace sprites {
 		spriteCtx->maxVertices = MAX_SPRITES * 4;
 		spriteCtx->buffer = gfx::createQuadBuffer(MAX_SPRITES * 4,sizeof(PCTVertex));
 		spriteCtx->shader = gfx::createShader("texture.vs","texture.ps");
+		gfx::attachInputLayout(spriteCtx->shader,SPRITE_LAYOUT,3);
 		spriteCtx->texture = assets::loadTexture(textureName);//"content\\ref_256.png");
 		assert(spriteCtx->texture != -1);
-
+		spriteCtx->constantBufferIndex = gfx::createConstantBuffer(sizeof(ConstantMatrixBuffer));
+		
+		spriteCtx->blendState = gfx::createBlendState(D3D11_BLEND_SRC_ALPHA,D3D11_BLEND_INV_SRC_ALPHA,D3D11_BLEND_ZERO,D3D11_BLEND_ZERO);
 		spriteCtx->fontDefinition.startChar = 32;// " : "32",
 		spriteCtx->fontDefinition.endChar = 128;// " : "128",
 		spriteCtx->fontDefinition.charHeight = 14;// " : "14",
@@ -58,6 +66,7 @@ namespace sprites {
 		spriteCtx->fontDefinition.height = 168;// " : "168",
 		spriteCtx->fontDefinition.padding = 6;// " : "6",
 		spriteCtx->fontDefinition.textureSize = 512;// " : "1024"
+		
 
 		gfx::initializeBitmapFont(spriteCtx->fontDefinition, spriteCtx->texture, Color(255, 0, 255, 255));
 		return true;
@@ -84,7 +93,22 @@ namespace sprites {
 			gfx::fillQuadBuffer(spriteCtx->buffer,spriteCtx->sprites,spriteCtx->index);
 			gfx::turnZBufferOff();
 			gfx::submitBuffer(spriteCtx->buffer);
+			gfx::setBlendState(spriteCtx->blendState);
 			int indexCount = spriteCtx->index / 4 * 6;
+			ConstantMatrixBuffer buffer;
+			D3DXMATRIX world;
+			D3DXMatrixIdentity(&world);
+			D3DXMatrixTranspose(&world, &world);
+			D3DXMATRIX viewMatrix = gfx::getViewMatrix();
+			D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
+			D3DXMATRIX projectionMatrix = gfx::getProjectionMatrix();
+			D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
+			buffer.world = world;
+			buffer.view = viewMatrix;
+			buffer.projection = projectionMatrix;
+			ConstantBuffer* cb = gfx::getConstantBuffer(spriteCtx->constantBufferIndex);	
+			cb->setData(gfx::getDeviceContext(),buffer);
+			cb->setBuffer(gfx::getDeviceContext(),0);
 			gfx::renderShader(spriteCtx->shader,spriteCtx->texture,indexCount);
 			//PR_END("sprites")
 		}
@@ -143,7 +167,7 @@ namespace sprites {
 		spriteCtx->sprites[idx + 3].u = tex.uv.x;
 		spriteCtx->sprites[idx + 3].v = tex.uv.w;
 		Vector2f cor = pos;
-		cor = cor - v2(400,300);//ds::renderer::getSelectedViewport().getPosition();
+		cor = cor - gfx::getScreenCenter();//v2(400,300);//ds::renderer::getSelectedViewport().getPosition();
 		v2 p(0, 0);
 		for (int i = 0; i < 4; ++i) {
 			p.x = VP_ARRAY[i * 2] * tex.dim.x;
