@@ -77,4 +77,8 @@ namespace gfx {
 	int createBlendState(D3D11_BLEND srcBlend, D3D11_BLEND destBlend);
 
 	void setBlendState(int index);
+
+	void setMousePos(int x, int y);
+
+	v2 getMousePos();
 }

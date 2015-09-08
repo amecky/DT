@@ -1,10 +1,13 @@
 #include "..\stdafx.h"
 #include "BaseApp.h"
 #include "..\utils\Log.h"
+#include <windowsx.h>
 
 #pragma comment (lib, "d3d9.lib")
 
 #define MAX_LOADSTRING 100
+#define GETX(l) (int(l & 0xFFFF))
+#define GETY(l) (int(l) >> 16)
 
 extern BaseApp* app;
 
@@ -79,6 +82,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow,const BaseSettings& settings
 	   LOGE << "Cannot create window";
       return FALSE;
    }
+
    RECT rect = { 0, 0, settings.screenSizeX, settings.screenSizeY};	
    AdjustWindowRect( &rect, GetWindowLong( _handle, GWL_STYLE ), FALSE );	
    SetWindowPos( _handle, HWND_TOP, 0, 0, rect.right - rect.left, rect.bottom - rect.top, 
@@ -97,7 +101,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			char ascii = wParam;
 			unsigned int keyState = lParam;
 			app->onChar(ascii,keyState);
-		}			
+		}	
+		case WM_LBUTTONDOWN:
+			app->onButton(0, BS_DOWN);
+			break;
+		case WM_LBUTTONUP:
+			app->onButton(0, BS_UP);
+			break;
+		case WM_RBUTTONDOWN:
+			app->onButton(1, BS_DOWN);
+			break;
+		case WM_RBUTTONUP:
+			app->onButton(1, BS_UP);
+			break;
+		case WM_KEYDOWN: {
+			switch (wParam)	{
+			case VK_ESCAPE:
+				PostQuitMessage(0);
+				break;
+			default:
+				break;
+			}
+			return 0;
+		}
 		return 0;
 	}
 	return DefWindowProc(hWnd, message, wParam, lParam);	

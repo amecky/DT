@@ -142,8 +142,11 @@ namespace sprites {
 			if (text[i] != '\0') {
 				CharDef cd = spriteCtx->fontDefinition.definitions[text[i]];
 				if (cd.ascii != -1) {
+					float dimX = cd.width;
+					float dimY = 20.0f;
+					v2 p = (Vector2f(xp + dimX * 0.5f, y + dimY * 0.5f));
 					draw(v2(xp, y), cd.texture,0.0f,1.0f,1.0f,color);
-					xp += cd.width;
+					xp += dimX;
 					xp += padding;
 				}
 			}

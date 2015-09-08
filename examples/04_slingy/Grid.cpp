@@ -68,8 +68,8 @@ void Grid::setFactor(int x, int y, float factor) {
 	}
 }
 void Grid::setHighlight(const v2& p) {
-	int xp = (p.x - GRID_SIZE + 12) / GRID_SIZE;
-	int yp = (p.y - GRID_SIZE + 2) / GRID_SIZE;
+	int xp = (p.x - GRID_SIZE + 25) / GRID_SIZE;
+	int yp = (p.y - GRID_SIZE + 25) / GRID_SIZE;
 	if (xp >= 0 && xp < GRID_X && yp >= 0 && yp < GRID_Y) {
 		for (int y = yp - 1; y < yp + 2; ++y) {
 			for (int x = xp - 1; x < xp + 2; ++x) {

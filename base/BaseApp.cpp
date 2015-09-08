@@ -23,6 +23,10 @@ void BaseApp::init(HWND handle) {
 	_timer.start();
 }
 
+void BaseApp::setMousePos(int x, int y) {
+	gfx::setMousePos(x, y);
+}
+
 void BaseApp::buildFrame() {
 	_timer.tick();
 	profiler::reset();

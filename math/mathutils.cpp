@@ -119,4 +119,30 @@ namespace math {
 		return ret;
 	}
 
+	float clamp(float value, float min, float max) {
+		if (value < min) {
+			return min;
+		}
+		if (value > max) {
+			return max;
+		}
+		return value;
+	}
+
+	float calculateRotation(const v2& v) {
+		Vector2f vn = normalize(v);
+		if (vn != V2_RIGHT) {
+			float dt = clamp(dot(vn, V2_RIGHT), -1.0f, 1.0f);
+			float tmp = acos(dt);
+			float cross = -1.0f * vn.y;
+			if (cross > 0.0f) {
+				tmp = 2.0f * PI - tmp;
+			}
+			return tmp;
+		}
+		else {
+			return 0.0f;
+		}
+	}
+
 }

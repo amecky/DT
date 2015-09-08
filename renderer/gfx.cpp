@@ -16,6 +16,7 @@
 // -------------------------------------------------
 struct RenderContext {
 
+	HWND hwnd;
 	bool vsync_enabled;
 	int videoCardMemory;
 	char videoCardDescription[128];
@@ -36,6 +37,7 @@ struct RenderContext {
 	std::vector<ID3D11SamplerState*> samplerStates;	
 	int currentSamplerState;
 	std::vector<ConstantBuffer*> constantBuffers;
+	v2 mousePos;
 };
 
 // -------------------------------------------------
@@ -114,6 +116,20 @@ namespace assets {
 // gfx
 // -------------------------------------------------
 namespace gfx {
+
+	void setMousePos(int x, int y) {
+	}
+
+	v2 getMousePos() {
+		POINT p;
+		if (GetCursorPos(&p)) {
+			if (ScreenToClient(ctx->hwnd, &p)) {
+				ctx->mousePos = v2(p.x, ctx->screenSize.y - p.y);
+				//p.x and p.y are now relative to hwnd's client area
+			}
+		}
+		return ctx->mousePos;
+	}
 
 	void setBlendState(int index) {
 		if ( index != ctx->currentBlendState ) {
@@ -435,6 +451,7 @@ namespace gfx {
 	// ----------------------------------------------
 	bool initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear) {
 		ctx = new RenderContext;	
+		ctx->hwnd = hwnd;
 		HRESULT result;
 		IDXGIFactory* factory;
 		IDXGIAdapter* adapter;
@@ -759,7 +776,7 @@ namespace gfx {
 		ctx->camera.CreateProjectionMatrix(screenWidth, screenHeight, D3DX_PI / 3.0f, screenWidth/screenHeight, 0.1f, 1000.0f);
 		ctx->camera.setPosition(0.0f,0.0f,-10.0f);
 		ctx->camera.Update();
-
+		ctx->mousePos = v2(0, 0);
 		assets::initialize();
 
 		return true;

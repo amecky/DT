@@ -21,4 +21,6 @@ namespace math {
 	float random(float min,float max);
 
 	v2 random(const v2& min,const v2& max);
+
+	float calculateRotation(const v2& v);
 }

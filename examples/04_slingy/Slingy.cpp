@@ -14,6 +14,8 @@ Slingy::Slingy() {
 	_settings.screenSizeY = 768;
 	_settings.clearColor = Color(0,0,0);
 	//_CrtSetBreakAlloc(339);
+	_firing = false;
+	_fireTimer = 0.0f;
 }
 
 
@@ -25,60 +27,26 @@ Slingy::~Slingy() {
 
 void Slingy::loadContent() {
 	sprites::intialize("array");
-	_ballTexture = math::buildTexture(Rect(0,38,24,24),512.0f,512.0f,true);
+	_headTexture = math::buildTexture(Rect(30,0,50,50),512.0f,512.0f,true);
 	_tailTexture = math::buildTexture(Rect(0,0,22,22),512.0f,512.0f,true);
-	
-	/*
-	FILE *fp = fopen("l1.txt", "rb");
-	char* text;
-	if (fp) {
-		fseek(fp, 0, SEEK_END);
-		int size = ftell(fp);
-		fseek(fp, 0, SEEK_SET);
-		char* text = (char*)malloc(sizeof(char) * (size + 1));
-		fread (text, 1, size, fp);
-		fclose(fp);
-		LOG << "size: " << size;
-		for ( int i = 0; i < 30; ++i ) {
-			char* line = text + i * 41;
-			for ( int j = 0; j < 40; ++j ) {
-				if ( line[j] == 'x' ) {
-					addWall(v2(20 + j*20,10 + (29-i)*20),20,20);
-				}
-				else if ( line[j] == 'E' ) {
-					_exit.position = v2(20 + j*20,10 + (29-i)*20);
-					_exit.texture = math::buildTexture(30,105,24,24,512.0f,512.0f,true);
-				}
-				else if ( line[j] == 'S' ) {
-					_startPos = v2(20 + j*20,10 + (29-i)*20);
-				}
-				else if ( line[j] == '*' ) {
-					Star s;
-					s.position = v2(20 + j*20,10 + (29-i)*20);
-					s.texture = math::buildTexture(0,75,26,26,512.0f,512.0f,true);
-					_stars.push_back(s);
-				}
-			}
-		}
-		delete[] text;
-	}
-	*/
+	_bulletTexture = math::buildTexture(Rect(0, 150, 6, 6), 512.0f, 512.0f, true);
 	_startPos = v2(12*30+45,9*30+45);
 
-	_ball.position = _startPos;
-	_ball.aabBox = AABBox(_ball.position,v2(15,15));
-	_ball.angle = 0.0f;
+	_head.position = _startPos;
+	_head.aabBox = AABBox(_head.position,v2(15,15));
+	_head.angle = 0.0f;
+	v2 p = _head.position;
 	for ( int i = 0; i < 10; ++i ) {
 		Tail t;
-		t.position = _ball.position;
-		t.position.x -= 22.0f;
+		p.x -= 22.0f;
+		t.position = p;
 		t.aabBox = AABBox(t.position,v2(10,10));
 		t.angle = 0.0f;
 		_tails.push_back(t);
 	}
 
 	_particles = new ParticleSystem(256, 0);
-	_particles->setTexture(math::buildTexture(60, 30, 20, 20, 512.0f, 512.0f, true));
+	_particles->setTexture(math::buildTexture(0, 100, 20, 20, 512.0f, 512.0f, true));
 	// generators
 	_particles->addGenerator("ring",RingData(2.0f,0.0f));
 	_particles->addGenerator("radial_velocity",RadialVelocityData(180.0f,120.0f));
@@ -101,34 +69,8 @@ void Slingy::loadContent() {
 	*/
 }
 
-void Slingy::drawLine(const v2& start,const v2& end,int thickness) {
-	v2 diff = end - start;	
-	int l = length(diff);
-	diff *= 0.5f;
-	float angle = math::get_target_angle(end,start);
-	sprites::draw(start + diff,math::buildTexture(Rect(275,0,l,thickness),512.0f,512.0f,true),angle);
-}
-
-void Slingy::addWall(const v2& p,int width,int height) {
-	Wall w;
-	w.position = p;
-	w.texture = math::buildTexture(Rect(60,50,20,20),512.0f,512.0f,true);
-	w.aabBox = AABBox(p,v2(width/2,height/2));
-	_walls.push_back(w);
-}
-
-void Slingy::resetBall() {
-	_ball.sticky = true;
-	_ball.angle = 0.0f;
-	_ball.position = _startPos;
-	_ball.aabBox.translate(_ball.position);
-	for ( size_t i = 0; i < _tails.size(); ++i ) {
-		_tails[i].position = v2(_startPos.x - 22.0f,_startPos.y);
-	}
-}
-
 void Slingy::moveTail(float dt) {
-	v2 parent = _ball.position;
+	v2 parent = _head.position;
 	for ( size_t i = 0; i < _tails.size(); ++i ) {
 		v2 diff = parent - _tails[i].position;
 		if ( sqr_length(diff) > 22.0f ) {
@@ -142,84 +84,98 @@ void Slingy::moveTail(float dt) {
 	}
 }
 
-void Slingy::moveBall(float dt) {
-	_ball.position += _ball.velocity * dt;
-	if ( _ball.position.x < 10.0f || _ball.position.x > 790.0f ) {
-		resetBall();
-	}
-	if ( _ball.position.y < 10.0f || _ball.position.y > 590.0f ) {
-		resetBall();
-	}
-	_ball.aabBox.translate(_ball.position);
-}
-
 void Slingy::tick(float dt) {
 
 	_timer += dt;
 
 	_particles->tick(dt);
 
-	if ( !_ball.sticky ) {
-		float da = 0.0f;
-		if ( GetAsyncKeyState('A') != 0 ) {
-			da = 1.0f;
-		}
-		if ( GetAsyncKeyState('D') != 0 ) {
-			da = -1.0f;
-		}
-		if ( da != 0.0f ) {
-			_ball.angle += da * dt * 2.0f;
-			_ball.velocity = math::get_radial_velocity(_ball.angle,80.0f);
-		}
-
-		moveBall(dt);
-
-		moveTail(dt);
-
-		for ( size_t i = 0; i < _walls.size(); ++i ) {
-			if ( _walls[i].aabBox.collides(_ball.aabBox)) {
-				resetBall();
-			}
-		}
-
+	v2 v;
+	if (GetAsyncKeyState('W') & 0x8000) {
+		v += Vector2f(0, 1);
 	}
+	if (GetAsyncKeyState('S') & 0x8000) {
+		v += Vector2f(0, -1);
+	}
+	if (GetAsyncKeyState('A') & 0x8000) {
+		v += Vector2f(-1, 0);
+	}
+	if (GetAsyncKeyState('D') & 0x8000) {
+		v += Vector2f(1, 0);
+	}
+	
+
+	v2 mp = gfx::getMousePos();
+	v2 diff = mp - _head.position;
+	_head.angle = math::calculateRotation(diff);
+	_head.position += v * dt * 150.0f;
+
+	//moveTail(dt);
 
 	_grid.tick(dt);
-	_grid.setHighlight(_ball.position);
+	_grid.setHighlight(_head.position);
+
+	if (_firing) {
+		_fireTimer += dt;
+		if (_fireTimer > 0.4f) {
+			LOG << "fire!!!!!";
+			_fireTimer -= 0.4f;
+			// fire bullet
+			if (_bullets.countAlive + 1 < _bullets.count) {
+				int idx = _bullets.countAlive;
+				_bullets.wake(idx);
+				_bullets.position[idx] = _head.position;
+				_bullets.velocity[idx] = math::get_radial_velocity(_head.angle, 800.0f);
+			}
+		}
+	}
+
+	for (int i = 0; i < _bullets.countAlive; ++i) {
+		_bullets.position[i] += _bullets.velocity[i] * dt;
+	}
+
+	int cnt = 0;
+	while (cnt < _bullets.countAlive) {
+		v2 p = _bullets.position[cnt];
+		if (p.x < 0.0f || p.x > 1020.0f || p.y < 0.0f || p.y > 768.0f) {
+			_bullets.kill(cnt);
+		}
+		++cnt;
+	}
 }
 
 void Slingy::render() {
 	sprites::begin();
-	/*
-	for ( size_t i = 0; i < _walls.size(); ++i ) {
-		sprites::draw(_walls[i].position,_walls[i].texture);
-	}
-	*/
+
 	_grid.render();
-	sprites::draw(_ball.position, _ballTexture, _ball.angle, 1.0f, 1.0f, Color(192,0,0));
-
-	for ( size_t i = 0; i < _tails.size(); ++i ) {
-		sprites::draw(_tails[i].position, _tailTexture, _tails[i].angle, 1.0f, 1.0f, Color(192, 0, 192));
+	sprites::draw(_head.position, _headTexture, _head.angle, 1.0f, 1.0f, Color(192,192,192));
+	for (int i = 0; i < _bullets.countAlive; ++i) {
+		sprites::draw(_bullets.position[i], _bulletTexture);
 	}
-	//sprites::draw(_exit.position,_exit.texture);
-	for ( size_t i = 0; i < _stars.size(); ++i ) {
-		sprites::draw(_stars[i].position,_stars[i].texture);
-	}
-	sprites::drawText("Hello World", 100, 20,Color(192,0,0));
-
+	//for ( size_t i = 0; i < _tails.size(); ++i ) {
+		//sprites::draw(_tails[i].position, _tailTexture, _tails[i].angle, 1.0f, 1.0f, Color(192, 0, 192));
+	//}
+	char buffer[32];
+	v2 mp = gfx::getMousePos();
+	sprintf(buffer, "%3.2f %3.2f", mp.x, mp.y);
+	sprites::drawText(buffer, 100, 740,Color(192,0,0));
 	_particles->render();
-
 	sprites::end();
 }
 
 void Slingy::onChar(char ascii, unsigned int state) {
-	if ( ascii == '1' ) {
-		if ( _ball.sticky ) {
-			_ball.sticky = false;
-			_ball.velocity = math::get_radial_velocity(_ball.angle,150.0f);
-		}
-	}
 	if (ascii == '2'){
 		_particles->start(v2(400, 300));
+	}
+}
+
+void Slingy::onButton(int button, ButtonState state) {
+	if (button == 0) {
+		if (state == BS_DOWN) {
+			_firing = true;
+		}
+		else if (state == BS_UP) {
+			_firing = false;
+		}
 	}
 }
