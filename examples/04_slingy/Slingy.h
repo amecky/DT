@@ -5,68 +5,8 @@
 #include <vector>
 #include "..\..\particle\ParticleSystem.h"
 #include "Grid.h"
-
-const int MAX_BULLETS = 64;
-
-struct BulletArray {
-
-	v2* position;
-	v2* velocity;
-	v2* scale;
-	float* rotation;
-	Color* color;
-	char* buffer;
-
-	int count;
-	int countAlive;
-
-	BulletArray() : count(0), countAlive(0), buffer(0) {
-		initialize();
-	}
-
-	~BulletArray() {
-		if (buffer != 0) {
-			delete[] buffer;
-		}
-	}
-
-	void initialize() {
-		int size = MAX_BULLETS * (sizeof(v2) * 3 + sizeof(float) + sizeof(Color));
-		buffer = new char[size];
-		position = (v2*)(buffer);
-		velocity = (v2*)(position + MAX_BULLETS);
-		scale = (v2*)(velocity + MAX_BULLETS);
-		rotation = (float*)(scale + MAX_BULLETS);
-		color = (Color*)(rotation + MAX_BULLETS);
-		count = MAX_BULLETS;
-		countAlive = 0;
-	}
-
-	void swapData(int a, int b) {
-		if (a != b) {
-			position[a] = position[b];
-			velocity[a] = velocity[b];
-			scale[a] = scale[b];
-			rotation[a] = rotation[b];
-			color[a] = color[b];
-		}
-	}
-
-	void kill(int id) {
-		if (countAlive > 0) {
-			swapData(id, countAlive - 1);
-			--countAlive;
-		}
-	}
-
-	void wake(int id) {
-		if (countAlive < count)	{
-			swapData(id, countAlive);
-			++countAlive;
-		}
-	}
-
-};
+#include "Bullets.h"
+#include "..\..\renderer\ScreenQuad.h"
 
 class Slingy : public BaseApp {
 
@@ -113,13 +53,15 @@ private:
 	Texture _tailTexture;
 	bool _firing;
 	float _fireTimer;
-	Texture _bulletTexture;
-	BulletArray _bullets;
+	BulletHandler _bullets;
 	Exit _exit;
 	v2 _startPos;
 	Head _head;
 	Tails _tails;
 	Grid _grid;
 	ParticleSystem* _particles;
+	int _rt1;
+	ScreenQuad _quad;
+	v2 _worldPos;
 };
 

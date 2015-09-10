@@ -16,6 +16,7 @@ Slingy::Slingy() {
 	//_CrtSetBreakAlloc(339);
 	_firing = false;
 	_fireTimer = 0.0f;
+	
 }
 
 
@@ -29,10 +30,12 @@ void Slingy::loadContent() {
 	sprites::intialize("array");
 	_headTexture = math::buildTexture(Rect(30,0,50,50),512.0f,512.0f,true);
 	_tailTexture = math::buildTexture(Rect(0,0,22,22),512.0f,512.0f,true);
-	_bulletTexture = math::buildTexture(Rect(0, 150, 6, 6), 512.0f, 512.0f, true);
-	_startPos = v2(12*30+45,9*30+45);
+	
+	_startPos = v2(512,384);
 
 	_head.position = _startPos;
+	_worldPos = v2(512,384);
+
 	_head.aabBox = AABBox(_head.position,v2(15,15));
 	_head.angle = 0.0f;
 	v2 p = _head.position;
@@ -67,6 +70,8 @@ void Slingy::loadContent() {
 	};
 	_particles->initialize(channels,6);
 	*/
+	_rt1 = gfx::createRenderTarget();
+	_quad.initialize();
 }
 
 void Slingy::moveTail(float dt) {
@@ -106,9 +111,11 @@ void Slingy::tick(float dt) {
 	
 
 	v2 mp = gfx::getMousePos();
-	v2 diff = mp - _head.position;
+	v2 diff = mp - v2(512,384);//_head.position;
 	_head.angle = math::calculateRotation(diff);
 	_head.position += v * dt * 150.0f;
+	_worldPos += v * dt * 150.0f;
+	gfx::setScreenCenter(_worldPos);
 
 	//moveTail(dt);
 
@@ -117,53 +124,45 @@ void Slingy::tick(float dt) {
 
 	if (_firing) {
 		_fireTimer += dt;
-		if (_fireTimer > 0.4f) {
-			LOG << "fire!!!!!";
-			_fireTimer -= 0.4f;
-			// fire bullet
-			if (_bullets.countAlive + 1 < _bullets.count) {
-				int idx = _bullets.countAlive;
-				_bullets.wake(idx);
-				_bullets.position[idx] = _head.position;
-				_bullets.velocity[idx] = math::get_radial_velocity(_head.angle, 800.0f);
-			}
+		if (_fireTimer > 0.2f) {
+			_fireTimer -= 0.2f;
+			_bullets.start(_head.position,_head.angle);
 		}
 	}
 
-	for (int i = 0; i < _bullets.countAlive; ++i) {
-		_bullets.position[i] += _bullets.velocity[i] * dt;
-	}
-
-	int cnt = 0;
-	while (cnt < _bullets.countAlive) {
-		v2 p = _bullets.position[cnt];
-		if (p.x < 0.0f || p.x > 1020.0f || p.y < 0.0f || p.y > 768.0f) {
-			_bullets.kill(cnt);
-		}
-		++cnt;
-	}
+	_bullets.tick(dt);
+	
 }
 
 void Slingy::render() {
+	
+	gfx::setRenderTarget(_rt1);
+	gfx::clearRenderTarget(_rt1,Color(0,0,0));
 	sprites::begin();
-
 	_grid.render();
+	sprites::flush();
+	gfx::restoreBackBuffer();	
+	gfx::beginRendering(Color(0,0,0));
+	gfx::drawRenderTarget(_rt1);
+	sprites::begin();
+	_bullets.render();
+
 	sprites::draw(_head.position, _headTexture, _head.angle, 1.0f, 1.0f, Color(192,192,192));
-	for (int i = 0; i < _bullets.countAlive; ++i) {
-		sprites::draw(_bullets.position[i], _bulletTexture);
-	}
-	//for ( size_t i = 0; i < _tails.size(); ++i ) {
-		//sprites::draw(_tails[i].position, _tailTexture, _tails[i].angle, 1.0f, 1.0f, Color(192, 0, 192));
-	//}
-	char buffer[32];
-	v2 mp = gfx::getMousePos();
-	sprintf(buffer, "%3.2f %3.2f", mp.x, mp.y);
-	sprites::drawText(buffer, 100, 740,Color(192,0,0));
 	_particles->render();
+
+	gfx::setScreenCenter(v2(512,384));
+	char buffer[32];
+	//v2 mp = gfx::getMousePos();
+	sprintf(buffer, "%3.2f %3.2f", _worldPos.x, _worldPos.y);
+	sprites::drawText(buffer, 100, 740,Color(192,0,0));
+	
 	sprites::end();
 }
 
 void Slingy::onChar(char ascii, unsigned int state) {
+	if ( ascii == '1' ) {
+		toggleTicking();
+	}
 	if (ascii == '2'){
 		_particles->start(v2(400, 300));
 	}

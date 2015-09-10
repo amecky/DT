@@ -45,9 +45,13 @@ public:
 	}
 	void setMousePos(int x, int y);
 	virtual void onButton(int button, ButtonState state) {}
+	void toggleTicking() {
+		_ticking = !_ticking;
+	}
 protected:
 	BaseSettings _settings;
 private:
+	bool _ticking;
 	HWND _handle;
 	GameTimer _timer;
 	int _ticks;

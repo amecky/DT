@@ -33,6 +33,12 @@ struct InputLayoutDefinition {
 	DXGI_FORMAT format;
 };
 
+const InputLayoutDefinition PTC_LAYOUT[] = {
+	{"POSITION",DXGI_FORMAT_R32G32B32_FLOAT},
+	{"TEXCOORD",DXGI_FORMAT_R32G32_FLOAT},
+	{"COLOR",DXGI_FORMAT_R32G32B32A32_FLOAT}
+};
+
 struct Color {
 
 	float r;

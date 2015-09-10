@@ -8,9 +8,10 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "render_types.h"
+#include "RenderTarget.h"
 #include "..\utils\Log.h"
 #include "..\utils\stringutils.h"
-
+#include "ScreenQuad.h"
 // -------------------------------------------------
 // RenderContext
 // -------------------------------------------------
@@ -38,6 +39,9 @@ struct RenderContext {
 	int currentSamplerState;
 	std::vector<ConstantBuffer*> constantBuffers;
 	v2 mousePos;
+	std::vector<RenderTarget*> renderTargets;
+	ScreenQuad* screenQuad;
+	DefaultShader* defaultShader;
 };
 
 // -------------------------------------------------
@@ -112,10 +116,69 @@ namespace assets {
 	}
 }
 
+namespace debug {
+
+	struct DebugContext {
+		int sprites;
+	};
+
+	static DebugContext* dbgCtx = 0;
+
+	void initialize() {
+		dbgCtx = new DebugContext;
+	}
+
+	void shutdown() {
+		delete dbgCtx;
+		dbgCtx = 0;
+	}
+
+	void reset() {
+		assert(dbgCtx != 0);
+		dbgCtx->sprites = 0;
+	}
+
+	void addSprites(int cnt) {
+		assert(dbgCtx != 0);
+		dbgCtx->sprites += cnt;
+	}
+
+	void log() {
+		assert(dbgCtx != 0);
+		LOG << "Sprites: " << dbgCtx->sprites;
+	}
+}
+
 // -------------------------------------------------
 // gfx
 // -------------------------------------------------
 namespace gfx {
+
+	int createRenderTarget() {
+		RenderTarget* rt = new RenderTarget();
+		rt->initialize(ctx->device,ctx->screenSize.x,ctx->screenSize.y);
+		ctx->renderTargets.push_back(rt);
+		return ctx->renderTargets.size() - 1;
+	}
+
+	void clearRenderTarget(int id,const Color& color) {
+		RenderTarget* rt = ctx->renderTargets[id];
+		rt->clearRenderTarget(ctx->deviceContext,ctx->depthStencilView,color);
+	}
+
+	void setRenderTarget(int id) {
+		RenderTarget* rt = ctx->renderTargets[id];
+		rt->setRenderTarget(ctx->deviceContext,ctx->depthStencilView);
+	}
+
+	void restoreBackBuffer() {
+		ctx->deviceContext->OMSetRenderTargets(1, &ctx->renderTargetView, ctx->depthStencilView);
+	}
+
+	void drawRenderTarget(int id) {
+		RenderTarget* rt = ctx->renderTargets[id];
+		ctx->screenQuad->render(rt->getShaderResourceView());
+	}
 
 	void setMousePos(int x, int y) {
 	}
@@ -227,6 +290,10 @@ namespace gfx {
 
 	const v2& getScreenCenter() {
 		return ctx->screenCenter;
+	}
+
+	void setScreenCenter(const v2& c) {
+		ctx->screenCenter = c;
 	}
 
 	Camera* getCamera() {
@@ -356,9 +423,22 @@ namespace gfx {
 		delete[] data;
 	}
 
+	DefaultShader* getDefaultShader() {
+		return ctx->defaultShader;
+	}
+
+	void renderShader(Shader* shader,ID3D11ShaderResourceView* shaderResourceView,int indexCount) {
+		if (shader->setShaderParameters(shaderResourceView)) {
+			shader->render(indexCount);
+		}
+		else {
+			LOG << "cannot set shader parameter";
+		}
+	}
+
 	void renderShader(Shader* shader,int texture_id,int indexCount) {
-		if (shader->setShaderParameters(ctx->deviceContext, texture_id)) {
-			shader->render(ctx->deviceContext,indexCount);
+		if (shader->setShaderParameters(texture_id)) {
+			shader->render(indexCount);
 		}
 		else {
 			LOG << "cannot set shader parameter";
@@ -366,12 +446,12 @@ namespace gfx {
 	}
 
 	void attachInputLayout(Shader* shader,const InputLayoutDefinition* definitions,int num) {
-		shader->createInputLayout(ctx->device,definitions,num);
+		shader->createInputLayout(definitions,num);
 	}
 
 	Shader* createShader(char* vsFilename, char* psFilename) {
-		Shader* s = new Shader;
-		if ( !s->initialize(ctx->device,vsFilename,psFilename) ) {
+		Shader* s = new Shader(ctx->device,ctx->deviceContext);
+		if ( !s->initialize(vsFilename,psFilename) ) {
 			LOG << "Cannot create shader!!!";
 			return 0;
 		}
@@ -408,6 +488,8 @@ namespace gfx {
 		ctx->currentBlendState = -1;
 	}
 
+
+
 	// ----------------------------------------------
 	// end rendering
 	// ----------------------------------------------
@@ -427,8 +509,24 @@ namespace gfx {
 	void shutdown() {
 		
 		assets::shutdown();
-
+		debug::shutdown();
 		assert(ctx != 0);
+		delete ctx->screenQuad;
+		for ( size_t i = 0; i < ctx->renderTargets.size(); ++i ) {
+			ctx->renderTargets[i]->shutdown();
+			delete ctx->renderTargets[i];
+		}
+		for ( size_t i = 0; i < ctx->blendStates.size(); ++i ) {
+			SAFE_RELEASE(ctx->blendStates[i]);
+		}
+		for ( size_t i = 0; i < ctx->samplerStates.size(); ++i ) {
+			SAFE_RELEASE(ctx->samplerStates[i]);
+		}
+		for ( size_t i = 0; i < ctx->constantBuffers.size(); ++i ) {
+			delete ctx->constantBuffers[i];
+		}
+		delete ctx->defaultShader;
+		//std::vector<ConstantBuffer*> constantBuffers;
 		// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 		if(ctx->swapChain) {
 			ctx->swapChain->SetFullscreenState(false, NULL);
@@ -778,8 +876,13 @@ namespace gfx {
 		ctx->camera.Update();
 		ctx->mousePos = v2(0, 0);
 		assets::initialize();
-
+		debug::initialize();
+		ctx->defaultShader = new DefaultShader(ctx->device,ctx->deviceContext);
+		ctx->defaultShader->initialize();
+		ctx->screenQuad = new ScreenQuad;
+		ctx->screenQuad->initialize();		
 		return true;
 	}
 
 }
+

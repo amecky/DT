@@ -3,10 +3,11 @@
 #include "..\renderer\VertexIndexBuffer.h"
 #include "..\renderer\Shader.h"
 #include "..\renderer\gfx.h"
-#include "..\renderer\Mesh.h"
+//#include "..\renderer\Mesh.h"
 #include "..\math\mathutils.h"
 #include "..\utils\Log.h"
 #include <assert.h>
+#include "..\utils\Profiler.h"
 
 namespace sprites {
 
@@ -25,10 +26,10 @@ namespace sprites {
 		int index;
 		int maxVertices;
 		VertexIndexBuffer* buffer;
-		Shader* shader;
+		DefaultShader* shader;
 		int texture;
 		FontDefinition fontDefinition;
-		int constantBufferIndex;
+		//int constantBufferIndex;
 		int blendState;
 		SpriteBatchContext() : size(0) {}
 
@@ -37,11 +38,7 @@ namespace sprites {
 
 	static SpriteBatchContext* spriteCtx = 0;
 
-	const InputLayoutDefinition SPRITE_LAYOUT[] = {
-		{"POSITION",DXGI_FORMAT_R32G32B32_FLOAT},
-		{"TEXCOORD",DXGI_FORMAT_R32G32_FLOAT},
-		{"COLOR",DXGI_FORMAT_R32G32B32A32_FLOAT}
-	};
+	
 
 	bool intialize(const char* textureName) {
 		spriteCtx = new SpriteBatchContext;
@@ -49,12 +46,9 @@ namespace sprites {
 		spriteCtx->index = 0;
 		spriteCtx->maxVertices = MAX_SPRITES * 4;
 		spriteCtx->buffer = gfx::createQuadBuffer(MAX_SPRITES * 4,sizeof(PCTVertex));
-		spriteCtx->shader = gfx::createShader("texture.vs","texture.ps");
-		gfx::attachInputLayout(spriteCtx->shader,SPRITE_LAYOUT,3);
-		spriteCtx->texture = assets::loadTexture(textureName);//"content\\ref_256.png");
+		spriteCtx->shader = gfx::getDefaultShader();
+		spriteCtx->texture = assets::loadTexture(textureName);
 		assert(spriteCtx->texture != -1);
-		spriteCtx->constantBufferIndex = gfx::createConstantBuffer(sizeof(ConstantMatrixBuffer));
-		
 		spriteCtx->blendState = gfx::createBlendState(D3D11_BLEND_SRC_ALPHA,D3D11_BLEND_INV_SRC_ALPHA,D3D11_BLEND_ZERO,D3D11_BLEND_ZERO);
 		spriteCtx->fontDefinition.startChar = 32;// " : "32",
 		spriteCtx->fontDefinition.endChar = 128;// " : "128",
@@ -66,15 +60,11 @@ namespace sprites {
 		spriteCtx->fontDefinition.height = 168;// " : "168",
 		spriteCtx->fontDefinition.padding = 6;// " : "6",
 		spriteCtx->fontDefinition.textureSize = 512;// " : "1024"
-		
-
 		gfx::initializeBitmapFont(spriteCtx->fontDefinition, spriteCtx->texture, Color(255, 0, 255, 255));
 		return true;
 	}
 
 	void shutdown() {
-		//delete spriteCtx->texture;
-		delete spriteCtx->shader;
 		delete spriteCtx->buffer;
 		delete spriteCtx;
 		spriteCtx = 0;
@@ -89,28 +79,15 @@ namespace sprites {
 	void end() {
 		assert(spriteCtx != 0);
 		if (spriteCtx->size > 0) {
-			//PR_START("sprites")
+			PR_START("sprites")
 			gfx::fillQuadBuffer(spriteCtx->buffer,spriteCtx->sprites,spriteCtx->index);
 			gfx::turnZBufferOff();
 			gfx::submitBuffer(spriteCtx->buffer);
 			gfx::setBlendState(spriteCtx->blendState);
 			int indexCount = spriteCtx->index / 4 * 6;
-			ConstantMatrixBuffer buffer;
-			D3DXMATRIX world;
-			D3DXMatrixIdentity(&world);
-			D3DXMatrixTranspose(&world, &world);
-			D3DXMATRIX viewMatrix = gfx::getViewMatrix();
-			D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
-			D3DXMATRIX projectionMatrix = gfx::getProjectionMatrix();
-			D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
-			buffer.world = world;
-			buffer.view = viewMatrix;
-			buffer.projection = projectionMatrix;
-			ConstantBuffer* cb = gfx::getConstantBuffer(spriteCtx->constantBufferIndex);	
-			cb->setData(gfx::getDeviceContext(),buffer);
-			cb->setBuffer(gfx::getDeviceContext(),0);
 			gfx::renderShader(spriteCtx->shader,spriteCtx->texture,indexCount);
-			//PR_END("sprites")
+			debug::addSprites(spriteCtx->size);
+			PR_END("sprites")
 		}
 	}
 

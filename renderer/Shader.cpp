@@ -7,13 +7,14 @@
 #include <fstream>
 #include "gfx.h"
 
-Shader::Shader() {
+Shader::Shader(ID3D11Device* device,ID3D11DeviceContext* deviceContext) : _device(device) , _deviceContext(deviceContext) {
 	_vertexShaderBuffer = 0;
 }
 
 Shader::~Shader() {
-	_vertexShaderBuffer->Release();
-	_vertexShaderBuffer = 0;
+	SAFE_RELEASE(_vertexShaderBuffer);
+	SAFE_RELEASE(_vertexShader);
+	SAFE_RELEASE(_pixelShader);
 }
 
 void Shader::initialize(const char* techName) {
@@ -22,23 +23,25 @@ void Shader::initialize(const char* techName) {
 
 }
 
-bool Shader::loadPixelShader(ID3D11Device* device,const char* fileName, const char* techName) {
+bool Shader::loadPixelShader(const char* fileName, const char* techName) {
 	// Compile the vertex shader code.
 	LOG << "Loading shader: " << fileName << " using tech: " << techName;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* pixelShaderBuffer = 0;
-	HRESULT result = D3DX11CompileFromFile(fileName, NULL, NULL, techName, "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &pixelShaderBuffer, &errorMessage, NULL);
+	char buffer[256];
+	sprintf_s(buffer,256,"content\\effects\\%s",fileName);
+	HRESULT result = D3DX11CompileFromFile(buffer, NULL, NULL, techName, "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &pixelShaderBuffer, &errorMessage, NULL);
 	if(FAILED(result)) {
 		if(errorMessage) {
 			LOGE << (char*)errorMessage->GetBufferPointer();			
 		}
 		else {
-			LOGE << "Missing shader file: " << fileName;
+			LOGE << "Missing shader file: " << buffer;
 		}
 		return false;
 	}	
 	// Create the pixel shader from the buffer.
-    result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &_pixelShader);
+    result = _device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &_pixelShader);
 	if(FAILED(result)) {
 		return false;
 	}
@@ -48,21 +51,23 @@ bool Shader::loadPixelShader(ID3D11Device* device,const char* fileName, const ch
 	return true;
 }
 
-bool Shader::loadVertexShader(ID3D11Device* device,const char* fileName, const char* techName) {
+bool Shader::loadVertexShader(const char* fileName, const char* techName) {
 	// Compile the pixel shader code.
 	LOG << "Loading shader: " << fileName << " using tech: " << techName;
+	char buffer[256];
+	sprintf_s(buffer,256,"content\\effects\\%s",fileName);
 	ID3D10Blob* errorMessage;
-	HRESULT result = D3DX11CompileFromFile(fileName, NULL, NULL, techName, "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &_vertexShaderBuffer, &errorMessage, NULL);
+	HRESULT result = D3DX11CompileFromFile(buffer, NULL, NULL, techName, "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &_vertexShaderBuffer, &errorMessage, NULL);
 	if(FAILED(result)) {
 		if(errorMessage) {
 			LOGE << (char*)errorMessage->GetBufferPointer();			
 		}
 		else {
-			LOGE << "Missing shader file: " << fileName;
+			LOGE << "Missing shader file: " << buffer;
 		}
 		return false;
 	}	
-	result = device->CreateVertexShader(_vertexShaderBuffer->GetBufferPointer(), _vertexShaderBuffer->GetBufferSize(), NULL, &_vertexShader);
+	result = _device->CreateVertexShader(_vertexShaderBuffer->GetBufferPointer(), _vertexShaderBuffer->GetBufferSize(), NULL, &_vertexShader);
 	if(FAILED(result)) {
 		return false;
 	}
@@ -72,14 +77,16 @@ bool Shader::loadVertexShader(ID3D11Device* device,const char* fileName, const c
 bool Shader::loadShader(const char* fileName, const char* techName,ID3D10Blob* shaderBuffer,const char* profile) {
 	// Compile the vertex shader code.
 	LOG << "Loading shader: " << fileName << " using tech: " << techName;
+	char buffer[256];
+	sprintf_s(buffer,256,"content\\effects\\%s",fileName);
 	ID3D10Blob* errorMessage;
-	HRESULT result = D3DX11CompileFromFile(fileName, NULL, NULL, techName, profile, D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &shaderBuffer, &errorMessage, NULL);
+	HRESULT result = D3DX11CompileFromFile(buffer, NULL, NULL, techName, profile, D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &shaderBuffer, &errorMessage, NULL);
 	if(FAILED(result)) {
 		if(errorMessage) {
 			LOGE << (char*)errorMessage->GetBufferPointer();			
 		}
 		else {
-			LOGE << "Missing shader file: " << fileName;
+			LOGE << "Missing shader file: " << buffer;
 		}
 		return false;
 	}	
@@ -88,69 +95,19 @@ bool Shader::loadShader(const char* fileName, const char* techName,ID3D10Blob* s
 
 
 
-bool Shader::initialize(ID3D11Device* device,char* vsFilename, char* psFilename) {
+bool Shader::initialize(char* vsFilename, char* psFilename) {
 
-	if ( !loadVertexShader(device,vsFilename,"TextureVertexShader") ) {
+	if ( !loadVertexShader(vsFilename,"TextureVertexShader") ) {
 		return false;
 	}
-	if ( !loadPixelShader(device,psFilename,"TexturePixelShader") ) {
+	if ( !loadPixelShader(psFilename,"TexturePixelShader") ) {
 		return false;
 	}
-	LOG << "All shaders loaded";
-	//HRESULT result;
-	//ID3D10Blob* errorMessage;
-	
-	
-	/*
-	// Initialize the pointers this function will use to null.
-	errorMessage = 0;
-	
-	pixelShaderBuffer = 0;
-
-    // Compile the vertex shader code.
-	result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "TextureVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
-								   &_vertexShaderBuffer, &errorMessage, NULL);
-	if(FAILED(result)) {
-		// If the shader failed to compile it should have writen something to the error message.
-		if(errorMessage) {
-			LOGE << errorMessage;
-			//OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
-		}
-		// If there was nothing in the error message then it simply could not find the shader file itself.
-		else {
-			//MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
-			LOGE << "Missing shader file: " << vsFilename;
-		}
-
-		return false;
-	}
-
-    // Compile the pixel shader code.
-	result = D3DX11CompileFromFile(psFilename, NULL, NULL, "TexturePixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
-								   &pixelShaderBuffer, &errorMessage, NULL);
-	if(FAILED(result)) {
-		// If the shader failed to compile it should have writen something to the error message.
-		if(errorMessage) {
-			LOGE << errorMessage;
-			//OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
-		}
-		// If there was nothing in the error message then it simply could not find the shader file itself.
-		else {
-			//MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
-			LOGE << "Missing shader file: " << vsFilename;
-		}
-		return false;
-	}
-	*/
-    // Create the vertex shader from the buffer.
-    
-
-    
 	_samplerStateIndex = gfx::createSamplerState(TAM_WRAP);
 	return true;
 }
 
-void Shader::createInputLayout(ID3D11Device* device,const InputLayoutDefinition* definitions,int num) {
+void Shader::createInputLayout(const InputLayoutDefinition* definitions,int num) {
 	D3D11_INPUT_ELEMENT_DESC* layout = new D3D11_INPUT_ELEMENT_DESC[num];
 	bool first = true;
 	for ( int i = 0; i < num; ++i ) {
@@ -169,26 +126,58 @@ void Shader::createInputLayout(ID3D11Device* device,const InputLayoutDefinition*
 		layout[i].InstanceDataStepRate = 0;
 	}
 	// Create the vertex input layout.
-	HR(device->CreateInputLayout(layout, num, _vertexShaderBuffer->GetBufferPointer(), _vertexShaderBuffer->GetBufferSize(),&_layout));
+	HR(_device->CreateInputLayout(layout, num, _vertexShaderBuffer->GetBufferPointer(), _vertexShaderBuffer->GetBufferSize(),&_layout));
 	delete[] layout;
 }
 
-bool Shader::setShaderParameters(ID3D11DeviceContext* deviceContext,int texture_id) {
+bool Shader::setShaderParameters(ID3D11ShaderResourceView* shaderResourceView) {
+	_deviceContext->PSSetShaderResources(0, 1, &shaderResourceView);
+	return true;
+}
+
+bool Shader::setShaderParameters(int texture_id) {
 	ID3D11ShaderResourceView* texture = assets::getRawTexture(texture_id);
-	deviceContext->PSSetShaderResources(0, 1, &texture);
+	_deviceContext->PSSetShaderResources(0, 1, &texture);
 	return true;
 }
 
 
-void Shader::render(ID3D11DeviceContext* deviceContext, int indexCount) {
+void Shader::render(int indexCount) {
 	// Set the vertex input layout.
-	deviceContext->IASetInputLayout(_layout);
+	_deviceContext->IASetInputLayout(_layout);
     // Set the vertex and pixel shaders that will be used to render this triangle.
-    deviceContext->VSSetShader(_vertexShader, NULL, 0);
-    deviceContext->PSSetShader(_pixelShader, NULL, 0);
+    _deviceContext->VSSetShader(_vertexShader, NULL, 0);
+    _deviceContext->PSSetShader(_pixelShader, NULL, 0);
 	// Set the sampler state in the pixel shader.
 	gfx::setSamplerState(_samplerStateIndex);
 	// Render the triangle.
-	deviceContext->DrawIndexed(indexCount, 0, 0);
+	_deviceContext->DrawIndexed(indexCount, 0, 0);
 	return;
+}
+
+
+
+
+void DefaultShader::initialize() {
+	Shader::initialize("basic_ptc.vs","basic_ptc.ps");
+	createInputLayout(PTC_LAYOUT,3);
+	_constantBufferIndex = gfx::createConstantBuffer(sizeof(ConstantMatrixBuffer));
+}
+
+void DefaultShader::render(int indexCount) {
+	ConstantMatrixBuffer buffer;
+	D3DXMATRIX world;
+	D3DXMatrixIdentity(&world);
+	D3DXMatrixTranspose(&world, &world);
+	D3DXMATRIX viewMatrix = gfx::getViewMatrix();
+	D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
+	D3DXMATRIX projectionMatrix = gfx::getProjectionMatrix();
+	D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
+	buffer.world = world;
+	buffer.view = viewMatrix;
+	buffer.projection = projectionMatrix;
+	ConstantBuffer* cb = gfx::getConstantBuffer(_constantBufferIndex);	
+	cb->setData(gfx::getDeviceContext(),buffer);
+	cb->setBuffer(gfx::getDeviceContext(),0);
+	Shader::render(indexCount);
 }

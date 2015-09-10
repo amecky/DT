@@ -75,6 +75,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="content\effects\basic_ptc.ps" />
+    <None Include="content\effects\basic_ptc.vs" />
     <None Include="DT.ico" />
     <None Include="ReadMe.txt" />
     <None Include="small.ico" />
@@ -84,6 +86,7 @@
     <ClInclude Include="examples\01_cube\CubeTest.h" />
     <ClInclude Include="examples\02_cube_mesh\CubeMeshTest.h" />
     <ClInclude Include="examples\03_breakout\Breakout.h" />
+    <ClInclude Include="examples\04_slingy\Bullets.h" />
     <ClInclude Include="examples\04_slingy\Grid.h" />
     <ClInclude Include="examples\04_slingy\Slingy.h" />
     <ClInclude Include="math\BezierCurve.h" />
@@ -96,7 +99,9 @@
     <ClInclude Include="renderer\ConstantBuffer.h" />
     <ClInclude Include="renderer\gfx.h" />
     <ClInclude Include="renderer\Mesh.h" />
+    <ClInclude Include="renderer\RenderTarget.h" />
     <ClInclude Include="renderer\render_types.h" />
+    <ClInclude Include="renderer\ScreenQuad.h" />
     <ClInclude Include="renderer\Shader.h" />
     <ClInclude Include="renderer\VertexIndexBuffer.h" />
     <ClInclude Include="Resource.h" />
@@ -117,6 +122,7 @@
     <ClCompile Include="examples\01_cube\CubeTest.cpp" />
     <ClCompile Include="examples\02_cube_mesh\CubeMeshTest.cpp" />
     <ClCompile Include="examples\03_breakout\Breakout.cpp" />
+    <ClCompile Include="examples\04_slingy\Bullets.cpp" />
     <ClCompile Include="examples\04_slingy\Grid.cpp" />
     <ClCompile Include="examples\04_slingy\Slingy.cpp" />
     <ClCompile Include="math\mathutils.cpp" />
@@ -126,6 +132,8 @@
     <ClCompile Include="renderer\Camera.cpp" />
     <ClCompile Include="renderer\gfx.cpp" />
     <ClCompile Include="renderer\Mesh.cpp" />
+    <ClCompile Include="renderer\RenderTarget.cpp" />
+    <ClCompile Include="renderer\ScreenQuad.cpp" />
     <ClCompile Include="renderer\Shader.cpp" />
     <ClCompile Include="renderer\VertexIndexBuffer.cpp" />
     <ClCompile Include="sprites\SpriteBatch.cpp" />

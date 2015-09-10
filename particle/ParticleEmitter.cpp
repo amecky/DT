@@ -73,7 +73,7 @@ int ParticleEmitter::findFunctionIndex(const char* name) {
 
 void ParticleEmitter::emitt(const v2& position, ParticleArray* array) {
 	int s = array->countAlive;
-	int e = s + 64;
+	int e = s + 32;
 	if ( e - s > 0 ) {
 		if ( e >= array->count ) {
 			e = array->count;

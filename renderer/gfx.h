@@ -7,11 +7,10 @@
 #include "Vector.h"
 #include "render_types.h"
 #include "ConstantBuffer.h"
+
 class VertexIndexBuffer;
 class Shader;
-//struct TextureAsset;
-//struct FontDefinition;
-//struct Color;
+class DefaultShader;
 
 namespace assets {
 
@@ -20,7 +19,26 @@ namespace assets {
 	ID3D11ShaderResourceView* getRawTexture(int id);
 }
 
+namespace debug {
+
+	void reset();
+
+	void addSprites(int cnt);
+
+	void log();
+}
+
 namespace gfx {
+
+	int createRenderTarget();
+
+	void clearRenderTarget(int id,const Color& color);
+
+	void setRenderTarget(int id);
+
+	void drawRenderTarget(int id);
+
+	void restoreBackBuffer();
 
 	bool initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
 
@@ -48,13 +66,19 @@ namespace gfx {
 
 	Shader* createShader(char* vsFilename, char* psFilename);
 
+	DefaultShader* getDefaultShader();
+
 	void renderShader(Shader* shader,int texture_id,int indexCount);
+
+	void renderShader(Shader* shader,ID3D11ShaderResourceView* shaderResourceView,int indexCount);
 
 	void attachInputLayout(Shader* shader,const InputLayoutDefinition* definitions,int num);
 
 	const v2& getScreenSize();
 
 	const v2& getScreenCenter();
+
+	void setScreenCenter(const v2& c);
 
 	//TextureAsset* loadTexture(const char* fileName);
 

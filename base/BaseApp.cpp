@@ -4,7 +4,7 @@
 #include "..\utils\Profiler.h"
 #include "..\renderer\gfx.h"
 
-BaseApp::BaseApp() : _ticks(0) , _time(0.0f) {
+BaseApp::BaseApp() : _ticks(0) , _time(0.0f) , _ticking(true) {	
 }
 
 
@@ -30,11 +30,14 @@ void BaseApp::setMousePos(int x, int y) {
 void BaseApp::buildFrame() {
 	_timer.tick();
 	profiler::reset();
+	debug::reset();
 	PR_START("FRAME")
-	tick(_timer.getElapsedTime());
-	if ( _settings.tickCamera ) {
-		//_dx.updateCamera();
-		gfx::getCamera()->tick();
+	if ( _ticking ) {
+		tick(_timer.getElapsedTime());
+		if ( _settings.tickCamera ) {
+			//_dx.updateCamera();
+			gfx::getCamera()->tick();
+		}
 	}
 	gfx::beginRendering(_settings.clearColor);
 	PR_START("RENDERING")
@@ -48,6 +51,7 @@ void BaseApp::buildFrame() {
 		_time -= 1.0f;
 		LOG << "ticks: " << _ticks;
 		profiler::print();
+		debug::log();
 		_ticks = 0;
 	}
 }
