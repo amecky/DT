@@ -95,6 +95,7 @@
     <ClInclude Include="particle\ParticleEmitter.h" />
     <ClInclude Include="particle\ParticleModifier.h" />
     <ClInclude Include="particle\ParticleSystem.h" />
+    <ClInclude Include="renderer\BloomFilter.h" />
     <ClInclude Include="renderer\Camera.h" />
     <ClInclude Include="renderer\ConstantBuffer.h" />
     <ClInclude Include="renderer\gfx.h" />
@@ -129,6 +130,7 @@
     <ClCompile Include="particle\ParticleEmitter.cpp" />
     <ClCompile Include="particle\ParticleModifier.cpp" />
     <ClCompile Include="particle\ParticleSystem.cpp" />
+    <ClCompile Include="renderer\BloomFilter.cpp" />
     <ClCompile Include="renderer\Camera.cpp" />
     <ClCompile Include="renderer\gfx.cpp" />
     <ClCompile Include="renderer\Mesh.cpp" />

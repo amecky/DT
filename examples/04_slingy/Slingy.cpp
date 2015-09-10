@@ -136,12 +136,15 @@ void Slingy::tick(float dt) {
 
 void Slingy::render() {
 	
+	// _bloomFilter::start()
 	gfx::setRenderTarget(_rt1);
 	gfx::clearRenderTarget(_rt1,Color(0,0,0));
 	sprites::begin();
 	_grid.render();
 	sprites::flush();
+	// _bloomFilter::end()
 	gfx::restoreBackBuffer();	
+	// _bloomFilter::render()
 	gfx::beginRendering(Color(0,0,0));
 	gfx::drawRenderTarget(_rt1);
 	sprites::begin();

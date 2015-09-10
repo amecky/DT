@@ -152,6 +152,9 @@
     <ClInclude Include="renderer\ScreenQuad.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\BloomFilter.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -232,6 +235,9 @@
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="renderer\ScreenQuad.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\BloomFilter.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>
