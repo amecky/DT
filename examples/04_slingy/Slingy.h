@@ -7,6 +7,7 @@
 #include "Grid.h"
 #include "Bullets.h"
 #include "..\..\renderer\ScreenQuad.h"
+#include "..\..\renderer\BloomFilter.h"
 
 class Slingy : public BaseApp {
 
@@ -63,5 +64,7 @@ private:
 	int _rt1;
 	ScreenQuad _quad;
 	v2 _worldPos;
+	BloomFilter* _bloomFilter;
+	bool _useBloom;
 };
 

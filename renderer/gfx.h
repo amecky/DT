@@ -11,6 +11,7 @@
 class VertexIndexBuffer;
 class Shader;
 class DefaultShader;
+class BasicShader;
 
 namespace assets {
 
@@ -31,6 +32,8 @@ namespace debug {
 namespace gfx {
 
 	int createRenderTarget();
+
+	ID3D11ShaderResourceView* getRenderTargetSRV(int index);
 
 	void clearRenderTarget(int id,const Color& color);
 
@@ -66,11 +69,15 @@ namespace gfx {
 
 	Shader* createShader(char* vsFilename, char* psFilename);
 
+	BasicShader* createBasicShader(char* vsFilename, char* psFilename);
+
 	DefaultShader* getDefaultShader();
 
 	void renderShader(Shader* shader,int texture_id,int indexCount);
 
 	void renderShader(Shader* shader,ID3D11ShaderResourceView* shaderResourceView,int indexCount);
+
+	void renderShader(Shader* shader, ID3D11ShaderResourceView* srv1, ID3D11ShaderResourceView* srv2, int indexCount);
 
 	void attachInputLayout(Shader* shader,const InputLayoutDefinition* definitions,int num);
 

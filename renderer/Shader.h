@@ -20,6 +20,7 @@ public:
 	bool initialize(char* vsFilename, char* psFilename);
 	bool setShaderParameters(int texture_id);
 	bool setShaderParameters(ID3D11ShaderResourceView* shaderResourceView);
+	bool setShaderParameters(ID3D11ShaderResourceView* srv1, ID3D11ShaderResourceView* srv2);
 	virtual void render(int indexCount);
 	void createInputLayout(const InputLayoutDefinition* definitions,int num);
 protected:
@@ -40,6 +41,15 @@ public:
 	virtual ~DefaultShader() {}
 	void initialize();
 	void render(int indexCount);
-private:
+protected:
 	int _constantBufferIndex;
+};
+
+class BasicShader : public DefaultShader {
+
+public:
+	BasicShader(ID3D11Device* device, ID3D11DeviceContext* deviceContext) : DefaultShader(device, deviceContext) {}
+	virtual ~BasicShader() {}
+	bool create(char* vsFilename, char* psFilename);	
+	void render(int indexCount);
 };

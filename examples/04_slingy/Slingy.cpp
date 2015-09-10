@@ -72,6 +72,9 @@ void Slingy::loadContent() {
 	*/
 	_rt1 = gfx::createRenderTarget();
 	_quad.initialize();
+
+	_bloomFilter = new BloomFilter;
+	_useBloom = true;
 }
 
 void Slingy::moveTail(float dt) {
@@ -135,27 +138,27 @@ void Slingy::tick(float dt) {
 }
 
 void Slingy::render() {
+	if (_useBloom) {
+		_bloomFilter->begin();
+		sprites::begin();
+		_grid.render();
+		_particles->render();
+		_bullets.render();
+		sprites::flush();
+		_bloomFilter->render();
+		sprites::begin();
+	}
+	else {
+		sprites::begin();
+		_grid.render();
+		_particles->render();
+		_bullets.render();
+	}
 	
-	// _bloomFilter::start()
-	gfx::setRenderTarget(_rt1);
-	gfx::clearRenderTarget(_rt1,Color(0,0,0));
-	sprites::begin();
-	_grid.render();
-	sprites::flush();
-	// _bloomFilter::end()
-	gfx::restoreBackBuffer();	
-	// _bloomFilter::render()
-	gfx::beginRendering(Color(0,0,0));
-	gfx::drawRenderTarget(_rt1);
-	sprites::begin();
-	_bullets.render();
-
 	sprites::draw(_head.position, _headTexture, _head.angle, 1.0f, 1.0f, Color(192,192,192));
-	_particles->render();
-
+	
 	gfx::setScreenCenter(v2(512,384));
 	char buffer[32];
-	//v2 mp = gfx::getMousePos();
 	sprintf(buffer, "%3.2f %3.2f", _worldPos.x, _worldPos.y);
 	sprites::drawText(buffer, 100, 740,Color(192,0,0));
 	
@@ -169,9 +172,13 @@ void Slingy::onChar(char ascii, unsigned int state) {
 	if (ascii == '2'){
 		_particles->start(v2(400, 300));
 	}
+	if (ascii == '3') {
+		_useBloom = !_useBloom;
+	}
 }
 
 void Slingy::onButton(int button, ButtonState state) {
+	LOG << "onButton: " << button << " state: " << state;
 	if (button == 0) {
 		if (state == BS_DOWN) {
 			_firing = true;

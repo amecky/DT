@@ -11,10 +11,12 @@ public:
 	~ScreenQuad();
 	void initialize();
 	void render(ID3D11ShaderResourceView* shaderResourceView);
+	void render(Shader* shader,ID3D11ShaderResourceView* shaderResourceView);
+	void render(Shader* shader, ID3D11ShaderResourceView* srv1, ID3D11ShaderResourceView* srv2);
 private:
 	PCTVertex _vertices[4];
 	VertexIndexBuffer* _buffer;
-	DefaultShader* _shader;
+	Shader* _shader;
 	int _constantBufferIndex;
 	int _blendState;
 };

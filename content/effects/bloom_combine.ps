@@ -1,0 +1,30 @@
+Texture2D shaderTexture : register(t0);
+Texture2D bloomTexture : register(t1);
+SamplerState SampleType;
+
+cbuffer SettingsCB {
+	float BloomIntensity;
+	float OriginalIntensity;
+	float BloomSaturation;
+	float OriginalSaturation;
+};
+
+float4 AdjustSaturation(float4 color, float saturation) {
+	float grey = dot(color, float4(0.3, 0.59, 0.11,1.0));  
+	return lerp(grey, color, saturation);
+}
+
+struct PixelInputType {
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+    float4 color : COLOR0;
+};
+
+float4 TexturePixelShader(PixelInputType input) : SV_TARGET {
+	float4 bloomColor = bloomTexture.Sample(SampleType, input.tex);
+	float4 originalColor = shaderTexture.Sample(SampleType, input.tex);
+	bloomColor = AdjustSaturation(bloomColor, BloomSaturation) * BloomIntensity;
+	originalColor = AdjustSaturation(originalColor, OriginalSaturation) * OriginalIntensity;
+	originalColor *= (1 - saturate(bloomColor));
+	return originalColor + bloomColor;
+}

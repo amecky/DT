@@ -161,6 +161,10 @@ namespace gfx {
 		return ctx->renderTargets.size() - 1;
 	}
 
+	ID3D11ShaderResourceView* getRenderTargetSRV(int index) {
+		return ctx->renderTargets[index]->getShaderResourceView();
+	}
+
 	void clearRenderTarget(int id,const Color& color) {
 		RenderTarget* rt = ctx->renderTargets[id];
 		rt->clearRenderTarget(ctx->deviceContext,ctx->depthStencilView,color);
@@ -427,6 +431,15 @@ namespace gfx {
 		return ctx->defaultShader;
 	}
 
+	void renderShader(Shader* shader, ID3D11ShaderResourceView* srv1, ID3D11ShaderResourceView* srv2, int indexCount) {
+		if (shader->setShaderParameters(srv1,srv2)) {
+			shader->render(indexCount);
+		}
+		else {
+			LOG << "cannot set shader parameter";
+		}
+	}
+
 	void renderShader(Shader* shader,ID3D11ShaderResourceView* shaderResourceView,int indexCount) {
 		if (shader->setShaderParameters(shaderResourceView)) {
 			shader->render(indexCount);
@@ -452,6 +465,15 @@ namespace gfx {
 	Shader* createShader(char* vsFilename, char* psFilename) {
 		Shader* s = new Shader(ctx->device,ctx->deviceContext);
 		if ( !s->initialize(vsFilename,psFilename) ) {
+			LOG << "Cannot create shader!!!";
+			return 0;
+		}
+		return s;
+	}
+
+	BasicShader* createBasicShader(char* vsFilename, char* psFilename) {
+		BasicShader* s = new BasicShader(ctx->device, ctx->deviceContext);
+		if (!s->create(vsFilename, psFilename)) {
 			LOG << "Cannot create shader!!!";
 			return 0;
 		}

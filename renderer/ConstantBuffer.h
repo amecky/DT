@@ -38,6 +38,9 @@ public:
 	void setBuffer(ID3D11DeviceContext* deviceContext,int index) {
 		deviceContext->VSSetConstantBuffers(index, 1, &_buffer);
 	}
+	void setPSBuffer(ID3D11DeviceContext* deviceContext, int index) {
+		deviceContext->PSSetConstantBuffers(index, 1, &_buffer);
+	}
 	
 private:
 	ID3D11Buffer* _buffer;

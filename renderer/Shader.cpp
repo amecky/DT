@@ -135,6 +135,12 @@ bool Shader::setShaderParameters(ID3D11ShaderResourceView* shaderResourceView) {
 	return true;
 }
 
+bool Shader::setShaderParameters(ID3D11ShaderResourceView* srv1, ID3D11ShaderResourceView* srv2) {
+	_deviceContext->PSSetShaderResources(0, 1, &srv1);
+	_deviceContext->PSSetShaderResources(1, 1, &srv2);
+	return true;
+}
+
 bool Shader::setShaderParameters(int texture_id) {
 	ID3D11ShaderResourceView* texture = assets::getRawTexture(texture_id);
 	_deviceContext->PSSetShaderResources(0, 1, &texture);
@@ -180,4 +186,15 @@ void DefaultShader::render(int indexCount) {
 	cb->setData(gfx::getDeviceContext(),buffer);
 	cb->setBuffer(gfx::getDeviceContext(),0);
 	Shader::render(indexCount);
+}
+
+bool BasicShader::create(char* vsFilename, char* psFilename) {
+	Shader::initialize(vsFilename, psFilename);
+	createInputLayout(PTC_LAYOUT, 3);
+	_constantBufferIndex = gfx::createConstantBuffer(sizeof(ConstantMatrixBuffer));
+	return true;
+}
+
+void BasicShader::render(int indexCount) {
+	DefaultShader::render(indexCount);
 }

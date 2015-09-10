@@ -101,6 +101,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			char ascii = wParam;
 			unsigned int keyState = lParam;
 			app->onChar(ascii,keyState);
+			break;
 		}	
 		case WM_LBUTTONDOWN:
 			app->onButton(0, BS_DOWN);

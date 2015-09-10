@@ -33,3 +33,23 @@ void ScreenQuad::render(ID3D11ShaderResourceView* shaderResourceView) {
 	gfx::renderShader(_shader,shaderResourceView,indexCount);
 	debug::addSprites(1);
 }
+
+void ScreenQuad::render(Shader* shader,ID3D11ShaderResourceView* shaderResourceView) {
+	gfx::fillQuadBuffer(_buffer, _vertices, 4);
+	gfx::turnZBufferOff();
+	gfx::submitBuffer(_buffer);
+	gfx::setBlendState(_blendState);
+	int indexCount = 6;
+	gfx::renderShader(shader, shaderResourceView, indexCount);
+	debug::addSprites(1);
+}
+
+void ScreenQuad::render(Shader* shader, ID3D11ShaderResourceView* srv1, ID3D11ShaderResourceView* srv2) {
+	gfx::fillQuadBuffer(_buffer, _vertices, 4);
+	gfx::turnZBufferOff();
+	gfx::submitBuffer(_buffer);
+	gfx::setBlendState(_blendState);
+	int indexCount = 6;
+	gfx::renderShader(shader, srv1, srv2, indexCount);
+	debug::addSprites(1);
+}
