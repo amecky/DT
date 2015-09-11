@@ -21,8 +21,11 @@ public:
 private:
 	int _rt1;
 	int _rt2;
+	int _rt3;
 	int _blCB;
 	BasicShader* _bloomShader;
 	BasicShader* _combineShader;
+	BasicShader* _hBlurShader;
+	BasicShader* _vBlurShader;
 	ScreenQuad _quad;
 };

@@ -6,7 +6,7 @@
 #include "..\..\utils\Log.h"
 #include "..\..\math\mathutils.h"
 
-BaseApp *app = new Slingy();
+//BaseApp *app = new Slingy();
 
 Slingy::Slingy() {
 	_settings.tickCamera = false;
@@ -22,6 +22,7 @@ Slingy::Slingy() {
 
 Slingy::~Slingy() {
 	delete _particles;
+	delete _bloomFilter;
 	sprites::shutdown();
 }
 

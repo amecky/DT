@@ -44,6 +44,9 @@
     <Filter Include="content\effects">
       <UniqueIdentifier>{7fe8a7fd-cc65-48ac-be79-b8a88016e833}</UniqueIdentifier>
     </Filter>
+    <Filter Include="examples\05_colors">
+      <UniqueIdentifier>{12834d2f-8e86-4fb6-afea-65ae6aff700c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -57,6 +60,21 @@
       <Filter>content\effects</Filter>
     </None>
     <None Include="content\effects\basic_ptc.vs">
+      <Filter>content\effects</Filter>
+    </None>
+    <None Include="content\effects\bloom.ps">
+      <Filter>content\effects</Filter>
+    </None>
+    <None Include="content\effects\bloom_combine.ps">
+      <Filter>content\effects</Filter>
+    </None>
+    <None Include="content\effects\blur.ps">
+      <Filter>content\effects</Filter>
+    </None>
+    <None Include="content\effects\hblur.vs">
+      <Filter>content\effects</Filter>
+    </None>
+    <None Include="content\effects\vblur.vs">
       <Filter>content\effects</Filter>
     </None>
   </ItemGroup>
@@ -155,6 +173,9 @@
     <ClInclude Include="renderer\BloomFilter.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="examples\05_colors\Colors.h">
+      <Filter>examples\05_colors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -239,6 +260,9 @@
     </ClCompile>
     <ClCompile Include="renderer\BloomFilter.cpp">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\05_colors\Colors.cpp">
+      <Filter>examples\05_colors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -44,9 +44,10 @@ void BaseApp::buildFrame() {
 	render();
 	PR_END("RENDERING")
 	gfx::endRendering();
-	++_ticks;
-	_time += _timer.getElapsedTime();
+	//++_ticks;
+	//_time += _timer.getElapsedTime();
 	PR_END("FRAME")
+	/*
 	if ( _time >= 1.0f ) {
 		_time -= 1.0f;
 		LOG << "ticks: " << _ticks;
@@ -54,6 +55,7 @@ void BaseApp::buildFrame() {
 		debug::log();
 		_ticks = 0;
 	}
+	*/
 }
 
 void BaseApp::shutdown() {

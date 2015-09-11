@@ -23,8 +23,11 @@ struct PixelInputType {
 float4 TexturePixelShader(PixelInputType input) : SV_TARGET {
 	float4 bloomColor = bloomTexture.Sample(SampleType, input.tex);
 	float4 originalColor = shaderTexture.Sample(SampleType, input.tex);
+	float alpha = originalColor.a;
 	bloomColor = AdjustSaturation(bloomColor, BloomSaturation) * BloomIntensity;
 	originalColor = AdjustSaturation(originalColor, OriginalSaturation) * OriginalIntensity;
 	originalColor *= (1 - saturate(bloomColor));
-	return originalColor + bloomColor;
+	float4 finalColor = originalColor + bloomColor;
+	finalColor.a = alpha;
+	return finalColor;
 }
