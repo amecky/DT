@@ -55,11 +55,11 @@ namespace sprites {
 		spriteCtx->fontDefinition.charHeight = 14;// " : "14",
 		spriteCtx->fontDefinition.gridHeight = 21;// " : "21",
 		spriteCtx->fontDefinition.startX = 0;// " : "0",
-		spriteCtx->fontDefinition.startY = 100;// " : "300",
+		spriteCtx->fontDefinition.startY = 300;// 100;// " : "300",
 		spriteCtx->fontDefinition.width = 405;// " : "405",
 		spriteCtx->fontDefinition.height = 168;// " : "168",
 		spriteCtx->fontDefinition.padding = 6;// " : "6",
-		spriteCtx->fontDefinition.textureSize = 512;// " : "1024"
+		spriteCtx->fontDefinition.textureSize = 1024;// " : "1024"
 		gfx::initializeBitmapFont(spriteCtx->fontDefinition, spriteCtx->texture, Color(255, 0, 255, 255));
 		return true;
 	}
