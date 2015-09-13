@@ -47,6 +47,9 @@
     <Filter Include="examples\05_colors">
       <UniqueIdentifier>{12834d2f-8e86-4fb6-afea-65ae6aff700c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{9a17a6ba-029e-4fc6-9640-4fcd97df66a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -176,6 +179,9 @@
     <ClInclude Include="examples\05_colors\Colors.h">
       <Filter>examples\05_colors</Filter>
     </ClInclude>
+    <ClInclude Include="ui\GUIDialog.h">
+      <Filter>ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -263,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="examples\05_colors\Colors.cpp">
       <Filter>examples\05_colors</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\GUIDialog.cpp">
+      <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
