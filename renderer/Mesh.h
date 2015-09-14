@@ -1,6 +1,7 @@
 #pragma once
 #include <d3dx9math.h>
 #include "render_types.h"
+#include "gfx.h"
 #include "VertexIndexBuffer.h"
 
 class MeshData {
@@ -38,6 +39,7 @@ class AbstractMeshData : public MeshData {
 public:
 	AbstractMeshData(int buffer_id,int vertex_declaration,int max) : MeshData(buffer_id,vertex_declaration,max) {
 		_data = new T[max];
+		_indexCount = 0;
 	}
 	virtual ~AbstractMeshData() {
 		delete[] _data;
@@ -48,19 +50,34 @@ public:
 			_data[_size++] = quad.v[1];
 			_data[_size++] = quad.v[2];
 			_data[_size++] = quad.v[3];
+			_indexCount += 6;
+		}
+	}
+	void addQuad(const T& v0,const T& v1,const T& v2,const T& v3) {
+		if ( _size + 4 < _maxVertices ) {
+			_data[_size++] = v0;
+			_data[_size++] = v1;
+			_data[_size++] = v2;
+			_data[_size++] = v3;
+			_indexCount += 6;
 		}
 	}
 	void fillBuffer(VertexIndexBuffer* buffer) {
-		//buffer->fillBuffer(_data,_size);
+		gfx::fillQuadBuffer(buffer,_data,_size);
 	}
 	T* getData() const {
 		return _data;
 	}
+	int getIndexCount() const {
+		return _indexCount;
+	}
 private:
 	T* _data;
+	int _indexCount;
 };
 
 typedef AbstractMeshData<PCTVertex> PCTMeshData;
+typedef AbstractMeshData<PNTCVertex> PNTCMeshData;
 typedef AbstractMeshData<PCVertex> PCMeshData;
 typedef AbstractMeshData<PTVertex> PTMeshData;
 
@@ -68,6 +85,10 @@ namespace data {
 
 	void load_mesh(PCTMeshData* data,const char* fileName,float textureSize);
 
+	void load_mesh(PNTCMeshData* data,const char* fileName,float textureSize);
+
+	void add_quad(PNTCMeshData* data,v3* vertices,const v3& n,const Rect& textureRect,float textureSize);
+	
 	void add_quad(PCTMeshData* data,Vector3f* vertices,const Rect& textureRect,float textureSize);
 
 	void build_cube(PCTMeshData* data,float dx,float dy,float dz,const Rect& textureRect,float textureSize);

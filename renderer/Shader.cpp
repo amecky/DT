@@ -167,14 +167,18 @@ void Shader::render(int indexCount) {
 void DefaultShader::initialize() {
 	Shader::initialize("basic_ptc.vs","basic_ptc.ps");
 	createInputLayout(PTC_LAYOUT,3);
-	_constantBufferIndex = gfx::createConstantBuffer(sizeof(ConstantMatrixBuffer));
+	_constantBufferIndex = gfx::createConstantBuffer(sizeof(ConstantMatrixBuffer));	
+	D3DXMatrixIdentity(&_worldMatrix);
+}
+
+void DefaultShader::setWorldMatrix(const D3DXMATRIX& world) {
+	_worldMatrix = world;
 }
 
 void DefaultShader::render(int indexCount) {
 	ConstantMatrixBuffer buffer;
 	D3DXMATRIX world;
-	D3DXMatrixIdentity(&world);
-	D3DXMatrixTranspose(&world, &world);
+	D3DXMatrixTranspose(&world, &_worldMatrix);
 	D3DXMATRIX viewMatrix = gfx::getViewMatrix();
 	D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
 	D3DXMATRIX projectionMatrix = gfx::getProjectionMatrix();
@@ -196,5 +200,17 @@ bool BasicShader::create(char* vsFilename, char* psFilename) {
 }
 
 void BasicShader::render(int indexCount) {
+	DefaultShader::render(indexCount);
+}
+
+
+bool SimpleLightShader::create(char* vsFilename, char* psFilename) {
+	Shader::initialize(vsFilename, psFilename);
+	createInputLayout(PNTC_LAYOUT, 4);
+	_constantBufferIndex = gfx::createConstantBuffer(sizeof(ConstantMatrixBuffer));
+	return true;
+}
+
+void SimpleLightShader::render(int indexCount) {
 	DefaultShader::render(indexCount);
 }

@@ -192,6 +192,17 @@ namespace data {
 		}
 	}
 
+	void add_quad(PNTCMeshData* data,v3* vertices,const v3& n,const Rect& textureRect,float textureSize) {
+		float u1,v1,u2,v2;
+		getTextureCoordinates(textureRect,textureSize,textureSize,&u1,&v1,&u2,&v2,true);
+		Quad<PNTCVertex> plane;
+		plane.v[0] = PNTCVertex(vertices[0], n, u1, v2);
+		plane.v[1] = PNTCVertex(vertices[1], n, u1, v1);
+		plane.v[2] = PNTCVertex(vertices[2], n, u2, v1);
+		plane.v[3] = PNTCVertex(vertices[3], n, u2, v2);
+		data->addQuad(plane);
+	}
+
 	void add_quad(PCTMeshData* data,Vector3f* vertices,const Rect& textureRect,float textureSize) {
 		float u1,v1,u2,v2;
 		getTextureCoordinates(textureRect,textureSize,textureSize,&u1,&v1,&u2,&v2,true);
@@ -252,6 +263,30 @@ namespace data {
 		plane.v[3] = PCVertex(  end.x, end.y, end.z, Color(192, 0, 0));
 		data.addQuad(plane);
 
+	}
+
+
+	void load_mesh(PNTCMeshData* data,const char* fileName,float textureSize)  {
+		JSONReader reader;
+		if ( reader.parse(fileName) ) {
+			std::vector<Category*> categories = reader.getCategories();
+			v3 vertices[4];
+			v3 normal;
+			for ( size_t i = 0; i < categories.size(); ++i ) {
+				Category* c = categories[i];
+				vertices[0] = c->getVector3f("v0");
+				vertices[1] = c->getVector3f("v1");
+				vertices[2] = c->getVector3f("v2");
+				vertices[3] = c->getVector3f("v3");
+				normal = c->getVector3f("n");
+				Rect r;
+				c->getRect("texture",&r);
+				data::add_quad(data,vertices,normal,r,textureSize);
+			}
+		}
+		else {
+			LOGE << "File not found";
+		}
 	}
 
 	void load_mesh(PCTMeshData* data,const char* fileName,float textureSize) {

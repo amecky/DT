@@ -5,20 +5,28 @@
 #include "..\..\renderer\VertexIndexBuffer.h"
 #include "..\..\renderer\Shader.h"
 
-class CubeMeshTest : public BaseApp {
+struct LightBuffer	{
+	v3 dir;
+	Color ambient;
+	Color diffuse;
+	float value;
+};
+
+
+class SimpleLight : public BaseApp {
 
 public:
-	CubeMeshTest();
-	~CubeMeshTest();
+	SimpleLight();
+	~SimpleLight();
 	void loadContent();
 	void tick(float dt);
 	void render();
 	void onChar(char ascii, unsigned int state);
 private:
-	PCTMeshData* _data;
-	PCTMeshData* _floorData;
+	PNTCMeshData* _data;
+	//PCTMeshData* _floorData;
 	int _textureID;
-	int _floorTexID;
+	//int _floorTexID;
 	bool _rotating;
 	bool _moving;
 	bool _scaling;
@@ -27,7 +35,9 @@ private:
 	v3 _scale;
 	v3 _rotation;
 	VertexIndexBuffer* _buffer;
-	DefaultShader* _shader;
+	SimpleLightShader* _shader;
 	D3DXMATRIX _worldMatrix;
+	LightBuffer _lightBuffer;
+	int _lightBufferIndex;
 };
 

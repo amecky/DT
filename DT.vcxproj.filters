@@ -50,6 +50,9 @@
     <Filter Include="ui">
       <UniqueIdentifier>{9a17a6ba-029e-4fc6-9640-4fcd97df66a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="examples\06_simple_light">
+      <UniqueIdentifier>{0fa02e09-b098-4c5e-9830-a3e01e0212f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -78,6 +81,12 @@
       <Filter>content\effects</Filter>
     </None>
     <None Include="content\effects\vblur.vs">
+      <Filter>content\effects</Filter>
+    </None>
+    <None Include="content\effects\basic_light.ps">
+      <Filter>content\effects</Filter>
+    </None>
+    <None Include="content\effects\basic_light.vs">
       <Filter>content\effects</Filter>
     </None>
   </ItemGroup>
@@ -182,6 +191,9 @@
     <ClInclude Include="ui\GUIDialog.h">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="examples\06_simple_light\SimpleLight.h">
+      <Filter>examples\06_simple_light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -272,6 +284,9 @@
     </ClCompile>
     <ClCompile Include="ui\GUIDialog.cpp">
       <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\06_simple_light\SimpleLight.cpp">
+      <Filter>examples\06_simple_light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

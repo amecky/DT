@@ -25,14 +25,14 @@ Parameters:
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void Camera::CreateProjectionMatrix(float screenWidth, float screenHeight, float fov, float aspect, float nearPlane, float farPlane) {
     m_fov       = fov;
-    m_aspect    = aspect;
+    m_aspect    = screenWidth / screenHeight;
     m_nearPlane = nearPlane;
     m_farPlane  = farPlane;
 	_screenWidth = screenWidth;
 	_screenHeight = screenHeight;
     D3DXMatrixPerspectiveFovLH( &m_projection, m_fov, m_aspect, m_nearPlane, m_farPlane );
 
-	D3DXMatrixOrthoLH(&m_projection,_screenWidth, _screenHeight, nearPlane, farPlane);
+	//D3DXMatrixOrthoLH(&m_projection,_screenWidth, _screenHeight, nearPlane, farPlane);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 

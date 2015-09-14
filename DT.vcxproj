@@ -39,8 +39,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\math;C:\devtools\DirectX_SDK\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\devtools\DirectX_SDK\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\math;C:\devtools\DirectX\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\devtools\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -75,6 +75,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="content\effects\basic_light.ps" />
+    <None Include="content\effects\basic_light.vs" />
     <None Include="content\effects\basic_ptc.ps" />
     <None Include="content\effects\basic_ptc.vs" />
     <None Include="content\effects\bloom.ps" />
@@ -95,6 +97,7 @@
     <ClInclude Include="examples\04_slingy\Grid.h" />
     <ClInclude Include="examples\04_slingy\Slingy.h" />
     <ClInclude Include="examples\05_colors\Colors.h" />
+    <ClInclude Include="examples\06_simple_light\SimpleLight.h" />
     <ClInclude Include="math\BezierCurve.h" />
     <ClInclude Include="math\mathutils.h" />
     <ClInclude Include="particle\ParticleArray.h" />
@@ -134,6 +137,7 @@
     <ClCompile Include="examples\04_slingy\Grid.cpp" />
     <ClCompile Include="examples\04_slingy\Slingy.cpp" />
     <ClCompile Include="examples\05_colors\Colors.cpp" />
+    <ClCompile Include="examples\06_simple_light\SimpleLight.cpp" />
     <ClCompile Include="math\mathutils.cpp" />
     <ClCompile Include="particle\ParticleEmitter.cpp" />
     <ClCompile Include="particle\ParticleModifier.cpp" />

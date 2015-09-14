@@ -7,7 +7,7 @@
 #include "..\..\renderer\gfx.h"
 
 
-BaseApp *app = new Colors();
+//BaseApp *app = new Colors();
 
 // -------------------------------------------------------------
 // Point

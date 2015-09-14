@@ -41,8 +41,10 @@ public:
 	virtual ~DefaultShader() {}
 	void initialize();
 	void render(int indexCount);
+	void setWorldMatrix(const D3DXMATRIX& world);
 protected:
 	int _constantBufferIndex;
+	D3DXMATRIX _worldMatrix;
 };
 
 class BasicShader : public DefaultShader {
@@ -50,6 +52,15 @@ class BasicShader : public DefaultShader {
 public:
 	BasicShader(ID3D11Device* device, ID3D11DeviceContext* deviceContext) : DefaultShader(device, deviceContext) {}
 	virtual ~BasicShader() {}
+	bool create(char* vsFilename, char* psFilename);	
+	void render(int indexCount);
+};
+
+class SimpleLightShader : public DefaultShader {
+
+public:
+	SimpleLightShader(ID3D11Device* device, ID3D11DeviceContext* deviceContext) : DefaultShader(device, deviceContext) {}
+	virtual ~SimpleLightShader() {}
 	bool create(char* vsFilename, char* psFilename);	
 	void render(int indexCount);
 };

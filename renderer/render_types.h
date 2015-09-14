@@ -39,6 +39,13 @@ const InputLayoutDefinition PTC_LAYOUT[] = {
 	{"COLOR",DXGI_FORMAT_R32G32B32A32_FLOAT}
 };
 
+const InputLayoutDefinition PNTC_LAYOUT[] = {
+	{"POSITION",DXGI_FORMAT_R32G32B32_FLOAT},
+	{"NORMAL",DXGI_FORMAT_R32G32B32_FLOAT},
+	{"TEXCOORD",DXGI_FORMAT_R32G32_FLOAT},
+	{"COLOR",DXGI_FORMAT_R32G32B32A32_FLOAT}
+};
+
 struct Color {
 
 	float r;
@@ -169,9 +176,35 @@ struct PCTVertex {
 
 	PCTVertex(float _x,float _y,float _z,Color _color,float _u,float _v) : x(_x) , y(_y) , z(_z) , color(_color) , u(_u) , v(_v) {}
 
+	PCTVertex(const Vector3f& p, float _u, float _v) : x(p.x) , y(p.y) , z(p.z) , color(255,255,255) , u(_u) , v(_v) {}
+
 	PCTVertex(const Vector3f& p,Color _color,float _u,float _v) : x(p.x) , y(p.y) , z(p.z) , color(_color) , u(_u) , v(_v) {}
 
 	PCTVertex(float _x,float _y,float _z,float _u,float _v) : x(_x) , y(_y) , z(_z) , color(1.0f,1.0f,1.0f,1.0f) , u(_u) , v(_v) {}
+
+
+};
+
+struct PNTCVertex {
+
+	float x,y,z;		
+	float nx,ny,nz;
+	float u,v;
+	Color color;
+
+	PNTCVertex() : x(0.0f) , y(0.0f) , z(0.0f) , nx(0.0f) , ny(0.0f) , nz(0.0f) , u(0.0f) , v(0.0f) , color(255,255,255) {}
+
+	PNTCVertex(float _x,float _y,float _z,float _nx, float _ny, float _nz, float _u, float _v, const Color& _color) 
+		: x(_x) , y(_y) , z(_z) , nx(_nx), ny(_ny) , nz(_nz) , u(_u) , v(_v) , color(_color) {}
+
+	PNTCVertex(const v3& p, const v3& n,float _u,float _v) 
+		: x(p.x) , y(p.y) , z(p.z) , nx(n.x), ny(n.y) , nz(n.z) , u(_u) , v(_v) , color(255,255,255) {}
+
+	PNTCVertex(const v3& p, const v3& n,float _u,float _v,const Color& _color) 
+		: x(p.x) , y(p.y) , z(p.z) , nx(n.x), ny(n.y) , nz(n.z) , u(_u) , v(_v) , color(_color) {}
+
+	PNTCVertex(float _x,float _y,float _z,float _u,float _v) 
+		: x(_x) , y(_y) , z(_z) , nx(0.0f), ny(0.0f), nz(0.0f), color(1.0f,1.0f,1.0f,1.0f) , u(_u) , v(_v) {}
 
 
 };

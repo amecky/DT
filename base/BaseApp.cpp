@@ -37,6 +37,7 @@ void BaseApp::buildFrame() {
 		if ( _settings.tickCamera ) {
 			//_dx.updateCamera();
 			gfx::getCamera()->tick();
+			gfx::getCamera()->Update();
 		}
 	}
 	gfx::beginRendering(_settings.clearColor);

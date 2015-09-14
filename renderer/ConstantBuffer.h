@@ -12,6 +12,7 @@ public:
 		_buffer = 0;
 	}
 	bool create(ID3D11Device* device,int size) {
+		LOG << "creating constant buffer with size: " << size;
 		D3D11_BUFFER_DESC desc = { 0 };
 		desc.Usage = D3D11_USAGE_DYNAMIC;
 		desc.ByteWidth = size;
@@ -22,7 +23,9 @@ public:
 
 		// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 		HRESULT result = device->CreateBuffer(&desc, NULL, &_buffer);
+		HR(result);
 		if(FAILED(result)) {
+			LOGE << "Failed to create constant buffer";
 			return false;
 		}
 		return true;

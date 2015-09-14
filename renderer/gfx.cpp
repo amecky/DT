@@ -242,6 +242,7 @@ namespace gfx {
 	}
 
 	int createConstantBuffer(int elementSize) {
+		// FIXME: elementsize must be multiple of 16!!!!
 		ConstantBuffer* buffer = new ConstantBuffer;
 		buffer->create(ctx->device,elementSize);
 		ctx->constantBuffers.push_back(buffer);
@@ -249,6 +250,7 @@ namespace gfx {
 	}
 
 	ConstantBuffer* getConstantBuffer(int index) {
+		assert(index < ctx->constantBuffers.size());
 		return ctx->constantBuffers[index];
 	}
 
@@ -465,6 +467,15 @@ namespace gfx {
 	Shader* createShader(char* vsFilename, char* psFilename) {
 		Shader* s = new Shader(ctx->device,ctx->deviceContext);
 		if ( !s->initialize(vsFilename,psFilename) ) {
+			LOG << "Cannot create shader!!!";
+			return 0;
+		}
+		return s;
+	}
+
+	SimpleLightShader* createSimpleLightShader(char* vsFilename, char* psFilename) {
+		SimpleLightShader* s = new SimpleLightShader(ctx->device,ctx->deviceContext);
+		if (!s->create(vsFilename, psFilename)) {
 			LOG << "Cannot create shader!!!";
 			return 0;
 		}
@@ -894,7 +905,7 @@ namespace gfx {
 		ctx->screenSize = v2(screenWidth,screenHeight);
 		ctx->screenCenter = ctx->screenSize * 0.5f;
 		ctx->camera.CreateProjectionMatrix(screenWidth, screenHeight, D3DX_PI / 3.0f, screenWidth/screenHeight, 0.1f, 1000.0f);
-		ctx->camera.setPosition(0.0f,0.0f,-10.0f);
+		ctx->camera.setPosition(0.0f,0.0f,-5.0f);
 		ctx->camera.Update();
 		ctx->mousePos = v2(0, 0);
 		assets::initialize();

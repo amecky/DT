@@ -12,6 +12,7 @@ class VertexIndexBuffer;
 class Shader;
 class DefaultShader;
 class BasicShader;
+class SimpleLightShader;
 
 namespace assets {
 
@@ -70,6 +71,8 @@ namespace gfx {
 	Shader* createShader(char* vsFilename, char* psFilename);
 
 	BasicShader* createBasicShader(char* vsFilename, char* psFilename);
+
+	SimpleLightShader* createSimpleLightShader(char* vsFilename, char* psFilename);
 
 	DefaultShader* getDefaultShader();
 
