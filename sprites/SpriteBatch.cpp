@@ -29,9 +29,10 @@ namespace sprites {
 		DefaultShader* shader;
 		int texture;
 		FontDefinition fontDefinition;
+		bool fontInitialized;
 		//int constantBufferIndex;
 		int blendState;
-		SpriteBatchContext() : size(0) {}
+		SpriteBatchContext() : size(0) , fontInitialized(false) {}
 
 		~SpriteBatchContext() {}
 	};
@@ -50,6 +51,10 @@ namespace sprites {
 		spriteCtx->texture = assets::loadTexture(textureName);
 		assert(spriteCtx->texture != -1);
 		spriteCtx->blendState = gfx::createBlendState(D3D11_BLEND_SRC_ALPHA,D3D11_BLEND_INV_SRC_ALPHA,D3D11_BLEND_ZERO,D3D11_BLEND_ZERO);
+		return true;
+	}
+
+	bool initializeFont() {
 		spriteCtx->fontDefinition.startChar = 32;// " : "32",
 		spriteCtx->fontDefinition.endChar = 128;// " : "128",
 		spriteCtx->fontDefinition.charHeight = 14;// " : "14",
@@ -61,6 +66,7 @@ namespace sprites {
 		spriteCtx->fontDefinition.padding = 6;// " : "6",
 		spriteCtx->fontDefinition.textureSize = 1024;// " : "1024"
 		gfx::initializeBitmapFont(spriteCtx->fontDefinition, spriteCtx->texture, Color(255, 0, 255, 255));
+		spriteCtx->fontInitialized = true;
 		return true;
 	}
 
@@ -98,6 +104,7 @@ namespace sprites {
 	}
 
 	v2 calculateTextSize(const char* text,int padding) {
+		assert(spriteCtx->fontInitialized);
 		int len = strlen(text);
 		int xp = 0;
 		for (int i = 0; i < len; ++i ) {
@@ -113,6 +120,7 @@ namespace sprites {
 	}
 
 	void drawText(const char* text, int x, int y,const Color& color,int padding) {
+		assert(spriteCtx->fontInitialized);
 		int len = strlen(text);
 		int xp = x;
 		for (int i = 0; i < len; ++i ) {

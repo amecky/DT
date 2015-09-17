@@ -6,6 +6,7 @@ class Camera {
 public:
     Camera();
     void CreateProjectionMatrix(float screenWidth,float screenHeight,float fov, float aspect, float nearPlane, float farPlane );
+	void createOrthoProjectionMatrix(float screenWidth,float screenHeight);
     void MoveForward( float units );
     void Strafe( float units ); 
 	void MoveUp( float units );    

@@ -98,6 +98,8 @@
     <ClInclude Include="examples\04_slingy\Slingy.h" />
     <ClInclude Include="examples\05_colors\Colors.h" />
     <ClInclude Include="examples\06_simple_light\SimpleLight.h" />
+    <ClInclude Include="examples\07_asteroids\Asteroid.h" />
+    <ClInclude Include="examples\07_asteroids\Asteroids.h" />
     <ClInclude Include="math\BezierCurve.h" />
     <ClInclude Include="math\mathutils.h" />
     <ClInclude Include="particle\ParticleArray.h" />
@@ -138,6 +140,8 @@
     <ClCompile Include="examples\04_slingy\Slingy.cpp" />
     <ClCompile Include="examples\05_colors\Colors.cpp" />
     <ClCompile Include="examples\06_simple_light\SimpleLight.cpp" />
+    <ClCompile Include="examples\07_asteroids\Asteroid.cpp" />
+    <ClCompile Include="examples\07_asteroids\Asteroids.cpp" />
     <ClCompile Include="math\mathutils.cpp" />
     <ClCompile Include="particle\ParticleEmitter.cpp" />
     <ClCompile Include="particle\ParticleModifier.cpp" />

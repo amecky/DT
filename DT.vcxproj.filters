@@ -53,6 +53,9 @@
     <Filter Include="examples\06_simple_light">
       <UniqueIdentifier>{0fa02e09-b098-4c5e-9830-a3e01e0212f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="examples\07_asteroids">
+      <UniqueIdentifier>{a45cfefe-4040-448e-a886-3aea266c6f90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -194,6 +197,12 @@
     <ClInclude Include="examples\06_simple_light\SimpleLight.h">
       <Filter>examples\06_simple_light</Filter>
     </ClInclude>
+    <ClInclude Include="examples\07_asteroids\Asteroids.h">
+      <Filter>examples\07_asteroids</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\07_asteroids\Asteroid.h">
+      <Filter>examples\07_asteroids</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -287,6 +296,12 @@
     </ClCompile>
     <ClCompile Include="examples\06_simple_light\SimpleLight.cpp">
       <Filter>examples\06_simple_light</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\07_asteroids\Asteroids.cpp">
+      <Filter>examples\07_asteroids</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\07_asteroids\Asteroid.cpp">
+      <Filter>examples\07_asteroids</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,7 @@ CubeTest::~CubeTest() {
 
 
 void CubeTest::loadContent() {
-	sprites::intialize("content\\ref_256.png");
+	sprites::intialize("ref_256");
 	_rotating = false;
 	_moving = false;
 	_scaling = false;

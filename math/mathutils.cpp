@@ -119,6 +119,11 @@ namespace math {
 		return ret;
 	}
 
+	bool chanceRoll(int probability) {
+		int x = random(0,100);
+		return x <= probability;
+	}
+
 	float clamp(float value, float min, float max) {
 		if (value < min) {
 			return min;

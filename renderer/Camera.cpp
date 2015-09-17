@@ -35,6 +35,16 @@ void Camera::CreateProjectionMatrix(float screenWidth, float screenHeight, float
 	//D3DXMatrixOrthoLH(&m_projection,_screenWidth, _screenHeight, nearPlane, farPlane);
 }
 
+void Camera::createOrthoProjectionMatrix(float screenWidth,float screenHeight) {
+	 m_fov = D3DX_PI / 3.0f;
+	 m_aspect    = screenWidth / screenHeight;
+	 m_nearPlane = 01.f;
+	 m_farPlane  = 1000.0f;
+	 _screenWidth = screenWidth;
+	_screenHeight = screenHeight;
+	D3DXMatrixOrthoLH(&m_projection,_screenWidth, _screenHeight, m_nearPlane, m_farPlane);
+}
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 Summary: Moves the camera forward and backward
 Parameters:

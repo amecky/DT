@@ -22,5 +22,7 @@ namespace math {
 
 	v2 random(const v2& min,const v2& max);
 
+	bool chanceRoll(int probability);
+
 	float calculateRotation(const v2& v);
 }

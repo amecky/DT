@@ -5,7 +5,7 @@
 #include "..\..\World.h"
 #include "..\..\utils\JSONReader.h"
 
-BaseApp *app = new SimpleLight();
+//BaseApp *app = new SimpleLight();
 
 SimpleLight::SimpleLight() {
 	_settings.tickCamera = true;
