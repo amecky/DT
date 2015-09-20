@@ -11,6 +11,11 @@ namespace math {
 		return v2(vx,vy);
 	}
 
+	v2 get_radial_velocity(float angle, float velocity, float velocityVariance) {
+		float var = random(-velocityVariance, velocityVariance);
+		return get_radial_velocity(angle, velocity + var);
+	}
+
 	float get_angle(const v2& v1,const v2& v2) {	
 		if ( v1 != v2 ) {
 			Vector2f vn1 = normalize(v1);

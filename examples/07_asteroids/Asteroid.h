@@ -7,13 +7,13 @@ enum AsteroidMode {
 };
 
 struct Line {
-	v2 start;
-	v2 end;
-	v2 center;
+	v3 start;
+	v3 end;
+	v3 center;
 	float rotation;
 	float rotationVelocity;
 	float length;
-	v2 velocity;
+	v3 velocity;
 	Texture texture;
 };
 
@@ -29,21 +29,21 @@ class Asteroid {
 struct AsteroidPoint {
 	float angle;
 	float radiusDiff;
-	v2 position;
+	float timer;
 };
 
 public:
 	Asteroid() {}
 	~Asteroid() {}
 	void set(const AsteroidSettings& settings);
-	void create(int type,const v2& pos);
+	void create(int type,const v3& pos);
 	void tick(float dt);
 	void render();
 	bool hit();
-	const v2& getPosition() const {
+	const v3& getPosition() const {
 		return _position;
 	}
-	const v2& getVelocity() const {
+	const v3& getVelocity() const {
 		return _velocity;
 	}
 	const float getRadius() const {
@@ -52,12 +52,13 @@ public:
 	}
 	bool isDead() const;
 private:
-	void drawLine(const v2& start,const v2& end);
-	void buildLine(const v2& start,const v2& end,Line* line);
+	void drawLine(const v3& start,const v3& end,float thickness);
+	void drawSegment(float alpha, float ra, float beta, float rb);
+	void buildLine(const v3& start,const v3& end,Line* line);
 	float _radius;
-	v2 _position;
-	v2 _velocity;
-	AsteroidPoint _points[9];	
+	v3 _position;
+	v3 _velocity;
+	AsteroidPoint _points[12];	
 	int _numPoints;
 	Line _lines[9];
 	int _numLines;

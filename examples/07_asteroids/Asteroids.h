@@ -3,6 +3,7 @@
 #include "..\..\renderer\Mesh.h"
 #include "Asteroid.h"
 #include <vector>
+#include "Ship.h"
 
 class Asteroids : public BaseApp {
 
@@ -17,7 +18,12 @@ public:
 	void onChar(char ascii, unsigned int state);
 private:
 	void createAsteroid(int type);
+	void drawGrid(const v3& pos);
 	AsteroidList _asteroids;
 	AsteroidSettings _asteroidSettings;
+	D3DXMATRIX _world;
+	float _rotation;
+	Ship _ship;
+	Texture _gridTex;
 };
 

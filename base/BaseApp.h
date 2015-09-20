@@ -15,12 +15,14 @@ struct BaseSettings {
 	int screenSizeY;
 	bool tickCamera;
 	Color clearColor;
+	v3 cameraPosition;
 
 	BaseSettings() {
 		screenSizeX = 800;
 		screenSizeY = 600;
 		tickCamera = true;
 		clearColor = Color(0, 40, 100);
+		cameraPosition = v3(0.0f, 0.0f, -5.0f);
 	}
 };
 

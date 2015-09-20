@@ -39,8 +39,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\math;C:\devtools\DirectX\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\devtools\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\math;C:\devtools\DirectX_SDK\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\devtools\DirectX_SDK\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -100,12 +100,14 @@
     <ClInclude Include="examples\06_simple_light\SimpleLight.h" />
     <ClInclude Include="examples\07_asteroids\Asteroid.h" />
     <ClInclude Include="examples\07_asteroids\Asteroids.h" />
+    <ClInclude Include="examples\07_asteroids\Ship.h" />
     <ClInclude Include="math\BezierCurve.h" />
     <ClInclude Include="math\mathutils.h" />
     <ClInclude Include="particle\ParticleArray.h" />
     <ClInclude Include="particle\ParticleEmitter.h" />
     <ClInclude Include="particle\ParticleModifier.h" />
     <ClInclude Include="particle\ParticleSystem.h" />
+    <ClInclude Include="renderer\BatchRenderer.h" />
     <ClInclude Include="renderer\BloomFilter.h" />
     <ClInclude Include="renderer\Camera.h" />
     <ClInclude Include="renderer\ConstantBuffer.h" />
@@ -142,10 +144,12 @@
     <ClCompile Include="examples\06_simple_light\SimpleLight.cpp" />
     <ClCompile Include="examples\07_asteroids\Asteroid.cpp" />
     <ClCompile Include="examples\07_asteroids\Asteroids.cpp" />
+    <ClCompile Include="examples\07_asteroids\Ship.cpp" />
     <ClCompile Include="math\mathutils.cpp" />
     <ClCompile Include="particle\ParticleEmitter.cpp" />
     <ClCompile Include="particle\ParticleModifier.cpp" />
     <ClCompile Include="particle\ParticleSystem.cpp" />
+    <ClCompile Include="renderer\BatchRenderer.cpp" />
     <ClCompile Include="renderer\BloomFilter.cpp" />
     <ClCompile Include="renderer\Camera.cpp" />
     <ClCompile Include="renderer\gfx.cpp" />

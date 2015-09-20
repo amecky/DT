@@ -203,6 +203,12 @@
     <ClInclude Include="examples\07_asteroids\Asteroid.h">
       <Filter>examples\07_asteroids</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\BatchRenderer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\07_asteroids\Ship.h">
+      <Filter>examples\07_asteroids</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\Profiler.cpp">
@@ -301,6 +307,12 @@
       <Filter>examples\07_asteroids</Filter>
     </ClCompile>
     <ClCompile Include="examples\07_asteroids\Asteroid.cpp">
+      <Filter>examples\07_asteroids</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\BatchRenderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\07_asteroids\Ship.cpp">
       <Filter>examples\07_asteroids</Filter>
     </ClCompile>
   </ItemGroup>

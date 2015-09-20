@@ -17,6 +17,7 @@ void BaseApp::init(HWND handle) {
 	_handle = handle;
 	//_dx.init(_handle,_settings.screenSizeX,_settings.screenSizeY);
 	gfx::initialize(_settings.screenSizeX,_settings.screenSizeY,true,handle,false,1000.0f,0.1f);
+	gfx::getCamera()->setPosition(_settings.cameraPosition.x, _settings.cameraPosition.y, _settings.cameraPosition.z);
 	profiler::init();
 	LOGC("BaseApp") << "--- load content ---";
 	loadContent();
@@ -44,11 +45,11 @@ void BaseApp::buildFrame() {
 	PR_START("RENDERING")
 	render();
 	PR_END("RENDERING")
-	gfx::endRendering();
-	//++_ticks;
-	//_time += _timer.getElapsedTime();
+	gfx::endRendering();	
 	PR_END("FRAME")
 	/*
+	++_ticks;
+	_time += _timer.getElapsedTime();
 	if ( _time >= 1.0f ) {
 		_time -= 1.0f;
 		LOG << "ticks: " << _ticks;
