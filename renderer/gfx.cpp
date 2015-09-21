@@ -101,6 +101,51 @@ namespace assets {
 		return assetCtx->textures.size() - 1;
 	}
 
+	// -------------------------------------------------
+	// load texture
+	// -------------------------------------------------
+	int createTexture(int size,const Color& fillColor) {
+		TextureAsset asset;
+		BYTE* bytes = new BYTE[size*size*4];
+		for ( int i = 0; i < size*size; ++i ) {
+			bytes[i * 4] = fillColor.r * 255.0f;
+			bytes[i * 4 + 1] = fillColor.g * 255.0f;
+			bytes[i * 4 + 2] = fillColor.b * 255.0f;
+			bytes[i * 4 + 3] = fillColor.a * 255.0f;
+		}
+
+		D3D11_TEXTURE2D_DESC desc;
+		desc.Width = size;
+		desc.Height = size;
+		desc.MipLevels = 1;
+		desc.ArraySize = 1;
+		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.SampleDesc.Count = 1;
+		desc.SampleDesc.Quality = 0;
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA data;
+		ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
+		data.pSysMem = bytes;
+		data.SysMemPitch = size * 4;		
+
+		ID3D11Texture2D *pTexture = NULL;
+		HRESULT result = ctx->device->CreateTexture2D( &desc, &data, &pTexture );
+		if (FAILED(result)) {
+			return -1;
+		}
+		result = ctx->device->CreateShaderResourceView(pTexture, NULL, &asset.texture);
+		if (FAILED(result)) {
+			return -1;
+		}
+		assetCtx->textures.push_back(asset);
+		delete[] bytes;
+		return assetCtx->textures.size() - 1;
+	}
+
 	ID3D11ShaderResourceView* getRawTexture(int id) {
 		assert(id >= 0 && id < assetCtx->textures.size());
 		return assetCtx->textures[id].texture;

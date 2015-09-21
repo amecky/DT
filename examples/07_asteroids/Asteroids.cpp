@@ -16,7 +16,7 @@ Asteroids::Asteroids() {
 	_settings.tickCamera = false;
 	_settings.screenSizeX = 1024;
 	_settings.screenSizeY = 768;
-	_settings.clearColor = Color(0,0,0);
+	//_settings.clearColor = Color(0,0,0);
 	_settings.cameraPosition = v3(0.0f, -2.5f, -5.0f);
 }
 
@@ -25,9 +25,10 @@ Asteroids::~Asteroids() {
 }
 
 void Asteroids::loadContent() {
+	_redTextureID = assets::createTexture(256,Color(255,255,255));
+	_arrayTextureID = assets::loadTexture("asteroids");
 	//gfx::getCamera()->createOrthoProjectionMatrix(1024,768);
-	//sprites::intialize("asteroids");	
-	batch::intialize("asteroids");	
+	batch::initialize(_arrayTextureID);	
 	_asteroidSettings.angularSpeed = 0.4f;
 	_asteroidSettings.radiusSpeed = 2.0f;
 	_asteroidSettings.velocity = 70.0f;
@@ -35,6 +36,17 @@ void Asteroids::loadContent() {
 	//createAsteroid(0);
 	_rotation = 0.0f;
 	_gridTex = math::buildTexture(0.0f, 60.0f, 30.0f, 30.0f, 512.0f, 512.0f, false);
+
+	v3 v(2.5f,1.0f,0.0f);
+	D3DXVECTOR3 v3 = D3DXVECTOR3(v.x,v.y,v.z);
+	D3DXMATRIX pm = gfx::getCamera()->GetViewMatrix() * gfx::getCamera()->GetProjectionMatrix();
+	D3DXMatrixInverse(&pm,NULL,&pm);
+	//D3DXMatrixTranspose(&pm,&pm);
+	D3DXVECTOR3 r;
+	D3DXVec3TransformCoord(&r,&v3,&pm);
+	LOG << "r: " << r.x << " " << r.y << " " << r.z;
+
+	
 }
 
 void Asteroids::createAsteroid(int type) {
@@ -86,6 +98,7 @@ void Asteroids::drawGrid(const v3& pos) {
 
 void Asteroids::render() {
 	batch::begin();
+	batch::setTexture(_arrayTextureID);
 	D3DXMATRIX t;
 	D3DXMatrixIdentity(&t);
 	D3DXMATRIX rz;
@@ -102,6 +115,7 @@ void Asteroids::render() {
 		_asteroids[i].render();
 	}
 	//sprites::end();
+	batch::setTexture(_redTextureID);
 	_ship.render();
 	batch::end();
 }

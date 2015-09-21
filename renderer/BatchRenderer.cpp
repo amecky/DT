@@ -33,14 +33,20 @@ namespace batch {
 
 	
 
-	bool intialize(const char* textureName) {
+	bool initialize(const char* textureName) {
+
+		int texture = assets::loadTexture(textureName);
+		return initialize(texture);
+	}
+
+	bool initialize(int textureID) {
 		batchCtx = new BatchContext;
 		batchCtx->size = 0;
 		batchCtx->index = 0;
 		batchCtx->maxVertices = MAX_QUADS * 4;
 		batchCtx->buffer = gfx::createQuadBuffer(MAX_QUADS * 4, sizeof(PCTVertex));
 		batchCtx->shader = gfx::getDefaultShader();
-		batchCtx->texture = assets::loadTexture(textureName);
+		batchCtx->texture = textureID;
 		D3DXMatrixIdentity(&batchCtx->world);
 		assert(batchCtx->texture != -1);
 		batchCtx->blendState = gfx::createBlendState(D3D11_BLEND_SRC_ALPHA,D3D11_BLEND_INV_SRC_ALPHA,D3D11_BLEND_ONE,D3D11_BLEND_ZERO);
@@ -82,6 +88,11 @@ namespace batch {
 		assert(batchCtx != 0);
 		end();
 		begin();
+	}
+
+	void setTexture(int textureID) {
+		flush();
+		batchCtx->texture = textureID;
 	}
 
 	void drawQuad(v3* vertices, const Texture& tex, const Color& color) {

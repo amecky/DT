@@ -18,6 +18,8 @@ namespace assets {
 
 	int loadTexture(const char* name);
 
+	int createTexture(int size,const Color& fillColor);
+
 	ID3D11ShaderResourceView* getRawTexture(int id);
 }
 

@@ -4,9 +4,13 @@
 
 namespace batch {
 
-	bool intialize(const char* textureName);
+	bool initialize(const char* textureName);
 
-	bool intializeFont();
+	bool initialize(int textureID);
+
+	void setTexture(int textureID);
+
+	bool initializeFont();
 
 	void setWorldMatrix(const D3DXMATRIX& world);
 

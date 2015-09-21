@@ -25,5 +25,7 @@ private:
 	float _rotation;
 	Ship _ship;
 	Texture _gridTex;
+	int _redTextureID;
+	int _arrayTextureID;
 };
 
